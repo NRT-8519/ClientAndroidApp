@@ -1,14 +1,11 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:client_android_app/auth/http_overrides.dart';
 import 'package:client_android_app/auth/login.dart';
-import 'package:client_android_app/models/jwt.dart';
+import 'package:client_android_app/models/doctor.dart';
+import 'package:client_android_app/unsupported_role.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'dart:convert' show json, base64, ascii;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:http/http.dart' as http;
 import 'package:jwt_decoder/jwt_decoder.dart';
 
 import 'home.dart';
@@ -27,7 +24,6 @@ class ClientWebApp extends StatelessWidget {
 
   Future<String> get jwtToken async {
     var jwt = await storage.read(key: "token");
-    print(jwt);
     if(jwt == null) return "";
     return jwt;
   }
@@ -59,15 +55,21 @@ class ClientWebApp extends StatelessWidget {
       home: FutureBuilder(
         future: jwtToken,
         builder: (context, snapshot) {
-          if(!snapshot.hasData) { return CircularProgressIndicator();}
+          if(!snapshot.hasData) { return const CircularProgressIndicator();}
           if(snapshot.data != "") {
             var jwt = JwtDecoder.decode(snapshot.data!);
-            print(jwt.toString());
             if (JwtDecoder.isExpired(snapshot.data!)) {
               return LoginPage();
             }
             else {
-              return HomePage(jwt);
+              switch (jwt["role"].toString()) {
+                case "ADMINISTRATOR":
+                case "DOCTOR":
+                case "PATIENT":
+                  return HomePage(jwt);
+                default:
+                  return const UnsupportedRole();
+              }
             }
           }
           else {
