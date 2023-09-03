@@ -3,6 +3,9 @@ import 'dart:convert';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
+
+import '../models/user.dart';
 
 class HttpRequests {
   static const STORAGE = FlutterSecureStorage();
@@ -135,5 +138,23 @@ class HttpRequests {
 
     int count = int.parse(result.body);
     return count;
+  }
+
+  static Future<User> getUser(String uuid) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    Response result = await get(
+        Uri.parse("$SERVER/api/users/$uuid"),
+        headers: headers
+    );
+
+    final Map<String, dynamic> parsed = json.decode(result.body);
+
+    final User user = User.fromJson(parsed);
+
+    return user;
   }
 }

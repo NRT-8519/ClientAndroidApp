@@ -2,6 +2,7 @@ import 'package:client_android_app/auth/http_request.dart';
 import 'package:client_android_app/auth/login.dart';
 import 'package:client_android_app/pages/admin/dashboard.dart';
 import 'package:client_android_app/pages/admin/service_reports.dart';
+import 'package:client_android_app/pages/my_profile.dart';
 import 'package:client_android_app/widgets/home_info_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -179,8 +180,8 @@ class HomePageState extends State<HomePage> {
               leading: const Icon(Icons.manage_accounts),
               title: const Text("My Profile"),
               onTap: () {
-
                 Navigator.pop(context);
+                Navigator.push(context, MaterialPageRoute(builder: (context) => MyProfile(payload)));
               },
             ),
             ListTile(
