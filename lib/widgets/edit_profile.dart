@@ -1,8 +1,9 @@
-import 'dart:ffi';
-
 import 'package:client_android_app/auth/validators.dart';
+import 'package:client_android_app/pages/my_profile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+import 'package:intl/intl.dart';
 
 import '../auth/http_request.dart';
 import '../models/user.dart';
@@ -23,8 +24,14 @@ class EditProfileState extends State<EditProfile> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   late Map<String, dynamic> payload;
+  bool submitting = false;
 
-  Future<User> get user async {return await HttpRequests.getUser(payload["jti"].toString()); }
+  User? userModel;
+
+  Future<User> get user async {
+    userModel = await HttpRequests.getUser(payload["jti"].toString());
+    return userModel!;
+  }
 
   TextEditingController firstNameController = TextEditingController();
   TextEditingController middleNameController = TextEditingController();
@@ -42,6 +49,9 @@ class EditProfileState extends State<EditProfile> {
   void initState() {
     super.initState();
     payload = widget.payload;
+    setState(() {
+      submitting = false;
+    });
   }
   @override
   Widget build(BuildContext context) {
@@ -61,7 +71,7 @@ class EditProfileState extends State<EditProfile> {
               lastNameController.text = snapshot.data!.lastName;
               titleController.text = snapshot.data!.title == null ? "" : snapshot.data!.title!;
               usernameController.text = snapshot.data!.username!;
-              genderController.text = snapshot.data!.gender == "M" ? "Male" : "Female";
+              genderController.text = snapshot.data!.gender;
               dateOfBirthController.text = "${snapshot.data!.dateOfBirth.day}/${snapshot.data!.dateOfBirth.month}/${snapshot.data!.dateOfBirth.year}";
               ssnController.text = snapshot.data!.ssn;
               emailController.text = snapshot.data!.email;
@@ -75,6 +85,7 @@ class EditProfileState extends State<EditProfile> {
                     Container(
                       margin: EdgeInsets.only(top: 8, left: 16.0, right: 16.0),
                       child: TextFormField(
+                        enabled: !submitting,
                         validator: (value) => Validators.validateName(value),
                         controller: firstNameController,
                         decoration: const InputDecoration(
@@ -86,6 +97,7 @@ class EditProfileState extends State<EditProfile> {
                     Container(
                       margin: EdgeInsets.only(top: 8, left: 16.0, right: 16.0),
                       child: TextFormField(
+                        enabled: !submitting,
                         validator: (value) => Validators.validateName(value),
                         controller: middleNameController,
                         decoration: const InputDecoration(
@@ -97,6 +109,7 @@ class EditProfileState extends State<EditProfile> {
                     Container(
                       margin: EdgeInsets.only(top: 8, left: 16.0, right: 16.0),
                       child: TextFormField(
+                        enabled: !submitting,
                         validator: (value) => Validators.validateName(value),
                         controller: lastNameController,
                         decoration: const InputDecoration(
@@ -108,6 +121,7 @@ class EditProfileState extends State<EditProfile> {
                     Container(
                       margin: EdgeInsets.only(top: 8, left: 16.0, right: 16.0),
                       child: TextFormField(
+                        enabled: !submitting,
                         validator: (value) => Validators.validateTitle(value),
                         controller: titleController,
                         decoration: const InputDecoration(
@@ -120,6 +134,7 @@ class EditProfileState extends State<EditProfile> {
                     Container(
                       margin: EdgeInsets.only(top: 8, left: 16.0, right: 16.0),
                       child: TextFormField(
+                        enabled: !submitting,
                         controller: usernameController,
                         decoration: const InputDecoration(
                             border: OutlineInputBorder(),
@@ -130,6 +145,7 @@ class EditProfileState extends State<EditProfile> {
                     Container(
                       margin: EdgeInsets.only(top: 8, left: 16.0, right: 16.0),
                       child: TextFormField(
+                        enabled: !submitting,
                         validator: (value) => Validators.validatePassword(value),
                         controller: passwordController,
                         obscureText: true,
@@ -148,19 +164,24 @@ class EditProfileState extends State<EditProfile> {
                         validator: (value) => Validators.validateGender(value),
                         decoration: const InputDecoration(
                             border: OutlineInputBorder(),
-                            labelText: "Gender"
+                            labelText: "Gender",
                         ),
-                        items: const [
-                          DropdownMenuItem(value: "", enabled: false, child: Text("Select...")),
-                          DropdownMenuItem(value: "M", child: Text("Male")),
-                          DropdownMenuItem(value: "F", child: Text("Female"))
+                        items:  [
+                          if (!submitting)... [
+                            DropdownMenuItem(value: "", enabled: false, child: Text("Select...")),
+                            DropdownMenuItem(value: "M", child: Text("Male")),
+                            DropdownMenuItem(value: "F", child: Text("Female"))
+                          ]
                       ],
-                        onChanged: (Object? value) {  },
+                        onChanged: (Object? value) {
+                          genderController.text = value.toString();
+                        },
                       ),
                     ),
                     Container(
                       margin: EdgeInsets.only(top: 8, left: 16.0, right: 16.0),
                       child: TextFormField(
+                        enabled: !submitting,
                         validator: (value) => Validators.validateDateOfBirth(value),
                         readOnly: true,
                         onTap: () async {
@@ -187,6 +208,7 @@ class EditProfileState extends State<EditProfile> {
                     Container(
                       margin: EdgeInsets.only(top: 8, left: 16.0, right: 16.0),
                       child: TextFormField(
+                        enabled: !submitting,
                         validator: (value) => Validators.validateSSN(value),
                         controller: ssnController,
                         decoration: const InputDecoration(
@@ -198,6 +220,7 @@ class EditProfileState extends State<EditProfile> {
                     Container(
                       margin: EdgeInsets.only(top: 8, left: 16.0, right: 16.0),
                       child: TextFormField(
+                        enabled: !submitting,
                         validator: (value) => Validators.validateEmail(value),
                         controller: emailController,
                         decoration: const InputDecoration(
@@ -209,6 +232,7 @@ class EditProfileState extends State<EditProfile> {
                     Container(
                       margin: EdgeInsets.only(top: 8, left: 16.0, right: 16.0, bottom: 64),
                       child: TextFormField(
+                        enabled: !submitting,
                         validator: (value) => Validators.validatePhoneNumber(value),
                         controller: phoneNumberController,
                         decoration: const InputDecoration(
@@ -228,11 +252,53 @@ class EditProfileState extends State<EditProfile> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
+        onPressed: () async {
           if (formKey.currentState!.validate()) {
+            setState(() {
+              submitting = true;
+            });
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text("Processing..."))
             );
+
+            DateFormat format = DateFormat("dd/MM/yyyy");
+
+            User user = User(
+              userModel!.uuid,
+              firstNameController.text,
+              middleNameController.text,
+              lastNameController.text,
+              titleController.text,
+              usernameController.text,
+              passwordController.text == "" ? null : passwordController.text,
+              emailController.text,
+              phoneNumberController.text,
+              format.parse(dateOfBirthController.text),
+              genderController.text,
+              ssnController.text,
+              userModel!.passwordExpiryDate,
+              userModel!.isDisabled,
+              userModel!.isExpired
+            );
+
+            Response response = await HttpRequests.putUser(user);
+
+            if (response.statusCode != 200) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("Failed to update profile!"))
+              );
+              setState(() {
+                submitting = false;
+              });
+            }
+            else {
+              await Future.delayed(const Duration(seconds: 2), () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Success!"))
+                );
+                Navigator.push(context, MaterialPageRoute(builder: (context) => MyProfile(payload)));
+              });
+            }
           }
         },
         backgroundColor: Colors.deepPurple,

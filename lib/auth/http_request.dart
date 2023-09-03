@@ -157,4 +157,20 @@ class HttpRequests {
 
     return user;
   }
+
+  static Future<Response> putUser(User user) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Content-Type": "application/json",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    Response result = await put(
+        Uri.parse("$SERVER/api/users/edit/"),
+        headers: headers,
+      body: user.asJson()
+    );
+
+    return result;
+  }
 }

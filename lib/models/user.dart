@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:ffi';
 
 import 'package:flutter/foundation.dart';
+import 'package:intl/intl.dart';
 
 @immutable
 class User {
@@ -57,6 +58,10 @@ class User {
   }
 
   String asJson() {
+
+    DateFormat dateOfBirthFormat = DateFormat("yyyy-MM-dd");
+    DateFormat passwordExpiryDateFormat = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS");
+
     return json.encode({
       "uuid": uuid,
       "firstName": firstName,
@@ -67,10 +72,10 @@ class User {
       "password": password,
       "email": email,
       "phoneNumber": phoneNumber,
-      "dateOfBirth": dateOfBirth,
+      "dateOfBirth": dateOfBirthFormat.format(dateOfBirth),
       "gender": gender,
       "ssn": ssn,
-      "passwordExpiryDate": passwordExpiryDate,
+      "passwordExpiryDate": "${passwordExpiryDateFormat.format(passwordExpiryDate)}Z",
       "isDisabled": isDisabled,
       "isExpired": isExpired
     });
