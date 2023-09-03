@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:client_android_app/auth/http_overrides.dart';
 import 'package:client_android_app/auth/login.dart';
-import 'package:client_android_app/models/doctor.dart';
 import 'package:client_android_app/unsupported_role.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -13,11 +12,11 @@ import 'home.dart';
 
 
 void main() async {
-  HttpOverrides.global = new LocalHttpOverrides();
+  HttpOverrides.global = LocalHttpOverrides();
   runApp(const ClientWebApp());
 }
 
-var storage = FlutterSecureStorage();
+var storage = const FlutterSecureStorage();
 
 class ClientWebApp extends StatelessWidget {
   const ClientWebApp({super.key});
