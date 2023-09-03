@@ -1,6 +1,6 @@
 import 'package:client_android_app/auth/http_request.dart';
 import 'package:client_android_app/widgets/edit_profile.dart';
-import 'package:client_android_app/widgets/my_profile_card.dart';
+import 'package:client_android_app/widgets/text_info_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -59,7 +59,7 @@ class MyProfileState extends State<MyProfile> {
                       textAlign: TextAlign.center,
                     ),
                     Divider(indent: 16, endIndent: 16,),
-                    MyProfileCard(
+                    TextInfoCard(
                       color: Colors.grey,
                       width: MediaQuery.of(context).size.width,
                       title: Text("Gender", textAlign: TextAlign.center),
@@ -71,7 +71,7 @@ class MyProfileState extends State<MyProfile> {
                         const Icon(Icons.device_unknown, size: 36, color: Colors.deepPurple),
                       ),
                     ),
-                    MyProfileCard(
+                    TextInfoCard(
                       callback: () async {
                         await Clipboard.setData(ClipboardData(text: "${snapshot.data!.dateOfBirth.day}/${snapshot.data!.dateOfBirth.month}/${snapshot.data!.dateOfBirth.year}"));
                       },
@@ -80,7 +80,7 @@ class MyProfileState extends State<MyProfile> {
                       title: Text("Date of Birth", textAlign: TextAlign.center),
                       text: Text ("${snapshot.data!.dateOfBirth.day}/${snapshot.data!.dateOfBirth.month}/${snapshot.data!.dateOfBirth.year}", textAlign: TextAlign.center,),
                     ),
-                    MyProfileCard(
+                    TextInfoCard(
                       callback: () async {
                         await Clipboard.setData(ClipboardData(text: "${snapshot.data!.ssn}"));
                       },
@@ -89,7 +89,7 @@ class MyProfileState extends State<MyProfile> {
                       title: Text("Social Security Number", textAlign: TextAlign.center),
                       text: Text ("${snapshot.data!.ssn}", textAlign: TextAlign.center),
                     ),
-                    MyProfileCard(
+                    TextInfoCard(
                       callback: () async {
                         await launchUrl(Uri.parse("mailto://${snapshot.data!.email}"));
                       },
@@ -98,7 +98,7 @@ class MyProfileState extends State<MyProfile> {
                       title: Text("Email", textAlign: TextAlign.center),
                       text: Text ("${snapshot.data!.email}", textAlign: TextAlign.center),
                     ),
-                    MyProfileCard(
+                    TextInfoCard(
                       callback: () async {
                         await launchUrl(Uri.parse("tel://${snapshot.data!.phoneNumber}"));
                       },
@@ -107,7 +107,7 @@ class MyProfileState extends State<MyProfile> {
                       title: Text("Phone Number", textAlign: TextAlign.center),
                       text: Text ("${snapshot.data!.phoneNumber}", textAlign: TextAlign.center),
                     ),
-                    MyProfileCard(
+                    TextInfoCard(
                       callback: () async {
                         await Clipboard.setData(ClipboardData(text: "${snapshot.data!.username}"));
                       },

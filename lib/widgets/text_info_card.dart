@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class MyProfileCard extends StatelessWidget {
-  const MyProfileCard({super.key, this.callback, this.color, this.icon, this.title, this.text, required this.width});
+class TextInfoCard extends StatelessWidget {
+  const TextInfoCard({super.key, this.callback, this.color, this.icon, this.title, this.text, required this.width});
 
   final VoidCallback? callback;
   final Color? color;
