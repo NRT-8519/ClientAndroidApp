@@ -10,14 +10,23 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
-class LoginPage extends StatelessWidget {
-  LoginPage({super.key});
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
+  @override
+  State<StatefulWidget> createState() => LoginPageState();
+
+}
+
+class LoginPageState extends State<LoginPage> {
+  LoginPageState();
 
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
   final storage = const FlutterSecureStorage();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  bool submitting = false;
 
   void displayDialog(context, title, text) => showDialog(
     context: context,
@@ -27,6 +36,14 @@ class LoginPage extends StatelessWidget {
             content: Text(text)
         ),
   );
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      submitting = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +61,7 @@ class LoginPage extends StatelessWidget {
                 Container(
                   margin: EdgeInsets.only(top: 165.0, left: 16.0, right: 16.0),
                   child: TextFormField(
+                    enabled: !submitting,
                     validator: (value) => Validators.validateUsername(value),
                     controller: usernameController,
                     decoration: const InputDecoration(
@@ -55,6 +73,7 @@ class LoginPage extends StatelessWidget {
                 Container(
                   margin: EdgeInsets.all(16),
                   child: TextFormField(
+                    enabled: !submitting,
                     validator: (value) => Validators.validatePasswordLogin(value),
                     controller: passwordController,
                     obscureText: true,
@@ -68,49 +87,82 @@ class LoginPage extends StatelessWidget {
                   margin: EdgeInsets.only(left: 16.0, right: 16.0, top: 0.0),
                   height: 50.0,
                   width: MediaQuery.of(context).size.width,
-                  child: MaterialButton(
-
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                    color: Colors.deepPurple,
-                    textColor: Colors.white,
-                    child: const Text("Log In"),
-                    onPressed: () async {
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.deepPurple, 
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5)
+                        )
+                    ),
+                    onPressed: submitting ? null : () async {
                       if (formKey.currentState!.validate()) {
+                        setState(() {
+                          submitting = true;
+                        });
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("Logging in..."))
+                            const SnackBar(content: Text("Logging in..."))
                         );
 
                         var username = usernameController.text;
                         var password = passwordController.text;
 
                         if (username != "" && password != "") {
-                          Response authResponse = await HttpRequests.authenticate(username, password);
-                          var jwt = jsonDecode(authResponse.body);
-                          JWT jwtToken = JWT(jwt["token"], jwt["referenceToken"], jwt["isAuthSuccessful"], jwt["errorMessage"]);
 
-                          if(jwtToken.isAuthSuccessful) {
-                            storage.write(key: "token", value: jwtToken.token);
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(JwtDecoder.decode(jwtToken.token))));
+                          Response? authResponse = await HttpRequests.authenticate(username, password);
+
+                          if (authResponse != null) {
+
+                            var jwt = jsonDecode(authResponse.body);
+                            JWT jwtToken = JWT(jwt["token"], jwt["referenceToken"], jwt["isAuthSuccessful"], jwt["errorMessage"]);
+
+                            if(jwtToken.isAuthSuccessful) {
+                              storage.write(key: "token", value: jwtToken.token);
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(JwtDecoder.decode(jwtToken.token))));
+                            }
+                            else {
+                              setState(() {
+                                submitting = false;
+                              });
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text("Login Failed: ${jwtToken.errorMessage!}"))
+                              );
+                              showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    title: Text("Error"),
+                                    content: Text(jwtToken.errorMessage!),
+                                    actions: [
+                                      TextButton(onPressed: () {Navigator.of(context).pop(true);}, child: Text("OK"))
+                                    ],
+                                  )
+
+                              );
+                            }
                           }
                           else {
+                            setState(() {
+                              submitting = false;
+                            });
                             ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text("Login Failed: ${jwtToken.errorMessage!}"))
+                                SnackBar(content: Text("Login Failed: Server offline"))
                             );
                             showDialog(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                title: Text("Error"),
-                                content: Text(jwtToken.errorMessage!),
-                                actions: [
-                                  TextButton(onPressed: () {Navigator.of(context).pop(true);}, child: Text("OK"))
-                                ],
-                              )
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  title: Text("Error"),
+                                  content: Text("Server offline"),
+                                  actions: [
+                                    TextButton(onPressed: () {Navigator.of(context).pop(true);}, child: Text("OK"))
+                                  ],
+                                )
 
                             );
                           }
                         }
                       }
                     },
+                    child: const Text("Log In")
 
                   ),
                 ),
