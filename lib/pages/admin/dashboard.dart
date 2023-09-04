@@ -1,3 +1,5 @@
+import 'package:client_android_app/pages/admin/company/companies.dart';
+import 'package:client_android_app/pages/admin/patient/patients.dart';
 import 'package:client_android_app/widgets/dashboard_info_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -5,13 +7,24 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 const storage = FlutterSecureStorage();
 
 class Dashboard extends StatefulWidget {
-  const Dashboard({super.key});
+  const Dashboard(this.payload, {super.key});
+
+  final Map<String, dynamic> payload;
 
   @override
   State<Dashboard> createState() => DashboardState();
 }
 
 class DashboardState extends State<Dashboard> {
+  DashboardState();
+
+  late Map<String, dynamic> payload;
+
+  @override
+  void initState() {
+    super.initState();
+    payload = widget.payload;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,11 +38,11 @@ class DashboardState extends State<Dashboard> {
           children: [
             DashboardInfoCard(
               callback: () async {
-
+                Navigator.push(context, MaterialPageRoute(builder: (context) => Patients(payload: payload)));
               },
               icon: Icons.personal_injury,
-              text: Text("Patients", style: TextStyle(color: Colors.white)),
-              descriptionText: Text("Add, edit and view patient related data", style: TextStyle(color: Colors.black)),
+              text: const Text("Patients", style: TextStyle(color: Colors.white)),
+              descriptionText: const Text("Add, edit and view patient related data", style: TextStyle(color: Colors.black)),
               width: MediaQuery.of(context).size.width,
               color: Colors.deepPurple,
             ),
@@ -38,8 +51,8 @@ class DashboardState extends State<Dashboard> {
 
               },
               icon: Icons.person,
-              text: Text("Doctors", style: TextStyle(color: Colors.white)),
-              descriptionText: Text("Add, edit and view doctor related data", style: TextStyle(color: Colors.black)),
+              text: const Text("Doctors", style: TextStyle(color: Colors.white)),
+              descriptionText: const Text("Add, edit and view doctor related data", style: TextStyle(color: Colors.black)),
               width: MediaQuery.of(context).size.width,
               color: Colors.deepPurple,
             ),
@@ -48,29 +61,29 @@ class DashboardState extends State<Dashboard> {
 
               },
               icon: Icons.engineering,
-              text: Text("Administrators", style: TextStyle(color: Colors.white)),
-              descriptionText: Text("Add, edit and view administrator related data", style: TextStyle(color: Colors.black)),
+              text: const Text("Administrators", style: TextStyle(color: Colors.white)),
+              descriptionText: const Text("Add, edit and view administrator related data", style: TextStyle(color: Colors.black)),
               width: MediaQuery.of(context).size.width,
               color: Colors.red,
             ),
-            Divider(),
+            const Divider(),
             DashboardInfoCard(
               callback: () async {
 
               },
               icon: Icons.medication,
-              text: Text("Medicine", style: TextStyle(color: Colors.white)),
-              descriptionText: Text("Add, edit and view Medicine related data", style: TextStyle(color: Colors.black)),
+              text: const Text("Medicine", style: TextStyle(color: Colors.white)),
+              descriptionText: const Text("Add, edit and view Medicine related data", style: TextStyle(color: Colors.black)),
               width: MediaQuery.of(context).size.width,
               color: Colors.green,
             ),
             DashboardInfoCard(
               callback: () async {
-
+                Navigator.push(context, MaterialPageRoute(builder: (context) => Companies(payload: payload)));
               },
               icon: Icons.business,
-              text: Text("Companies", style: TextStyle(color: Colors.white)),
-              descriptionText: Text("Add, edit and view company related data", style: TextStyle(color: Colors.black)),
+              text: const Text("Companies", style: TextStyle(color: Colors.white)),
+              descriptionText: const Text("Add, edit and view company related data", style: TextStyle(color: Colors.black)),
               width: MediaQuery.of(context).size.width,
               color: Colors.green,
             ),
@@ -79,8 +92,8 @@ class DashboardState extends State<Dashboard> {
 
               },
               icon: Icons.work,
-              text: Text("Issuers", style: TextStyle(color: Colors.white)),
-              descriptionText: Text("Add, edit and view issuer related data", style: TextStyle(color: Colors.black)),
+              text: const Text("Issuers", style: TextStyle(color: Colors.white)),
+              descriptionText: const Text("Add, edit and view issuer related data", style: TextStyle(color: Colors.black)),
               width: MediaQuery.of(context).size.width,
               color: Colors.green,
             )
@@ -89,5 +102,4 @@ class DashboardState extends State<Dashboard> {
       ),
     );
   }
-
 }

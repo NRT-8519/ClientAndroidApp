@@ -15,19 +15,25 @@ class HomePage extends StatefulWidget {
   final Map<String, dynamic> payload;
 
   @override
-  State<HomePage> createState() => HomePageState(payload);
+  State<HomePage> createState() => HomePageState();
 
 }
 
 class HomePageState extends State<HomePage> {
-  HomePageState(this.payload);
+  HomePageState();
 
-  final Map<String, dynamic> payload;
+  late Map<String, dynamic> payload;
   final GlobalKey<ScaffoldState> key = new GlobalKey<ScaffoldState>();
 
   void logOut() {
     storage.delete(key: "token");
-    Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginPage()));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    payload = widget.payload;
   }
 
   Future<int?> get adminCount async { return await HttpRequests.getAdminCount(); }
@@ -75,10 +81,10 @@ class HomePageState extends State<HomePage> {
               ),
               ListTile(
                 leading: const Icon(Icons.admin_panel_settings),
-                title: const Text("Administrator Dashboard"),
+                title: Text("Administrator Dashboard"),
                 onTap: () {
                   Navigator.pop(context);
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => const Dashboard()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => Dashboard(payload)));
                 },
               ),
             ],
@@ -418,7 +424,7 @@ class HomePageState extends State<HomePage> {
                     margin: const EdgeInsets.only(left: 32, right: 32),
                     child: HomeInfoCard(
                       callback: () async {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => const Dashboard()));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => Dashboard(payload)));
                       },
                       icon: Icons.admin_panel_settings,
                       text: const Text("Administrator Dashboard", style: TextStyle(color: Colors.white)),
