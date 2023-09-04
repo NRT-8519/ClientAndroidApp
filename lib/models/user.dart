@@ -37,6 +37,7 @@ class User {
       this.isDisabled,
       this.isExpired);
 
+
   factory User.fromJson(Map<String, dynamic> parsedJson) {
     return User(
       parsedJson["uuid"],
