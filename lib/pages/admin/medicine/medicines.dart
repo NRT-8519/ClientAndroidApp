@@ -3,8 +3,11 @@ import 'dart:convert';
 import 'package:client_android_app/auth/http_request.dart';
 import 'package:client_android_app/models/medicine.dart';
 import 'package:client_android_app/models/paginated_list.dart';
+import 'package:client_android_app/pages/admin/medicine/medicine_details.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+
+import '../dashboard.dart';
 
 class Medicines extends StatefulWidget {
   Medicines({super.key, required this.payload});
@@ -48,6 +51,13 @@ class MedicinesState extends State<Medicines> {
       appBar: AppBar(
         title: const Text("Medicines"),
         centerTitle: true,
+        automaticallyImplyLeading: false,
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => Dashboard(payload)));
+          },
+          child: Icon(Icons.arrow_back),
+        ),
         actions: [
           Padding(
             padding: EdgeInsets.only(right: 16),
@@ -123,7 +133,7 @@ class MedicinesState extends State<Medicines> {
                                     margin: EdgeInsets.all(9),
                                     child: GestureDetector(
                                       onTap: () {
-
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => MedicineDetails(payload, snapshot.data!.items[i].uuid)));
                                       },
                                       child: const Icon(Icons.info, color: Colors.green, size: 32),
                                     ),

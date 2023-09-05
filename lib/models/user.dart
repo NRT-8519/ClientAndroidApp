@@ -58,12 +58,12 @@ class User {
     );
   }
 
-  String asJson() {
+  Map<String, dynamic> toJson() {
 
     DateFormat dateOfBirthFormat = DateFormat("yyyy-MM-dd");
     DateFormat passwordExpiryDateFormat = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS");
 
-    return json.encode({
+    return {
       "uuid": uuid,
       "firstName": firstName,
       "middleName": middleName,
@@ -79,6 +79,10 @@ class User {
       "passwordExpiryDate": "${passwordExpiryDateFormat.format(passwordExpiryDate)}Z",
       "isDisabled": isDisabled,
       "isExpired": isExpired
-    });
+    };
+  }
+
+  String asJson() {
+    return json.encode(toJson());
   }
 }

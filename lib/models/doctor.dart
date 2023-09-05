@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:client_android_app/models/patient.dart';
 import 'package:client_android_app/models/user_basic.dart';
 import 'package:flutter/foundation.dart';
+import 'package:intl/intl.dart';
 
 import 'user.dart';
 
@@ -66,5 +67,32 @@ class Doctor extends User {
         parsedJson["roomNumber"],
         patients
     );
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+
+    DateFormat dateOfBirthFormat = DateFormat("yyyy-MM-dd");
+    DateFormat passwordExpiryDateFormat = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS");
+
+    return {
+      "uuid": uuid,
+      "firstName": firstName,
+      "middleName": middleName,
+      "lastName": lastName,
+      "title": title,
+      "username": username,
+      "password": password,
+      "email": email,
+      "phoneNumber": phoneNumber,
+      "dateOfBirth": dateOfBirthFormat.format(dateOfBirth),
+      "gender": gender,
+      "ssn": ssn,
+      "passwordExpiryDate": "${passwordExpiryDateFormat.format(passwordExpiryDate)}Z",
+      "isDisabled": isDisabled,
+      "isExpired": isExpired,
+      "areaOfExpertise": areaOfExpertise,
+      "roomNumber": roomNumber
+    };
   }
 }

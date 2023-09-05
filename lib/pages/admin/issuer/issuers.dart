@@ -2,9 +2,12 @@ import 'dart:convert';
 
 import 'package:client_android_app/auth/http_request.dart';
 import 'package:client_android_app/models/paginated_list.dart';
+import 'package:client_android_app/pages/admin/issuer/add_issuer.dart';
+import 'package:client_android_app/pages/admin/issuer/edit_issuer.dart';
 import 'package:flutter/material.dart';
 
 import '../../../models/issuer.dart';
+import '../dashboard.dart';
 import 'issuer_details.dart';
 
 class Issuers extends StatefulWidget {
@@ -46,12 +49,19 @@ class IssuersState extends State<Issuers> {
       appBar: AppBar(
         title: const Text("Issuers"),
         centerTitle: true,
+        automaticallyImplyLeading: false,
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => Dashboard(payload)));
+          },
+          child: Icon(Icons.arrow_back),
+        ),
         actions: [
           Padding(
             padding: EdgeInsets.only(right: 16),
             child: GestureDetector(
               onTap: () {
-
+                Navigator.push(context, MaterialPageRoute(builder: (context) => AddIssuer(payload)));
               },
               child: Icon(Icons.add_circle_outline),
             ),
@@ -130,7 +140,7 @@ class IssuersState extends State<Issuers> {
                                       margin: EdgeInsets.all(9),
                                       child: GestureDetector(
                                         onTap: () {
-
+                                          Navigator.push(context, MaterialPageRoute(builder: (context) => EditIssuer(payload, snapshot.data!.items[i].uuid)));
                                         },
                                         child: const Icon(Icons.edit, color: Colors.orange, size: 32),
                                       )

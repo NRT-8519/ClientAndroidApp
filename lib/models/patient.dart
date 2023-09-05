@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:client_android_app/models/user.dart';
 import 'package:client_android_app/models/user_basic.dart';
 import 'package:flutter/foundation.dart';
+import 'package:intl/intl.dart';
 
 @immutable
 class Patient extends User {
@@ -45,5 +48,31 @@ class Patient extends User {
         parsedJson["isExpired"],
         UserBasic.fromJson(parsedJson["assignedDoctor"])
     );
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+
+    DateFormat dateOfBirthFormat = DateFormat("yyyy-MM-dd");
+    DateFormat passwordExpiryDateFormat = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS");
+
+    return {
+      "uuid": uuid,
+      "firstName": firstName,
+      "middleName": middleName,
+      "lastName": lastName,
+      "title": title,
+      "username": username,
+      "password": password,
+      "email": email,
+      "phoneNumber": phoneNumber,
+      "dateOfBirth": dateOfBirthFormat.format(dateOfBirth),
+      "gender": gender,
+      "ssn": ssn,
+      "passwordExpiryDate": "${passwordExpiryDateFormat.format(passwordExpiryDate)}Z",
+      "isDisabled": isDisabled,
+      "isExpired": isExpired,
+      "assignedDoctor": assignedDoctor
+    };
   }
 }

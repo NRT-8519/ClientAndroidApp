@@ -4,8 +4,15 @@ import 'package:client_android_app/auth/http_request.dart';
 import 'package:client_android_app/models/company.dart';
 import 'package:client_android_app/models/paginated_list.dart';
 import 'package:client_android_app/models/user.dart';
+import 'package:client_android_app/pages/admin/administrator/add_administrator.dart';
+import 'package:client_android_app/pages/admin/administrator/administrator_details.dart';
+import 'package:client_android_app/pages/admin/administrator/edit_administrator.dart';
+import 'package:client_android_app/pages/edit_profile.dart';
+import 'package:client_android_app/pages/my_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+
+import '../dashboard.dart';
 
 class Administrators extends StatefulWidget {
   Administrators({super.key, required this.payload});
@@ -46,12 +53,19 @@ class AdministratorsState extends State<Administrators> {
       appBar: AppBar(
         title: const Text("Administrators"),
         centerTitle: true,
+        automaticallyImplyLeading: false,
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => Dashboard(payload)));
+          },
+          child: Icon(Icons.arrow_back),
+        ),
         actions: [
           Padding(
             padding: EdgeInsets.only(right: 16),
             child: GestureDetector(
               onTap: () {
-
+                Navigator.push(context, MaterialPageRoute(builder: (context) => AddAdministrator(payload)));
               },
               child: Icon(Icons.add_circle_outline),
             ),
@@ -121,16 +135,27 @@ class AdministratorsState extends State<Administrators> {
                                     margin: EdgeInsets.all(9),
                                     child: GestureDetector(
                                       onTap: () {
+                                        if (snapshot.data!.items[i].uuid != payload["jti"].toString()) {
+                                          Navigator.push(context, MaterialPageRoute(builder: (context) => AdministratorDetails(payload, snapshot.data!.items[i].uuid!)));
+                                        }
+                                        else {
+                                          Navigator.push(context, MaterialPageRoute(builder: (context) => MyProfile(payload)));
 
+                                        }
                                       },
-                                      child: snapshot.data!.items[i].uuid == payload["jti"].toString() ? const Icon(Icons.account_circle, color: Colors.red, size: 32) : const Icon(Icons.edit, color: Colors.orange, size: 32),
+                                      child: snapshot.data!.items[i].uuid == payload["jti"].toString() ? const Icon(Icons.account_circle, color: Colors.red, size: 32) : const Icon(Icons.info, color: Colors.green, size: 32),
                                     ),
                                   ),
                                   Container(
                                       margin: EdgeInsets.all(9),
                                       child: GestureDetector(
                                         onTap: () {
-
+                                          if (snapshot.data!.items[i].uuid != payload["jti"].toString()) {
+                                            Navigator.push(context, MaterialPageRoute(builder: (context) => EditAdministrator(payload, snapshot.data!.items[i].uuid!)));
+                                          }
+                                          else {
+                                            Navigator.push(context, MaterialPageRoute(builder: (context) => EditProfile(payload)));
+                                          }
                                         },
                                         child: snapshot.data!.items[i].uuid == payload["jti"].toString() ? const Icon(Icons.edit, color: Colors.red, size: 32) : const Icon(Icons.edit, color: Colors.orange, size: 32),
                                       )

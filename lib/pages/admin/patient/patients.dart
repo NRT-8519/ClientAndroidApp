@@ -3,8 +3,13 @@ import 'dart:convert';
 import 'package:client_android_app/auth/http_request.dart';
 import 'package:client_android_app/models/paginated_list.dart';
 import 'package:client_android_app/models/patient.dart';
+import 'package:client_android_app/pages/admin/patient/add_patient.dart';
+import 'package:client_android_app/pages/admin/patient/edit_patient.dart';
+import 'package:client_android_app/pages/admin/patient/patient_details.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+
+import '../dashboard.dart';
 
 class Patients extends StatefulWidget {
   Patients({super.key, required this.payload});
@@ -46,12 +51,19 @@ class PatientsState extends State<Patients> {
       appBar: AppBar(
         title: const Text("Patients"),
         centerTitle: true,
+        automaticallyImplyLeading: false,
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => Dashboard(payload)));
+          },
+          child: Icon(Icons.arrow_back),
+        ),
         actions: [
           Padding(
             padding: EdgeInsets.only(right: 16),
             child: GestureDetector(
               onTap: () {
-
+                Navigator.push(context, MaterialPageRoute(builder: (context) => AddPatient(payload)));
               },
               child: Icon(Icons.add_circle_outline),
             ),
@@ -121,7 +133,7 @@ class PatientsState extends State<Patients> {
                                       margin: EdgeInsets.all(9),
                                       child: GestureDetector(
                                         onTap: () {
-
+                                          Navigator.push(context, MaterialPageRoute(builder: (context) => PatientDetails(payload, snapshot.data!.items[i].uuid!)));
                                         },
                                         child: const Icon(Icons.info, color: Colors.green, size: 32),
                                       ),
@@ -130,7 +142,7 @@ class PatientsState extends State<Patients> {
                                       margin: EdgeInsets.all(9),
                                       child: GestureDetector(
                                         onTap: () {
-
+                                          Navigator.push(context, MaterialPageRoute(builder: (context) => EditPatient(payload, snapshot.data!.items[i].uuid!)));
                                         },
                                         child: const Icon(Icons.edit, color: Colors.orange, size: 32),
                                       )

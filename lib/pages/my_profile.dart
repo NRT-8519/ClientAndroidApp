@@ -1,5 +1,5 @@
 import 'package:client_android_app/auth/http_request.dart';
-import 'package:client_android_app/widgets/edit_profile.dart';
+import 'package:client_android_app/pages/edit_profile.dart';
 import 'package:client_android_app/widgets/text_info_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

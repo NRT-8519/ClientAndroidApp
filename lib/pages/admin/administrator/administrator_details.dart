@@ -1,4 +1,5 @@
 import 'package:client_android_app/models/patient.dart';
+import 'package:client_android_app/models/user.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,40 +10,40 @@ import '../../../auth/http_request.dart';
 import '../../../widgets/text_info_card.dart';
 import '../doctor/doctor_details.dart';
 
-class PatientDetails extends StatefulWidget {
-  const PatientDetails(this.payload, this.patientUUID, {super.key});
+class AdministratorDetails extends StatefulWidget {
+  const AdministratorDetails(this.payload, this.administratorUUID, {super.key});
 
   final Map<String, dynamic> payload;
-  final String patientUUID;
+  final String administratorUUID;
   @override
-  State<StatefulWidget> createState() => PatientDetailsState();
+  State<StatefulWidget> createState() => AdministratorDetailsState();
 }
 
-class PatientDetailsState extends State<PatientDetails> {
+class AdministratorDetailsState extends State<AdministratorDetails> {
 
   late Map<String, dynamic> payload;
-  late String patientUUID;
+  late String administratorUUID;
   DateFormat expiryFormat = DateFormat("dd/MM/yyyy HH:mm");
-  Future<Patient> get patient async {
-    return await HttpRequests.getPatient(patientUUID);
+  Future<User> get administrator async {
+    return await HttpRequests.getUser(administratorUUID);
   }
   @override
   void initState() {
     super.initState();
     payload = widget.payload;
-    patientUUID = widget.patientUUID;
+    administratorUUID = widget.administratorUUID;
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: patient,
+        future: administrator,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return Scaffold(
               resizeToAvoidBottomInset: false,
               appBar: AppBar(
-                title: Text("Patient: ${snapshot.data!.firstName} ${snapshot.data!.middleName[0]}. ${snapshot.data!.lastName}"),
+                title: Text("Administrator: ${snapshot.data!.firstName} ${snapshot.data!.middleName[0]}. ${snapshot.data!.lastName}"),
                 centerTitle: true,
               ),
               body: Center(
@@ -50,7 +51,7 @@ class PatientDetailsState extends State<PatientDetails> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(Icons.personal_injury, size: 78, color: Colors.deepPurple,),
+                        const Icon(Icons.engineering, size: 78, color: Colors.red,),
                         const Divider(indent: 16, endIndent: 16,),
                         GestureDetector(
                           onTap: () async {
@@ -71,7 +72,7 @@ class PatientDetailsState extends State<PatientDetails> {
                                 SnackBar(content: snapshot.data!.gender == "M" ? const Text("Male") : const Text("Female"))
                             );
                           },
-                          color: Colors.deepPurple,
+                          color: Colors.red,
                           width: MediaQuery.of(context).size.width,
                           title: const Text("Gender", textAlign: TextAlign.center, style: TextStyle(color: Colors.white),),
                           text: Container(
@@ -79,32 +80,23 @@ class PatientDetailsState extends State<PatientDetails> {
                             const Icon(Icons.male, size: 36, color: Colors.lightBlue,) :
                             snapshot.data!.gender == "F" ?
                             const Icon(Icons.female, size: 36, color: Colors.pinkAccent) :
-                            const Icon(Icons.device_unknown, size: 36, color: Colors.deepPurple),
+                            const Icon(Icons.device_unknown, size: 36, color: Colors.red),
                           ),
                         ),
                         TextInfoCard(
                           callback: () async {
                             await Clipboard.setData(ClipboardData(text: "${snapshot.data!.dateOfBirth.day}/${snapshot.data!.dateOfBirth.month}/${snapshot.data!.dateOfBirth.year}"));
                           },
-                          color: Colors.deepPurple,
+                          color: Colors.red,
                           width: MediaQuery.of(context).size.width,
                           title: const Text("Date of Birth", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
                           text: Text ("${snapshot.data!.dateOfBirth.day}/${snapshot.data!.dateOfBirth.month}/${snapshot.data!.dateOfBirth.year}", textAlign: TextAlign.center,),
                         ),
                         TextInfoCard(
                           callback: () async {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => DoctorDetails(payload, snapshot.data!.assignedDoctor.uuid!)));
-                          },
-                          color: Colors.deepPurple,
-                          width: MediaQuery.of(context).size.width,
-                          title: const Text("Assigned Doctor", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
-                          text: Text (snapshot.data!.assignedDoctor.uuid! == "00000000-0000-0000-0000-000000000000" ? "Not yet assigned" : "Dr. ${snapshot.data!.assignedDoctor.firstName} ${snapshot.data!.assignedDoctor.middleName[0]}. ${snapshot.data!.assignedDoctor.lastName}", textAlign: TextAlign.center),
-                        ),
-                        TextInfoCard(
-                          callback: () async {
                             await Clipboard.setData(ClipboardData(text: snapshot.data!.ssn));
                           },
-                          color: Colors.deepPurple,
+                          color: Colors.red,
                           width: MediaQuery.of(context).size.width,
                           title: const Text("Social Security Number", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
                           text: Text (snapshot.data!.ssn, textAlign: TextAlign.center),
@@ -113,7 +105,7 @@ class PatientDetailsState extends State<PatientDetails> {
                           callback: () async {
                             await launchUrl(Uri.parse("mailto://${snapshot.data!.email}"));
                           },
-                          color: Colors.deepPurple,
+                          color: Colors.red,
                           width: MediaQuery.of(context).size.width,
                           title: const Text("Email", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
                           text: Text (snapshot.data!.email, textAlign: TextAlign.center),
@@ -122,7 +114,7 @@ class PatientDetailsState extends State<PatientDetails> {
                           callback: () async {
                             await launchUrl(Uri.parse("tel://${snapshot.data!.phoneNumber}"));
                           },
-                          color: Colors.deepPurple,
+                          color: Colors.red,
                           width: MediaQuery.of(context).size.width,
                           title: const Text("Phone Number", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
                           text: Text (snapshot.data!.phoneNumber, textAlign: TextAlign.center),
@@ -131,7 +123,7 @@ class PatientDetailsState extends State<PatientDetails> {
                           callback: () async {
                             await Clipboard.setData(ClipboardData(text: snapshot.data!.username!));
                           },
-                          color: Colors.deepPurple,
+                          color: Colors.red,
                           title: const Text("Username", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
                           text: Text(snapshot.data!.username!, textAlign: TextAlign.center),
                           width: MediaQuery.of(context).size.width,
@@ -140,19 +132,19 @@ class PatientDetailsState extends State<PatientDetails> {
                           callback: () async {
                             await Clipboard.setData(ClipboardData(text: expiryFormat.format(snapshot.data!.passwordExpiryDate)));
                           },
-                          color: Colors.deepPurple,
+                          color: Colors.red,
                           width: MediaQuery.of(context).size.width,
                           title: const Text("Password Expiry", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
                           text: Text (expiryFormat.format(snapshot.data!.passwordExpiryDate), textAlign: TextAlign.center,),
                         ),
                         TextInfoCard(
-                          color: Colors.deepPurple,
+                          color: Colors.red,
                           width: MediaQuery.of(context).size.width,
                           title: const Text("Is Password expired", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
                           text: Text (snapshot.data!.isExpired ? "Yes" : "No", textAlign: TextAlign.center,),
                         ),
                         TextInfoCard(
-                          color: Colors.deepPurple,
+                          color: Colors.red,
                           width: MediaQuery.of(context).size.width,
                           title: const Text("Is Account expired", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
                           text: Text (snapshot.data!.isDisabled ? "Yes" : "No", textAlign: TextAlign.center,),
@@ -161,7 +153,7 @@ class PatientDetailsState extends State<PatientDetails> {
                           callback: () async {
                             await Clipboard.setData(ClipboardData(text: snapshot.data!.uuid!));
                           },
-                          color: Colors.deepPurple,
+                          color: Colors.red,
                           title: const Text("UUID", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
                           text: Text(snapshot.data!.uuid!, textAlign: TextAlign.center),
                           width: MediaQuery.of(context).size.width,

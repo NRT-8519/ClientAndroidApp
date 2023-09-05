@@ -1,5 +1,4 @@
-import 'package:client_android_app/models/patient.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:client_android_app/models/doctor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -7,42 +6,41 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../../auth/http_request.dart';
 import '../../../widgets/text_info_card.dart';
-import '../doctor/doctor_details.dart';
 
-class PatientDetails extends StatefulWidget {
-  const PatientDetails(this.payload, this.patientUUID, {super.key});
+class DoctorDetails extends StatefulWidget {
+  const DoctorDetails(this.payload, this.doctorUUID, {super.key});
 
   final Map<String, dynamic> payload;
-  final String patientUUID;
+  final String doctorUUID;
   @override
-  State<StatefulWidget> createState() => PatientDetailsState();
+  State<StatefulWidget> createState() => DoctorDetailsState();
 }
 
-class PatientDetailsState extends State<PatientDetails> {
+class DoctorDetailsState extends State<DoctorDetails> {
 
   late Map<String, dynamic> payload;
-  late String patientUUID;
+  late String doctorUUID;
   DateFormat expiryFormat = DateFormat("dd/MM/yyyy HH:mm");
-  Future<Patient> get patient async {
-    return await HttpRequests.getPatient(patientUUID);
+  Future<Doctor> get doctor async {
+    return await HttpRequests.getDoctor(doctorUUID);
   }
   @override
   void initState() {
     super.initState();
     payload = widget.payload;
-    patientUUID = widget.patientUUID;
+    doctorUUID = widget.doctorUUID;
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: patient,
+        future: doctor,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return Scaffold(
               resizeToAvoidBottomInset: false,
               appBar: AppBar(
-                title: Text("Patient: ${snapshot.data!.firstName} ${snapshot.data!.middleName[0]}. ${snapshot.data!.lastName}"),
+                title: Text("Doctor: ${snapshot.data!.firstName} ${snapshot.data!.middleName[0]}. ${snapshot.data!.lastName}"),
                 centerTitle: true,
               ),
               body: Center(
@@ -50,7 +48,7 @@ class PatientDetailsState extends State<PatientDetails> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(Icons.personal_injury, size: 78, color: Colors.deepPurple,),
+                        const Icon(Icons.person, size: 78, color: Colors.deepPurple,),
                         const Divider(indent: 16, endIndent: 16,),
                         GestureDetector(
                           onTap: () async {
@@ -93,21 +91,30 @@ class PatientDetailsState extends State<PatientDetails> {
                         ),
                         TextInfoCard(
                           callback: () async {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => DoctorDetails(payload, snapshot.data!.assignedDoctor.uuid!)));
+                            await Clipboard.setData(ClipboardData(text: "${snapshot.data!.ssn}"));
                           },
                           color: Colors.deepPurple,
                           width: MediaQuery.of(context).size.width,
-                          title: const Text("Assigned Doctor", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
-                          text: Text (snapshot.data!.assignedDoctor.uuid! == "00000000-0000-0000-0000-000000000000" ? "Not yet assigned" : "Dr. ${snapshot.data!.assignedDoctor.firstName} ${snapshot.data!.assignedDoctor.middleName[0]}. ${snapshot.data!.assignedDoctor.lastName}", textAlign: TextAlign.center),
+                          title: const Text("Area of Expertise", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
+                          text: Text (snapshot.data!.areaOfExpertise, textAlign: TextAlign.center),
                         ),
                         TextInfoCard(
                           callback: () async {
-                            await Clipboard.setData(ClipboardData(text: snapshot.data!.ssn));
+                            await Clipboard.setData(ClipboardData(text: "${snapshot.data!.ssn}"));
+                          },
+                          color: Colors.deepPurple,
+                          width: MediaQuery.of(context).size.width,
+                          title: const Text("Room number", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
+                          text: Text ("${snapshot.data!.roomNumber}", textAlign: TextAlign.center),
+                        ),
+                        TextInfoCard(
+                          callback: () async {
+                            await Clipboard.setData(ClipboardData(text: "${snapshot.data!.ssn}"));
                           },
                           color: Colors.deepPurple,
                           width: MediaQuery.of(context).size.width,
                           title: const Text("Social Security Number", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
-                          text: Text (snapshot.data!.ssn, textAlign: TextAlign.center),
+                          text: Text ("${snapshot.data!.ssn}", textAlign: TextAlign.center),
                         ),
                         TextInfoCard(
                           callback: () async {
@@ -116,7 +123,7 @@ class PatientDetailsState extends State<PatientDetails> {
                           color: Colors.deepPurple,
                           width: MediaQuery.of(context).size.width,
                           title: const Text("Email", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
-                          text: Text (snapshot.data!.email, textAlign: TextAlign.center),
+                          text: Text ("${snapshot.data!.email}", textAlign: TextAlign.center),
                         ),
                         TextInfoCard(
                           callback: () async {
@@ -125,7 +132,7 @@ class PatientDetailsState extends State<PatientDetails> {
                           color: Colors.deepPurple,
                           width: MediaQuery.of(context).size.width,
                           title: const Text("Phone Number", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
-                          text: Text (snapshot.data!.phoneNumber, textAlign: TextAlign.center),
+                          text: Text ("${snapshot.data!.phoneNumber}", textAlign: TextAlign.center),
                         ),
                         TextInfoCard(
                           callback: () async {

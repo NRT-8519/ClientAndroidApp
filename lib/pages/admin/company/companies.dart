@@ -3,6 +3,9 @@ import 'dart:convert';
 import 'package:client_android_app/auth/http_request.dart';
 import 'package:client_android_app/models/company.dart';
 import 'package:client_android_app/models/paginated_list.dart';
+import 'package:client_android_app/pages/admin/company/add_company.dart';
+import 'package:client_android_app/pages/admin/company/edit_company.dart';
+import 'package:client_android_app/pages/admin/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 
@@ -47,12 +50,19 @@ class CompaniesState extends State<Companies> {
       appBar: AppBar(
         title: const Text("Companies"),
         centerTitle: true,
+        automaticallyImplyLeading: false,
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => Dashboard(payload)));
+          },
+          child: Icon(Icons.arrow_back),
+        ),
         actions: [
           Padding(
             padding: EdgeInsets.only(right: 16),
             child: GestureDetector(
               onTap: () {
-
+                Navigator.push(context, MaterialPageRoute(builder: (context) => AddCompany(payload)));
               },
               child: Icon(Icons.add_circle_outline),
             ),
@@ -128,13 +138,13 @@ class CompaniesState extends State<Companies> {
                                     ),
                                   ),
                                   Container(
-                                      margin: EdgeInsets.all(9),
-                                      child: GestureDetector(
-                                        onTap: () {
-
-                                        },
-                                        child: const Icon(Icons.edit, color: Colors.orange, size: 32),
-                                      )
+                                    margin: EdgeInsets.all(9),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => EditCompany(payload, snapshot.data!.items[i].uuid)));
+                                      },
+                                      child: const Icon(Icons.edit, color: Colors.orange, size: 32),
+                                    )
                                   )
                                 ]
                             ),

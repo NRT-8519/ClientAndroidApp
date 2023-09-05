@@ -172,6 +172,42 @@ class HttpRequests {
     return user;
   }
 
+  static Future<Patient> getPatient(String uuid) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    Response result = await get(
+        Uri.parse("$SERVER/api/users/patients/$uuid"),
+        headers: headers
+    );
+
+    final Map<String, dynamic> parsed = json.decode(result.body);
+
+    final Patient patient = Patient.fromJson(parsed);
+
+    return patient;
+  }
+
+  static Future<Doctor> getDoctor(String uuid) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    Response result = await get(
+        Uri.parse("$SERVER/api/users/doctors/$uuid"),
+        headers: headers
+    );
+
+    final Map<String, dynamic> parsed = json.decode(result.body);
+
+    final Doctor doctor = Doctor.fromJson(parsed);
+
+    return doctor;
+  }
+
   static Future<Company> getCompany(String uuid) async {
     Map<String, String> headers = HashMap<String, String>();
     headers.addAll({
@@ -208,6 +244,24 @@ class HttpRequests {
     return issuer;
   }
 
+  static Future<Medicine> getMedicine(String uuid) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    Response result = await get(
+        Uri.parse("$SERVER/api/medicine/$uuid"),
+        headers: headers
+    );
+
+    final Map<String, dynamic> parsed = json.decode(result.body);
+
+    final Medicine medicine = Medicine.fromJson(parsed);
+
+    return medicine;
+  }
+
   static Future<Response> putUser(User user) async {
     Map<String, String> headers = HashMap<String, String>();
     headers.addAll({
@@ -219,6 +273,150 @@ class HttpRequests {
         Uri.parse("$SERVER/api/users/edit/"),
         headers: headers,
       body: user.asJson()
+    );
+
+    return result;
+  }
+
+  static Future<Response> putPatient(Patient patient) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Content-Type": "application/json",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    Response result = await put(
+        Uri.parse("$SERVER/api/users/patients/edit/"),
+        headers: headers,
+        body: patient.asJson()
+    );
+
+    return result;
+  }
+
+  static Future<Response> putCompany(Company company) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Content-Type": "application/json",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    Response result = await put(
+        Uri.parse("$SERVER/api/company/edit/"),
+        headers: headers,
+        body: company.asJson()
+    );
+
+    return result;
+  }
+
+  static Future<Response> putIssuer(Issuer issuer) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Content-Type": "application/json",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    Response result = await put(
+        Uri.parse("$SERVER/api/issuer/edit/"),
+        headers: headers,
+        body: issuer.asJson()
+    );
+
+    return result;
+  }
+
+  static Future<Response> putDoctor(Doctor doctor) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Content-Type": "application/json",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    Response result = await put(
+        Uri.parse("$SERVER/api/users/doctors/edit/"),
+        headers: headers,
+        body: doctor.asJson()
+    );
+
+    return result;
+  }
+
+  static Future<Response> postUser(User user) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Content-Type": "application/json",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    Response result = await post(
+        Uri.parse("$SERVER/api/users/add/"),
+        headers: headers,
+        body: user.asJson()
+    );
+
+    return result;
+  }
+
+  static Future<Response> postPatient(Patient patient) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Content-Type": "application/json",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    Response result = await post(
+        Uri.parse("$SERVER/api/users/patients/add/"),
+        headers: headers,
+        body: patient.asJson()
+    );
+
+    return result;
+  }
+
+  static Future<Response> postDoctor(Doctor doctor) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Content-Type": "application/json",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    Response result = await post(
+        Uri.parse("$SERVER/api/users/doctors/add/"),
+        headers: headers,
+        body: doctor.asJson()
+    );
+
+    return result;
+  }
+
+  static Future<Response> postCompany(Company company) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Content-Type": "application/json",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    Response result = await post(
+        Uri.parse("$SERVER/api/company/add/"),
+        headers: headers,
+        body: company.asJson()
+    );
+
+    return result;
+  }
+
+  static Future<Response> postIssuer(Issuer issuer) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Content-Type": "application/json",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    Response result = await post(
+        Uri.parse("$SERVER/api/issuer/add/"),
+        headers: headers,
+        body: issuer.asJson()
     );
 
     return result;
@@ -273,6 +471,31 @@ class HttpRequests {
     else {
       List<Doctor> list = [];
       return PaginatedList(list, 1, 10, 0, 0, false, false);
+    }
+  }
+
+  static Future<List<Doctor>?> getAllDoctors() async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    Response result = await get(Uri.parse("$SERVER/api/users/doctors/all/"), headers: headers);
+
+    if (result.statusCode == 200) {
+      List<dynamic> dynamicList = json.decode(result.body);
+      List<Doctor> list = [];
+      if (dynamicList.isNotEmpty) {
+        for (dynamic i in dynamicList) {
+          Doctor doctor = Doctor.fromJson(i);
+          list.add(doctor);
+        }
+      }
+      return list;
+    }
+    else {
+      List<Doctor> list = [];
+      return list;
     }
   }
 

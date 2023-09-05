@@ -73,10 +73,8 @@ class Validators {
   }
 
   static String? validateGender(String? value) {
-    if (value!.isNotEmpty) {
-      if (value.length != 1) {
-        return "Select a gender!";
-      }
+    if (value!.isEmpty) {
+      return "Select a gender!";
     }
     return null;
   }
@@ -124,6 +122,18 @@ class Validators {
     }
     else {
       return "SSN is required!";
+    }
+    return null;
+  }
+
+  static String? validateRoomNumber(String? value) {
+    if (value!.isNotEmpty) {
+      if (int.parse(value) < 100 || int.parse(value) > 999) {
+        return "Room number must be between 100 and 999";
+      }
+    }
+    else if (value!.isEmpty) {
+      return "Room number is required!";
     }
     return null;
   }
