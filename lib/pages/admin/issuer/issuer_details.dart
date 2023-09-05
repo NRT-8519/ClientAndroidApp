@@ -1,3 +1,4 @@
+import 'package:client_android_app/models/issuer.dart';
 import 'package:client_android_app/widgets/text_info_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,42 +8,42 @@ import '../../../auth/http_request.dart';
 import '../../../models/company.dart';
 import '../../../models/paginated_list.dart';
 
-class CompanyDetails extends StatefulWidget {
-  const CompanyDetails(this.payload, this.companyUUID, {super.key});
+class IssuerDetails extends StatefulWidget {
+  const IssuerDetails(this.payload, this.issuerUUID, {super.key});
 
   final Map<String, dynamic> payload;
-  final String companyUUID;
+  final String issuerUUID;
 
   @override
-  State<StatefulWidget> createState() => CompanyDetailsState();
+  State<StatefulWidget> createState() => IssuerDetailsState();
 }
 
-class CompanyDetailsState extends State<CompanyDetails> {
+class IssuerDetailsState extends State<IssuerDetails> {
 
   late Map<String, dynamic> payload;
-  late String companyUUID;
+  late String issuerUUID;
 
-  Future<Company> get company async {
-    return await HttpRequests.getCompany(companyUUID);
+  Future<Issuer> get issuer async {
+    return await HttpRequests.getIssuer(issuerUUID);
   }
 
   @override
   void initState() {
     super.initState();
     payload = widget.payload;
-    companyUUID = widget.companyUUID;
+    issuerUUID = widget.issuerUUID;
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: company,
+      future: issuer,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return Scaffold(
             resizeToAvoidBottomInset: false,
             appBar: AppBar(
-              title: Text("Company: ${snapshot.data!.name}"),
+              title: Text("Issuer: ${snapshot.data!.name}"),
               centerTitle: true,
             ),
             body: Center(
@@ -66,29 +67,20 @@ class CompanyDetailsState extends State<CompanyDetails> {
                     const Divider(indent: 16, endIndent: 16,),
                     TextInfoCard(
                       callback: () async {
-                        await Clipboard.setData(ClipboardData(text: snapshot.data!.country));
-                      },
-                      color: Colors.green,
-                      title: const Text("Country", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
-                      text: Text(snapshot.data!.country, textAlign: TextAlign.center),
-                      width: MediaQuery.of(context).size.width,
-                    ),
-                    TextInfoCard(
-                      callback: () async {
                         await Clipboard.setData(ClipboardData(text: snapshot.data!.city));
                       },
                       color: Colors.green,
-                      title: const Text("City", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
-                      text: Text(snapshot.data!.city  , textAlign: TextAlign.center),
+                      title: const Text("Country", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
+                      text: Text(snapshot.data!.city, textAlign: TextAlign.center),
                       width: MediaQuery.of(context).size.width,
                     ),
                     TextInfoCard(
                       callback: () async {
-                        await Clipboard.setData(ClipboardData(text: snapshot.data!.address));
+                        await Clipboard.setData(ClipboardData(text: snapshot.data!.area));
                       },
                       color: Colors.green,
-                      title: const Text("Address", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
-                      text: Text(snapshot.data!.address, textAlign: TextAlign.center),
+                      title: const Text("City", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
+                      text: Text(snapshot.data!.area  , textAlign: TextAlign.center),
                       width: MediaQuery.of(context).size.width,
                     ),
                     TextInfoCard(
