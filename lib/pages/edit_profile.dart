@@ -86,7 +86,7 @@ class EditProfileState extends State<EditProfile> {
                       margin: EdgeInsets.only(top: 8, left: 16.0, right: 16.0),
                       child: TextFormField(
                         enabled: !submitting,
-                        validator: (value) => Validators.validateName(value),
+                        validator: (value) => Validators.validateNotEmpty(value),
                         controller: firstNameController,
                         decoration: const InputDecoration(
                             border: OutlineInputBorder(),
@@ -98,7 +98,7 @@ class EditProfileState extends State<EditProfile> {
                       margin: EdgeInsets.only(top: 8, left: 16.0, right: 16.0),
                       child: TextFormField(
                         enabled: !submitting,
-                        validator: (value) => Validators.validateName(value),
+                        validator: (value) => Validators.validateNotEmpty(value),
                         controller: middleNameController,
                         decoration: const InputDecoration(
                             border: OutlineInputBorder(),
@@ -110,7 +110,7 @@ class EditProfileState extends State<EditProfile> {
                       margin: EdgeInsets.only(top: 8, left: 16.0, right: 16.0),
                       child: TextFormField(
                         enabled: !submitting,
-                        validator: (value) => Validators.validateName(value),
+                        validator: (value) => Validators.validateNotEmpty(value),
                         controller: lastNameController,
                         decoration: const InputDecoration(
                             border: OutlineInputBorder(),

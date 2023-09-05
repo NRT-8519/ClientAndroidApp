@@ -3,11 +3,13 @@ import 'dart:convert';
 import 'package:client_android_app/auth/http_request.dart';
 import 'package:client_android_app/models/medicine.dart';
 import 'package:client_android_app/models/paginated_list.dart';
+import 'package:client_android_app/pages/admin/medicine/add_medicine.dart';
 import 'package:client_android_app/pages/admin/medicine/medicine_details.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 
 import '../dashboard.dart';
+import 'edit_medicine.dart';
 
 class Medicines extends StatefulWidget {
   Medicines({super.key, required this.payload});
@@ -63,7 +65,7 @@ class MedicinesState extends State<Medicines> {
             padding: EdgeInsets.only(right: 16),
             child: GestureDetector(
               onTap: () {
-
+                Navigator.push(context, MaterialPageRoute(builder: (context) => AddMedicine(payload)));
               },
               child: Icon(Icons.add_circle_outline),
             ),
@@ -137,24 +139,12 @@ class MedicinesState extends State<Medicines> {
                                       },
                                       child: const Icon(Icons.info, color: Colors.green, size: 32),
                                     ),
-                                    // child: ElevatedButton(
-                                    //   style: ElevatedButton.styleFrom(
-                                    //       padding: EdgeInsets.all(10),
-                                    //       backgroundColor: Colors.green,
-                                    //       foregroundColor: Colors.white
-                                    //   ),
-                                    //   child: const Icon(Icons.info, ),
-                                    //
-                                    //   onPressed: () { //TODO: Patient details
-                                    //
-                                    //   },
-                                    //)
                                   ),
                                   Container(
                                       margin: EdgeInsets.all(9),
                                       child: GestureDetector(
                                         onTap: () {
-
+                                          Navigator.push(context, MaterialPageRoute(builder: (context) => EditMedicine(payload, snapshot.data!.items[i].uuid)));
                                         },
                                         child: const Icon(Icons.edit, color: Colors.orange, size: 32),
                                       )

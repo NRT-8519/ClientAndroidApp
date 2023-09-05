@@ -1,7 +1,7 @@
 import 'package:intl/intl.dart';
 
 class Validators {
-  static String? validateName(String? value) {
+  static String? validateNotEmpty(String? value) {
     if (value == null || value.isEmpty) {
       return "Required";
     }
@@ -96,6 +96,34 @@ class Validators {
     return null;
   }
 
+  static String? validateBeginDate(String? value) {
+    if (value!.isNotEmpty) {
+      DateFormat formatter = DateFormat("dd/MM/yyyy");
+      DateTime date = formatter.parse(value);
+      if (date.compareTo(DateTime(1901)) < 0) {
+        return "Date cannot be older than 1901!";
+      }
+    }
+    else {
+      return "Please provide a begin date";
+    }
+    return null;
+  }
+
+  static String? validateExpiryDate(String? value) {
+    if (value!.isNotEmpty) {
+      DateFormat formatter = DateFormat("dd/MM/yyyy");
+      DateTime date = formatter.parse(value);
+      if (date.compareTo(DateTime(1901)) < 0) {
+        return "Date cannot be older than 1901!";
+      }
+    }
+    else {
+      return "Please provide a expiry date";
+    }
+    return null;
+  }
+
   static String? validatePasswordLogin(String? value) {
     if (value != null || !value!.isEmpty) {
       if (value.length < 8 || value.length > 45) {
@@ -126,6 +154,60 @@ class Validators {
     return null;
   }
 
+  static String? validateClearanceNumber(String? value) {
+    if (value != null || value!.isNotEmpty) {
+      if (value.length != 19) {
+        return "Clearance Number is 19 digits and dashes long!";
+      }
+      else {
+        final digits = RegExp(r"515-01-0[0-9]{4}-[0-9]{2}-[0-9]{3}");
+        if(!digits.hasMatch(value)) {
+          return "Clearance Number starts with 515-01-0\nIt is in the following format: 515-01-01234-56-789!";
+        }
+      }
+    }
+    else {
+      return "Clearance Number is required!";
+    }
+    return null;
+  }
+
+  static String? validateATC(String? value) {
+    if (value != null || value!.isNotEmpty) {
+      if (value.length != 7) {
+        return "ATC is 7 characters long!";
+      }
+      else {
+        final digits = RegExp(r"^[A-Z](\d+([A-Z]{1,2}(\d+)?)?)?$");
+        if(!digits.hasMatch(value)) {
+          return "Invalid ATC.\nExample of a valid ATC: A10BA02";
+        }
+      }
+    }
+    else {
+      return "ATC is required!";
+    }
+    return null;
+  }
+
+  static String? validateEAN(String? value) {
+    if (value != null || value!.isNotEmpty) {
+      if (value.length != 13) {
+        return "EAN is 13 digits long!";
+      }
+      else {
+        final digits = RegExp(r"^[0-9]{13}$");
+        if(!digits.hasMatch(value)) {
+          return "Invalid EAN.\nEAN is 13 digits long";
+        }
+      }
+    }
+    else {
+      return "EAN is required!";
+    }
+    return null;
+  }
+
   static String? validateRoomNumber(String? value) {
     if (value!.isNotEmpty) {
       if (int.parse(value) < 100 || int.parse(value) > 999) {
@@ -137,4 +219,6 @@ class Validators {
     }
     return null;
   }
+
+
 }

@@ -71,7 +71,7 @@ class EditCompanyState extends State<EditCompany> {
                       margin: const EdgeInsets.only(top: 8, left: 16.0, right: 16.0),
                       child: TextFormField(
                         enabled: !submitting,
-                        validator: (value) => Validators.validateName(value),
+                        validator: (value) => Validators.validateNotEmpty(value),
                         controller: nameController,
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
@@ -83,7 +83,7 @@ class EditCompanyState extends State<EditCompany> {
                       margin: const EdgeInsets.only(top: 8, left: 16.0, right: 16.0),
                       child: TextFormField(
                         enabled: !submitting,
-                        validator: (value) => Validators.validateName(value),
+                        validator: (value) => Validators.validateNotEmpty(value),
                         controller: countryController,
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
@@ -95,7 +95,7 @@ class EditCompanyState extends State<EditCompany> {
                       margin: const EdgeInsets.only(top: 8, left: 16.0, right: 16.0),
                       child: TextFormField(
                         enabled: !submitting,
-                        validator: (value) => Validators.validateName(value),
+                        validator: (value) => Validators.validateNotEmpty(value),
                         controller: cityController,
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),

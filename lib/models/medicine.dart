@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:client_android_app/models/company.dart';
 import 'package:client_android_app/models/issuer.dart';
 
@@ -51,5 +53,27 @@ class Medicine {
       Issuer.fromJson(parsedJson["issuer"]),
       Clearance.fromJson(parsedJson["clearance"])
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "uuid": uuid,
+      "name": name,
+      "type": type,
+      "dosage": dosage,
+      "dosageType": dosageType,
+      "ean": ean,
+      "atc": atc,
+      "uniqueClassification": uniqueClassification,
+      "inn": inn,
+      "prescriptionType": prescriptionType,
+      "company": company,
+      "issuer": issuer,
+      "clearance": clearance
+    };
+  }
+
+  String asJson() {
+    return json.encode(toJson());
   }
 }

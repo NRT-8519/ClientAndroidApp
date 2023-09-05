@@ -326,6 +326,22 @@ class HttpRequests {
     return result;
   }
 
+  static Future<Response> putMedicine(Medicine medicine) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Content-Type": "application/json",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    Response result = await put(
+        Uri.parse("$SERVER/api/medicine/edit/"),
+        headers: headers,
+        body: medicine.asJson()
+    );
+
+    return result;
+  }
+
   static Future<Response> putDoctor(Doctor doctor) async {
     Map<String, String> headers = HashMap<String, String>();
     headers.addAll({
@@ -422,6 +438,22 @@ class HttpRequests {
     return result;
   }
 
+  static Future<Response> postMedicine(Medicine medicine) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Content-Type": "application/json",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    Response result = await post(
+        Uri.parse("$SERVER/api/medicine/add/"),
+        headers: headers,
+        body: medicine.asJson()
+    );
+
+    return result;
+  }
+
   static Future<PaginatedList<Patient>?> getPatients(String? sortOrder, String searchString, String currentFilter, int? pageNumber, int pageSize, String doctor) async {
     Map<String, String> headers = HashMap<String, String>();
     headers.addAll({
@@ -495,6 +527,56 @@ class HttpRequests {
     }
     else {
       List<Doctor> list = [];
+      return list;
+    }
+  }
+
+  static Future<List<Company?>> getAllCompanies() async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    Response result = await get(Uri.parse("$SERVER/api/company/all/all/"), headers: headers);
+
+    if (result.statusCode == 200) {
+      List<dynamic> dynamicList = json.decode(result.body);
+      List<Company> list = [];
+      if (dynamicList.isNotEmpty) {
+        for (dynamic i in dynamicList) {
+          Company company = Company.fromJson(i);
+          list.add(company);
+        }
+      }
+      return list;
+    }
+    else {
+      List<Company> list = [];
+      return list;
+    }
+  }
+
+  static Future<List<Issuer?>> getAllIssuers() async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    Response result = await get(Uri.parse("$SERVER/api/issuer/all/all/"), headers: headers);
+
+    if (result.statusCode == 200) {
+      List<dynamic> dynamicList = json.decode(result.body);
+      List<Issuer> list = [];
+      if (dynamicList.isNotEmpty) {
+        for (dynamic i in dynamicList) {
+          Issuer issuer = Issuer.fromJson(i);
+          list.add(issuer);
+        }
+      }
+      return list;
+    }
+    else {
+      List<Issuer> list = [];
       return list;
     }
   }

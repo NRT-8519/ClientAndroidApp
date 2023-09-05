@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:intl/intl.dart';
 
 class Clearance {
@@ -16,5 +18,21 @@ class Clearance {
         format.parse(parsedJson["beginDate"]),
         format.parse(parsedJson["expiryDate"])
     );
+  }
+
+  Map<String, dynamic> toJson() {
+
+    DateFormat format = DateFormat("yyyy-MM-dd");
+
+    return {
+      "uuid": uuid,
+      "clearanceNumber": clearanceNumber,
+      "beginDate": format.format(beginDate),
+      "expiryDate": format.format(expiryDate)
+    };
+  }
+
+  String asJson() {
+    return json.encode(toJson());
   }
 }
