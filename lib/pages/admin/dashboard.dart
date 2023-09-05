@@ -1,3 +1,4 @@
+import 'package:client_android_app/home.dart';
 import 'package:client_android_app/pages/admin/administrator/administrators.dart';
 import 'package:client_android_app/pages/admin/company/companies.dart';
 import 'package:client_android_app/pages/admin/doctor/doctors.dart';
@@ -37,6 +38,13 @@ class DashboardState extends State<Dashboard> {
       appBar: AppBar(
         title: const Text("Administrator dashboard"),
         centerTitle: true,
+        automaticallyImplyLeading: false,
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(payload)));
+          },
+          child: Icon(Icons.arrow_back),
+        ),
       ),
       body: Center(
         child: ListView(

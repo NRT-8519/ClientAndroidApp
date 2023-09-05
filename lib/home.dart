@@ -1,6 +1,12 @@
 import 'package:client_android_app/auth/http_request.dart';
 import 'package:client_android_app/auth/login.dart';
+import 'package:client_android_app/pages/admin/administrator/administrators.dart';
+import 'package:client_android_app/pages/admin/company/companies.dart';
 import 'package:client_android_app/pages/admin/dashboard.dart';
+import 'package:client_android_app/pages/admin/doctor/doctors.dart';
+import 'package:client_android_app/pages/admin/issuer/issuers.dart';
+import 'package:client_android_app/pages/admin/medicine/medicines.dart';
+import 'package:client_android_app/pages/admin/patient/patients.dart';
 import 'package:client_android_app/pages/admin/service_reports.dart';
 import 'package:client_android_app/pages/my_profile.dart';
 import 'package:client_android_app/widgets/home_info_card.dart';
@@ -230,7 +236,7 @@ class HomePageState extends State<HomePage> {
                           if (snapshot.hasData) {
                             return HomeInfoCard(
                               callback: () async {
-
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => Doctors(payload: payload)));
                               },
                               color: Colors.deepPurple,
                               icon: Icons.person,
@@ -250,7 +256,7 @@ class HomePageState extends State<HomePage> {
                           if(snapshot.hasData) {
                             return HomeInfoCard(
                                 callback: () async {
-
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => Patients(payload: payload)));
                                 },
                                 color:  Colors.deepPurple,
                                 icon: Icons.personal_injury,
@@ -270,7 +276,7 @@ class HomePageState extends State<HomePage> {
                           if(snapshot.hasData) {
                             return HomeInfoCard(
                                 callback: () async {
-
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => Administrators(payload: payload)));
                                 },
                                 color:  Colors.deepPurple,
                                 icon: Icons.engineering,
@@ -290,7 +296,7 @@ class HomePageState extends State<HomePage> {
                           if(snapshot.hasData) {
                             return HomeInfoCard(
                                 callback: () async {
-
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => Medicines(payload: payload)));
                                 },
                                 color:  Colors.deepPurple,
                                 icon: Icons.medication,
@@ -310,7 +316,7 @@ class HomePageState extends State<HomePage> {
                           if(snapshot.hasData) {
                             return HomeInfoCard(
                                 callback: () async {
-
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => Companies(payload: payload)));
                                 },
                                 color:  Colors.deepPurple,
                                 icon: Icons.business,
@@ -330,7 +336,7 @@ class HomePageState extends State<HomePage> {
                           if(snapshot.hasData) {
                             return HomeInfoCard(
                                 callback: () async {
-
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => Issuers(payload: payload)));
                                 },
                                 color:  Colors.deepPurple,
                                 icon: Icons.work,
