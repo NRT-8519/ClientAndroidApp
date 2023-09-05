@@ -6,11 +6,13 @@ import 'dart:io';
 import 'package:client_android_app/models/issuer.dart';
 import 'package:client_android_app/models/paginated_list.dart';
 import 'package:client_android_app/models/patient.dart';
+import 'package:client_android_app/models/medicine.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
 import '../models/company.dart';
+import '../models/doctor.dart';
 import '../models/user.dart';
 
 class HttpRequests {
@@ -170,6 +172,42 @@ class HttpRequests {
     return user;
   }
 
+  static Future<Company> getCompany(String uuid) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    Response result = await get(
+        Uri.parse("$SERVER/api/company/$uuid"),
+        headers: headers
+    );
+
+    final Map<String, dynamic> parsed = json.decode(result.body);
+
+    final Company company = Company.fromJson(parsed);
+
+    return company;
+  }
+
+  static Future<Issuer> getIssuer(String uuid) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    Response result = await get(
+        Uri.parse("$SERVER/api/issuer/$uuid"),
+        headers: headers
+    );
+
+    final Map<String, dynamic> parsed = json.decode(result.body);
+
+    final Issuer issuer = Issuer.fromJson(parsed);
+
+    return issuer;
+  }
+
   static Future<Response> putUser(User user) async {
     Map<String, String> headers = HashMap<String, String>();
     headers.addAll({
@@ -208,6 +246,58 @@ class HttpRequests {
     }
     else {
       List<Patient> list = [];
+      return PaginatedList(list, 1, 10, 0, 0, false, false);
+    }
+  }
+
+  static Future<PaginatedList<Doctor>?> getDoctors(String? sortOrder, String searchString, String currentFilter, int? pageNumber, int pageSize) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    Response result = await get(Uri.parse("$SERVER/api/users/doctors/all/basic?sortOrder=$sortOrder&searchString=$searchString&currentFilter=$currentFilter&pageNumber=$pageNumber&pageSize=$pageSize"), headers: headers);
+
+    if (result.statusCode == 200) {
+      Map<String, dynamic> body = json.decode(result.body);
+      List<dynamic> dynamicList = body["items"];
+      List<Doctor> list = [];
+      if (dynamicList.isNotEmpty) {
+        for (dynamic i in dynamicList) {
+          Doctor doctor = Doctor.fromJson(i);
+          list.add(doctor);
+        }
+      }
+      return PaginatedList(list, body["pageNumber"], body["pageSize"], body["totalPages"], body["totalItems"], body["hasPrevious"], body["hasNext"]);
+    }
+    else {
+      List<Doctor> list = [];
+      return PaginatedList(list, 1, 10, 0, 0, false, false);
+    }
+  }
+
+  static Future<PaginatedList<User>?> getAdministrators(String? sortOrder, String searchString, String currentFilter, int? pageNumber, int pageSize) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    Response result = await get(Uri.parse("$SERVER/api/users/all/basic?sortOrder=$sortOrder&searchString=$searchString&currentFilter=$currentFilter&pageNumber=$pageNumber&pageSize=$pageSize"), headers: headers);
+
+    if (result.statusCode == 200) {
+      Map<String, dynamic> body = json.decode(result.body);
+      List<dynamic> dynamicList = body["items"];
+      List<User> list = [];
+      if (dynamicList.isNotEmpty) {
+        for (dynamic i in dynamicList) {
+          User user = User.fromJson(i);
+          list.add(user);
+        }
+      }
+      return PaginatedList(list, body["pageNumber"], body["pageSize"], body["totalPages"], body["totalItems"], body["hasPrevious"], body["hasNext"]);
+    }
+    else {
+      List<User> list = [];
       return PaginatedList(list, 1, 10, 0, 0, false, false);
     }
   }
@@ -260,6 +350,32 @@ class HttpRequests {
     }
     else {
       List<Issuer> list = [];
+      return PaginatedList(list, 1, 10, 0, 0, false, false);
+    }
+  }
+
+  static Future<PaginatedList<Medicine>?> getMedicines(String? sortOrder, String searchString, String currentFilter, int? pageNumber, int pageSize, String company, String issuer) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    Response result = await get(Uri.parse("$SERVER/api/medicine/all?sortOrder=$sortOrder&searchString=$searchString&currentFilter=$currentFilter&pageNumber=$pageNumber&pageSize=$pageSize&company=$company&issuer=$issuer"), headers: headers);
+
+    if (result.statusCode == 200) {
+      Map<String, dynamic> body = json.decode(result.body);
+      List<dynamic> dynamicList = body["items"];
+      List<Medicine> list = [];
+      if (dynamicList.isNotEmpty) {
+        for (dynamic i in dynamicList) {
+          Medicine medicine = Medicine.fromJson(i);
+          list.add(medicine);
+        }
+      }
+      return PaginatedList(list, body["pageNumber"], body["pageSize"], body["totalPages"], body["totalItems"], body["hasPrevious"], body["hasNext"]);
+    }
+    else {
+      List<Medicine> list = [];
       return PaginatedList(list, 1, 10, 0, 0, false, false);
     }
   }
