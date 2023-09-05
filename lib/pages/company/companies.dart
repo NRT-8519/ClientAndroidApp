@@ -1,36 +1,35 @@
 import 'dart:convert';
 
 import 'package:client_android_app/auth/http_request.dart';
-import 'package:client_android_app/models/medicine.dart';
+import 'package:client_android_app/models/company.dart';
 import 'package:client_android_app/models/paginated_list.dart';
-import 'package:client_android_app/pages/admin/medicine/add_medicine.dart';
-import 'package:client_android_app/pages/admin/medicine/medicine_details.dart';
+import 'package:client_android_app/pages/company/add_company.dart';
+import 'package:client_android_app/pages/company/edit_company.dart';
+import 'package:client_android_app/pages/admin/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 
-import '../dashboard.dart';
-import 'edit_medicine.dart';
+import 'company_details.dart';
 
-class Medicines extends StatefulWidget {
-  Medicines({super.key, required this.payload});
+class Companies extends StatefulWidget {
+  Companies({super.key, required this.payload});
 
   final Map<String, dynamic> payload;
 
   @override
-  State<StatefulWidget> createState() => MedicinesState();
+  State<StatefulWidget> createState() => CompaniesState();
 }
 
-class MedicinesState extends State<Medicines> {
+class CompaniesState extends State<Companies> {
 
   late Map<String, dynamic> payload;
   late String sortOrder, searchString, currentFilter;
   late int pageNumber, pageSize;
-  late String company, issuer;
 
   TextEditingController searchController = TextEditingController();
 
-  Future<PaginatedList<Medicine>?> get medicines async {
-    return await HttpRequests.getMedicines(sortOrder, searchString, currentFilter, pageNumber, pageSize, company, issuer);
+  Future<PaginatedList<Company>?> get companies async {
+    return await HttpRequests.getCompanies(sortOrder, searchString, currentFilter, pageNumber, pageSize);
   }
 
   @override
@@ -42,8 +41,6 @@ class MedicinesState extends State<Medicines> {
     currentFilter = "";
     pageNumber = 1;
     pageSize = 10;
-    company = "";
-    issuer = "";
   }
 
   @override
@@ -51,7 +48,7 @@ class MedicinesState extends State<Medicines> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text("Medicines"),
+        title: const Text("Companies"),
         centerTitle: true,
         automaticallyImplyLeading: false,
         leading: GestureDetector(
@@ -65,7 +62,7 @@ class MedicinesState extends State<Medicines> {
             padding: EdgeInsets.only(right: 16),
             child: GestureDetector(
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => AddMedicine(payload)));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => AddCompany(payload)));
               },
               child: Icon(Icons.add_circle_outline),
             ),
@@ -73,7 +70,7 @@ class MedicinesState extends State<Medicines> {
         ],
       ),
       body: FutureBuilder(
-        future: medicines,
+        future: companies,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return Column(
@@ -135,19 +132,19 @@ class MedicinesState extends State<Medicines> {
                                     margin: EdgeInsets.all(9),
                                     child: GestureDetector(
                                       onTap: () {
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => MedicineDetails(payload, snapshot.data!.items[i].uuid)));
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => CompanyDetails(payload, snapshot.data!.items[i].uuid)));
                                       },
                                       child: const Icon(Icons.info, color: Colors.green, size: 32),
                                     ),
                                   ),
                                   Container(
-                                      margin: EdgeInsets.all(9),
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          Navigator.push(context, MaterialPageRoute(builder: (context) => EditMedicine(payload, snapshot.data!.items[i].uuid)));
-                                        },
-                                        child: const Icon(Icons.edit, color: Colors.orange, size: 32),
-                                      )
+                                    margin: EdgeInsets.all(9),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => EditCompany(payload, snapshot.data!.items[i].uuid)));
+                                      },
+                                      child: const Icon(Icons.edit, color: Colors.orange, size: 32),
+                                    )
                                   )
                                 ]
                             ),

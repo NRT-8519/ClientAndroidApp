@@ -3,39 +3,32 @@ import 'package:client_android_app/auth/validators.dart';
 import 'package:client_android_app/models/doctor.dart';
 import 'package:client_android_app/models/patient.dart';
 import 'package:client_android_app/models/user_basic.dart';
-import 'package:client_android_app/pages/admin/patient/patients.dart';
+import 'package:client_android_app/pages/patient/patients.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 
-class EditPatient extends StatefulWidget {
-  const EditPatient(this.payload, this.patientUUID, {super.key});
+class AddPatient extends StatefulWidget {
+  const AddPatient(this.payload, {super.key});
 
   final Map<String, dynamic> payload;
-  final String patientUUID;
 
   @override
-  State<StatefulWidget> createState() => EditPatientState();
+  State<StatefulWidget> createState() => AddPatientState();
 
 }
 
-class EditPatientState extends State<EditPatient> {
-  EditPatientState();
+class AddPatientState extends State<AddPatient> {
+  AddPatientState();
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   late Map<String, dynamic> payload;
-  late String patientUUID;
   bool submitting = false;
 
   Patient? patientModel;
 
   List<Doctor>? doctorsList;
-
-  Future<Patient> get patient async {
-    patientModel = await HttpRequests.getPatient(patientUUID);
-    return patientModel!;
-  }
 
   Future<List<Doctor>> get doctors async {
     doctorsList = await HttpRequests.getAllDoctors();
@@ -46,7 +39,6 @@ class EditPatientState extends State<EditPatient> {
   void initState() {
     super.initState();
     payload = widget.payload;
-    patientUUID = widget.patientUUID;
     setState(() {
       submitting = false;
     });
@@ -74,21 +66,9 @@ class EditPatientState extends State<EditPatient> {
       ),
       body: Center(
         child: FutureBuilder(
-          future: patient,
+          future: doctors,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-
-              firstNameController.text = snapshot.data!.firstName;
-              middleNameController.text = snapshot.data!.middleName;
-              lastNameController.text = snapshot.data!.lastName;
-              titleController.text = snapshot.data!.title == null ? "" : snapshot.data!.title!;
-              usernameController.text = snapshot.data!.username!;
-              genderController.text = snapshot.data!.gender;
-              dateOfBirthController.text = "${snapshot.data!.dateOfBirth.day}/${snapshot.data!.dateOfBirth.month}/${snapshot.data!.dateOfBirth.year}";
-              ssnController.text = snapshot.data!.ssn;
-              emailController.text = snapshot.data!.email;
-              phoneNumberController.text = snapshot.data!.phoneNumber;
-              assignedDoctorController.text = snapshot.data!.assignedDoctor.uuid!;
               return Form(
                   key: formKey,
                   child: ListView(
@@ -159,7 +139,7 @@ class EditPatientState extends State<EditPatient> {
                         width: MediaQuery.of(context).size.width,
                         margin: const EdgeInsets.only(top: 8, left: 16.0, right: 16.0),
                         child: DropdownButtonFormField(
-                          value: snapshot.data!.gender,
+                          value: "",
                           validator: (value) => Validators.validateGender(value),
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(),
@@ -186,7 +166,7 @@ class EditPatientState extends State<EditPatient> {
                           onTap: () async {
                             DateTime? pickedDateTime = await showDatePicker(
                                 context: context,
-                                initialDate: snapshot.data!.dateOfBirth,
+                                initialDate: DateTime.now(),
                                 firstDate: DateTime(1901),
                                 lastDate: DateTime.now()
                             );
@@ -204,47 +184,35 @@ class EditPatientState extends State<EditPatient> {
                         ),
                       ),
                       const Divider(indent: 16, endIndent: 16,),
-                      FutureBuilder(future: doctors, builder: (context, doctorSnapshot) {
-                        if (doctorSnapshot.hasData) {
-                          return Container(
-                            width: MediaQuery.of(context).size.width,
-                            margin: const EdgeInsets.only(top: 8, left: 16.0, right: 16.0),
-                            child: DropdownButtonFormField<String>(
-                              validator: (value) {
-                                if (value!.isEmpty) {
-                                  return "Select a doctor, or 'Don't assign yet'";
-                                }
-                                return null;
-                              },
-                              value: snapshot.data!.assignedDoctor.uuid,
-                              decoration: const InputDecoration(
-                                border: OutlineInputBorder(),
-                                labelText: "Doctor",
-                              ),
-                              items:  [
-                                const DropdownMenuItem(value: "", enabled: false, child: Text("Select...")),
-                                const DropdownMenuItem(value: "00000000-0000-0000-0000-000000000000", enabled: false, child: Text("Don't assign yet")),
-                                if (doctorSnapshot.data!.isNotEmpty)... [
-                                  for(int i = 0; i < doctorSnapshot.data!.length; i++)... [
-                                    DropdownMenuItem(value: doctorSnapshot.data![i].uuid, child: Text("Dr. ${doctorSnapshot.data![i].firstName} ${doctorSnapshot.data![i].lastName}")),
-                                  ]
-                                ]
-                              ],
-                              onChanged: (Object? value) {
-                                assignedDoctorController.text = value.toString();
-                              },
-                            ),
-                          );
-                        }
-                        else {
-                          return Container(
-                            alignment: Alignment.center,
-                            width: 60,
-                            height: 60,
-                            child: const CircularProgressIndicator(),
-                          );
-                        }
-                      }),
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        margin: const EdgeInsets.only(top: 8, left: 16.0, right: 16.0),
+                        child: DropdownButtonFormField<String>(
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return "Select a doctor, or 'Don't assign yet'";
+                            }
+                            return null;
+                          },
+                          value: "",
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: "Doctor",
+                          ),
+                          items:  [
+                            const DropdownMenuItem(value: "", enabled: false, child: Text("Select...")),
+                            const DropdownMenuItem(value: "00000000-0000-0000-0000-000000000000", enabled: false, child: Text("Don't assign yet")),
+                            if (snapshot.data!.isNotEmpty)... [
+                              for(int i = 0; i < snapshot.data!.length; i++)... [
+                                DropdownMenuItem(value: snapshot.data![i].uuid, child: Text("Dr. ${snapshot.data![i].firstName} ${snapshot.data![i].lastName}")),
+                              ]
+                            ]
+                          ],
+                          onChanged: (Object? value) {
+                            assignedDoctorController.text = value.toString();
+                          },
+                        ),
+                      ),
                       Container(
                         margin: const EdgeInsets.only(top: 8, left: 16.0, right: 16.0),
                         child: TextFormField(
@@ -322,11 +290,11 @@ class EditPatientState extends State<EditPatient> {
                 UserBasic(assignedDoctorController.text, "", "", "", "", "")
             );
 
-            Response response = await HttpRequests.putPatient(patient);
+            Response response = await HttpRequests.postPatient(patient);
 
             if (response.statusCode != 200) {
               ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Failed to update patient!"))
+                  const SnackBar(content: Text("Failed to add patient!"))
               );
               setState(() {
                 submitting = false;
@@ -345,7 +313,7 @@ class EditPatientState extends State<EditPatient> {
         backgroundColor: Colors.deepPurple,
         foregroundColor: Colors.white,
         shape: const CircleBorder(),
-        child: const Icon(Icons.done),
+        child: const Icon(Icons.add),
       ),
     );
   }

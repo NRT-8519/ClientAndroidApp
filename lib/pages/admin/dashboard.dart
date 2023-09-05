@@ -1,10 +1,10 @@
 import 'package:client_android_app/home.dart';
-import 'package:client_android_app/pages/admin/administrator/administrators.dart';
-import 'package:client_android_app/pages/admin/company/companies.dart';
-import 'package:client_android_app/pages/admin/doctor/doctors.dart';
-import 'package:client_android_app/pages/admin/issuer/issuers.dart';
-import 'package:client_android_app/pages/admin/medicine/medicines.dart';
-import 'package:client_android_app/pages/admin/patient/patients.dart';
+import 'package:client_android_app/pages/administrator/administrators.dart';
+import 'package:client_android_app/pages/company/companies.dart';
+import 'package:client_android_app/pages/doctor/doctors.dart';
+import 'package:client_android_app/pages/issuer/issuers.dart';
+import 'package:client_android_app/pages/medicine/medicines.dart';
+import 'package:client_android_app/pages/patient/patients.dart';
 import 'package:client_android_app/widgets/dashboard_info_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';

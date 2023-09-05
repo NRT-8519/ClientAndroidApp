@@ -1,38 +1,35 @@
 import 'dart:convert';
 
 import 'package:client_android_app/auth/http_request.dart';
-import 'package:client_android_app/models/company.dart';
 import 'package:client_android_app/models/paginated_list.dart';
-import 'package:client_android_app/models/user.dart';
-import 'package:client_android_app/pages/admin/administrator/add_administrator.dart';
-import 'package:client_android_app/pages/admin/administrator/administrator_details.dart';
-import 'package:client_android_app/pages/admin/administrator/edit_administrator.dart';
-import 'package:client_android_app/pages/edit_profile.dart';
-import 'package:client_android_app/pages/my_profile.dart';
+import 'package:client_android_app/models/patient.dart';
+import 'package:client_android_app/pages/patient/add_patient.dart';
+import 'package:client_android_app/pages/patient/edit_patient.dart';
+import 'package:client_android_app/pages/patient/patient_details.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 
-import '../dashboard.dart';
+import 'package:client_android_app/pages/admin/dashboard.dart';
 
-class Administrators extends StatefulWidget {
-  Administrators({super.key, required this.payload});
+class Patients extends StatefulWidget {
+  Patients({super.key, required this.payload});
 
   final Map<String, dynamic> payload;
 
   @override
-  State<StatefulWidget> createState() => AdministratorsState();
+  State<StatefulWidget> createState() => PatientsState();
 }
 
-class AdministratorsState extends State<Administrators> {
+class PatientsState extends State<Patients> {
 
   late Map<String, dynamic> payload;
-  late String sortOrder, searchString, currentFilter;
+  late String sortOrder, searchString, currentFilter, doctor;
   late int pageNumber, pageSize;
 
   TextEditingController searchController = TextEditingController();
 
-  Future<PaginatedList<User>?> get administrators async {
-    return await HttpRequests.getAdministrators(sortOrder, searchString, currentFilter, pageNumber, pageSize);
+  Future<PaginatedList<Patient>?> get patients async {
+    return await HttpRequests.getPatients(sortOrder, searchString, currentFilter, pageNumber, pageSize, doctor);
   }
 
   @override
@@ -42,6 +39,7 @@ class AdministratorsState extends State<Administrators> {
     sortOrder = "";
     searchString = "";
     currentFilter = "";
+    doctor = "";
     pageNumber = 1;
     pageSize = 10;
   }
@@ -51,7 +49,7 @@ class AdministratorsState extends State<Administrators> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text("Administrators"),
+        title: const Text("Patients"),
         centerTitle: true,
         automaticallyImplyLeading: false,
         leading: GestureDetector(
@@ -65,7 +63,7 @@ class AdministratorsState extends State<Administrators> {
             padding: EdgeInsets.only(right: 16),
             child: GestureDetector(
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => AddAdministrator(payload)));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => AddPatient(payload)));
               },
               child: Icon(Icons.add_circle_outline),
             ),
@@ -73,14 +71,14 @@ class AdministratorsState extends State<Administrators> {
         ],
       ),
       body: FutureBuilder(
-        future: administrators,
+        future: patients,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  padding: const EdgeInsets.all(16),
+                  padding: EdgeInsets.all(16),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -104,11 +102,11 @@ class AdministratorsState extends State<Administrators> {
                           },
                           style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                            minimumSize: const Size(100, 60),
-                            backgroundColor: Colors.red,
+                            minimumSize: Size(100, 60),
+                            backgroundColor: Colors.deepPurple,
                             foregroundColor: Colors.white,
                           ),
-                          child: const Icon(Icons.search)
+                          child: Icon(Icons.search)
                       )
                     ],
                   ),
@@ -119,45 +117,34 @@ class AdministratorsState extends State<Administrators> {
                     child: Table(
                       defaultVerticalAlignment: TableCellVerticalAlignment.middle,
                       columnWidths: <int, TableColumnWidth>{
-                        0: snapshot.data!.items.isEmpty ? FixedColumnWidth(MediaQuery.of(context).size.width - 32) : const FixedColumnWidth(32),
-                        1: const FixedColumnWidth(200),
-                        2: const FixedColumnWidth(64),
-                        3: const FixedColumnWidth(64),
+                        0: snapshot.data!.items.isEmpty ? FixedColumnWidth(MediaQuery.of(context).size.width - 32) : FixedColumnWidth(32),
+                        1: FixedColumnWidth(200),
+                        2: FixedColumnWidth(64),
+                        3: FixedColumnWidth(64),
                       },
                       children: [
                         if(snapshot.data!.items.isNotEmpty)... [
                           for(int i = 0; i < snapshot.data!.items.length; i++)... [
                             TableRow(
                                 children: [
-                                  TableCell(child: Text("${i + 1}", textAlign: TextAlign.center, style: snapshot.data!.items[i].uuid == payload["jti"].toString() ? TextStyle(fontWeight: FontWeight.bold) : TextStyle(fontWeight: FontWeight.normal),)),
-                                  TableCell(child: Text("${snapshot.data!.items[i].firstName} ${snapshot.data!.items[i].middleName[0]}. ${snapshot.data!.items[i].lastName}", textAlign: TextAlign.center, style: snapshot.data!.items[i].uuid == payload["jti"].toString() ? TextStyle(fontWeight: FontWeight.bold) : TextStyle(fontWeight: FontWeight.normal),)),
+                                  TableCell(child: Text("${i + 1}", textAlign: TextAlign.center,)),
+                                  TableCell(child: Text("${snapshot.data!.items[i].firstName} ${snapshot.data!.items[i].middleName[0]}. ${snapshot.data!.items[i].lastName}", textAlign: TextAlign.center)),
                                   Container(
-                                    margin: EdgeInsets.all(9),
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        if (snapshot.data!.items[i].uuid != payload["jti"].toString()) {
-                                          Navigator.push(context, MaterialPageRoute(builder: (context) => AdministratorDetails(payload, snapshot.data!.items[i].uuid!)));
-                                        }
-                                        else {
-                                          Navigator.push(context, MaterialPageRoute(builder: (context) => MyProfile(payload)));
-
-                                        }
-                                      },
-                                      child: snapshot.data!.items[i].uuid == payload["jti"].toString() ? const Icon(Icons.account_circle, color: Colors.red, size: 32) : const Icon(Icons.info, color: Colors.green, size: 32),
-                                    ),
+                                      margin: EdgeInsets.all(9),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(context, MaterialPageRoute(builder: (context) => PatientDetails(payload, snapshot.data!.items[i].uuid!)));
+                                        },
+                                        child: const Icon(Icons.info, color: Colors.green, size: 32),
+                                      ),
                                   ),
                                   Container(
                                       margin: EdgeInsets.all(9),
                                       child: GestureDetector(
                                         onTap: () {
-                                          if (snapshot.data!.items[i].uuid != payload["jti"].toString()) {
-                                            Navigator.push(context, MaterialPageRoute(builder: (context) => EditAdministrator(payload, snapshot.data!.items[i].uuid!)));
-                                          }
-                                          else {
-                                            Navigator.push(context, MaterialPageRoute(builder: (context) => EditProfile(payload)));
-                                          }
+                                          Navigator.push(context, MaterialPageRoute(builder: (context) => EditPatient(payload, snapshot.data!.items[i].uuid!)));
                                         },
-                                        child: snapshot.data!.items[i].uuid == payload["jti"].toString() ? const Icon(Icons.edit, color: Colors.red, size: 32) : const Icon(Icons.edit, color: Colors.orange, size: 32),
+                                        child: const Icon(Icons.edit, color: Colors.orange, size: 32),
                                       )
                                   )
                                 ]
@@ -165,7 +152,7 @@ class AdministratorsState extends State<Administrators> {
                           ]
                         ]
                         else... [
-                          const TableRow(
+                          TableRow(
                               children: [
                                 Text(
                                   "No Content",
@@ -179,40 +166,30 @@ class AdministratorsState extends State<Administrators> {
                   ),
                 ),
                 Container(
-                    padding: const EdgeInsets.all(16),
+                    padding: EdgeInsets.all(16),
                     child: Row(
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         ElevatedButton(
-                            onPressed: snapshot.data!.hasPrevious ? () {
-                              pageNumber -= 1;
-                              setState(() {
-
-                              });
-                            } : null,
+                            onPressed: snapshot.data!.hasPrevious ? () {} : null,
                             style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                              minimumSize: const Size(160, 40),
-                              backgroundColor: Colors.red,
+                              minimumSize: Size(160, 40),
+                              backgroundColor: Colors.deepPurple,
                               foregroundColor: Colors.white,
                             ),
-                            child: const Text("Previous")
+                            child: Text("Previous")
                         ),
                         ElevatedButton(
-                            onPressed: snapshot.data!.hasNext ? () {
-                              pageNumber += 1;
-                              setState(() {
-
-                              });
-                            } : null,
+                            onPressed: snapshot.data!.hasNext ? () {} : null,
                             style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                              minimumSize: const Size(160, 40),
-                              backgroundColor: Colors.red,
+                              minimumSize: Size(160, 40),
+                              backgroundColor: Colors.deepPurple,
                               foregroundColor: Colors.white,
                             ),
-                            child: const Text("Next")
+                            child: Text("Next")
                         ),
                       ],
                     )

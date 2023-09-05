@@ -1,15 +1,14 @@
 import 'package:client_android_app/models/company.dart';
 import 'package:client_android_app/models/issuer.dart';
 import 'package:client_android_app/models/medicine.dart';
-import 'package:client_android_app/pages/admin/company/companies.dart';
-import 'package:client_android_app/pages/admin/medicine/medicines.dart';
+import 'package:client_android_app/pages/medicine/medicines.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 
-import '../../../auth/http_request.dart';
-import '../../../auth/validators.dart';
-import '../../../models/clearance.dart';
+import 'package:client_android_app/auth/http_request.dart';
+import 'package:client_android_app/auth/validators.dart';
+import 'package:client_android_app/models/clearance.dart';
 
 class AddMedicine extends StatefulWidget {
   const AddMedicine(this.payload, {super.key});

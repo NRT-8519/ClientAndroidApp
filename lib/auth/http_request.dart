@@ -55,8 +55,13 @@ class HttpRequests {
       headers: headers
     );
 
-    int count = int.parse(result.body);
-    return count;
+    if (result.statusCode == 200) {
+      int count = int.parse(result.body);
+      return count;
+    }
+    else {
+      return -1;
+    }
   }
 
   static Future<int> getPatientCount() async {
@@ -71,8 +76,13 @@ class HttpRequests {
         headers: headers
     );
 
-    int count = int.parse(result.body);
-    return count;
+    if (result.statusCode == 200) {
+      int count = int.parse(result.body);
+      return count;
+    }
+    else {
+      return -1;
+    }
   }
 
   static Future<int> getDoctorCount() async {
@@ -87,8 +97,13 @@ class HttpRequests {
         headers: headers
     );
 
-    int count = int.parse(result.body);
-    return count;
+    if (result.statusCode == 200) {
+      int count = int.parse(result.body);
+      return count;
+    }
+    else {
+      return -1;
+    }
   }
 
   static Future<int> getMedicineCount() async {
@@ -103,8 +118,13 @@ class HttpRequests {
         headers: headers
     );
 
-    int count = int.parse(result.body);
-    return count;
+    if (result.statusCode == 200) {
+      int count = int.parse(result.body);
+      return count;
+    }
+    else {
+      return -1;
+    }
   }
 
   static Future<int> getCompanyCount() async {
@@ -119,8 +139,13 @@ class HttpRequests {
         headers: headers
     );
 
-    int count = int.parse(result.body);
-    return count;
+    if (result.statusCode == 200) {
+      int count = int.parse(result.body);
+      return count;
+    }
+    else {
+      return -1;
+    }
   }
 
   static Future<int> getIssuerCount() async {
@@ -135,8 +160,13 @@ class HttpRequests {
         headers: headers
     );
 
-    int count = int.parse(result.body);
-    return count;
+    if (result.statusCode == 200) {
+      int count = int.parse(result.body);
+      return count;
+    }
+    else {
+      return -1;
+    }
   }
 
   static Future<int> getReportCount() async {
@@ -151,8 +181,34 @@ class HttpRequests {
         headers: headers
     );
 
-    int count = int.parse(result.body);
-    return count;
+    if (result.statusCode == 200) {
+      int count = int.parse(result.body);
+      return count;
+    }
+    else {
+      return -1;
+    }
+  }
+
+  static Future<int> getRequestCount(String uuid) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+
+    Response result = await get(
+        Uri.parse("$SERVER/api/request/count?UUID=$uuid&status=AWAITING"),
+        headers: headers
+    );
+
+    if (result.statusCode == 200) {
+      int count = int.parse(result.body);
+      return count;
+    }
+    else {
+      return -1;
+    }
   }
 
   static Future<User> getUser(String uuid) async {

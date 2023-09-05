@@ -1,17 +1,19 @@
 import 'package:client_android_app/auth/http_request.dart';
 import 'package:client_android_app/auth/login.dart';
-import 'package:client_android_app/pages/admin/administrator/administrators.dart';
-import 'package:client_android_app/pages/admin/company/companies.dart';
+import 'package:client_android_app/pages/administrator/administrators.dart';
+import 'package:client_android_app/pages/company/companies.dart';
 import 'package:client_android_app/pages/admin/dashboard.dart';
-import 'package:client_android_app/pages/admin/doctor/doctors.dart';
-import 'package:client_android_app/pages/admin/issuer/issuers.dart';
-import 'package:client_android_app/pages/admin/medicine/medicines.dart';
-import 'package:client_android_app/pages/admin/patient/patients.dart';
+import 'package:client_android_app/pages/doctor/doctors.dart';
+import 'package:client_android_app/pages/issuer/issuers.dart';
+import 'package:client_android_app/pages/medicine/medicines.dart';
+import 'package:client_android_app/pages/patient/patients.dart';
 import 'package:client_android_app/pages/admin/service_reports.dart';
 import 'package:client_android_app/pages/my_profile.dart';
 import 'package:client_android_app/widgets/home_info_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
+import 'models/doctor.dart';
 
 const storage = FlutterSecureStorage();
 
@@ -49,7 +51,8 @@ class HomePageState extends State<HomePage> {
   Future<int?> get companyCount async { return await HttpRequests.getCompanyCount(); }
   Future<int?> get issuerCount async { return await HttpRequests.getIssuerCount(); }
   Future<int?> get reportCount async { return await HttpRequests.getReportCount(); }
-
+  Future<int?> get requestCount async { return await HttpRequests.getRequestCount(payload["jti"].toString()); }
+  Future<Doctor?> get doctor async { return await HttpRequests.getDoctor(payload["jti"].toString()); }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -354,21 +357,48 @@ class HomePageState extends State<HomePage> {
                         }),
                       ],
                       if (payload["role"].toString() == "DOCTOR")... [
-                        HomeInfoCard(
-                          callback: () async {
+                        FutureBuilder(future: doctor, builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return HomeInfoCard(
+                              callback: () async {
 
-                          },
-                          color: Colors.deepPurple,
-                          icon: Icons.person,
-                          text: const Text("Patients", style: TextStyle(color: Colors.white)),
-                        ),
-                        HomeInfoCard(
-                          callback: () async {
+                              },
+                              color: Colors.deepPurple,
+                              icon: Icons.person,
+                              text: const Text("My Patients", style: TextStyle(color: Colors.white)),
+                              count: snapshot.data!.patients.length
+                            );
+                          }
+                          else {
+                            return Container(
+                              padding: const EdgeInsets.all(25),
+                              width: 110,
+                              child: const CircularProgressIndicator(),
+                            );
+                          }
+                        }),
+                        FutureBuilder(
+                          future: requestCount,
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              return HomeInfoCard(
+                                callback: () async {
 
-                          },
-                          color:  Colors.deepPurple,
-                          icon: Icons.question_mark,
-                          text: const Text("Requests", style: TextStyle(color: Colors.white)),
+                                },
+                                color:  Colors.deepPurple,
+                                icon: Icons.question_mark,
+                                text: const Text("Requests", style: TextStyle(color: Colors.white)),
+                                count: snapshot.data!,
+                              );
+                            }
+                            else {
+                              return Container(
+                                padding: const EdgeInsets.all(25),
+                                width: 110,
+                                child: const CircularProgressIndicator(),
+                              );
+                            }
+                          }
                         ),
                       ],
                       if (payload["role"].toString() == "PATIENT")... [

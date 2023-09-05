@@ -1,10 +1,7 @@
 import 'package:client_android_app/auth/http_request.dart';
 import 'package:client_android_app/auth/validators.dart';
 import 'package:client_android_app/models/doctor.dart';
-import 'package:client_android_app/models/user.dart';
-import 'package:client_android_app/pages/admin/administrator/administrators.dart';
-import 'package:client_android_app/pages/admin/doctor/doctors.dart';
-import 'package:client_android_app/pages/my_profile.dart';
+import 'package:client_android_app/pages/doctor/doctors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';

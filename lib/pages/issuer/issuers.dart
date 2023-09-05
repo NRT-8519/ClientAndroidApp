@@ -1,35 +1,32 @@
-import 'dart:convert';
-
 import 'package:client_android_app/auth/http_request.dart';
 import 'package:client_android_app/models/paginated_list.dart';
-import 'package:client_android_app/models/patient.dart';
-import 'package:client_android_app/pages/admin/patient/add_patient.dart';
-import 'package:client_android_app/pages/admin/patient/edit_patient.dart';
-import 'package:client_android_app/pages/admin/patient/patient_details.dart';
+import 'package:client_android_app/pages/admin/dashboard.dart';
+import 'package:client_android_app/pages/issuer/add_issuer.dart';
+import 'package:client_android_app/pages/issuer/edit_issuer.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 
-import '../dashboard.dart';
+import '../../../models/issuer.dart';
+import 'issuer_details.dart';
 
-class Patients extends StatefulWidget {
-  Patients({super.key, required this.payload});
+class Issuers extends StatefulWidget {
+  Issuers({super.key, required this.payload});
 
   final Map<String, dynamic> payload;
 
   @override
-  State<StatefulWidget> createState() => PatientsState();
+  State<StatefulWidget> createState() => IssuersState();
 }
 
-class PatientsState extends State<Patients> {
+class IssuersState extends State<Issuers> {
 
   late Map<String, dynamic> payload;
-  late String sortOrder, searchString, currentFilter, doctor;
+  late String sortOrder, searchString, currentFilter;
   late int pageNumber, pageSize;
 
   TextEditingController searchController = TextEditingController();
 
-  Future<PaginatedList<Patient>?> get patients async {
-    return await HttpRequests.getPatients(sortOrder, searchString, currentFilter, pageNumber, pageSize, doctor);
+  Future<PaginatedList<Issuer>?> get issuers async {
+    return await HttpRequests.getIssuers(sortOrder, searchString, currentFilter, pageNumber, pageSize);
   }
 
   @override
@@ -39,7 +36,6 @@ class PatientsState extends State<Patients> {
     sortOrder = "";
     searchString = "";
     currentFilter = "";
-    doctor = "";
     pageNumber = 1;
     pageSize = 10;
   }
@@ -49,7 +45,7 @@ class PatientsState extends State<Patients> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text("Patients"),
+        title: const Text("Issuers"),
         centerTitle: true,
         automaticallyImplyLeading: false,
         leading: GestureDetector(
@@ -63,7 +59,7 @@ class PatientsState extends State<Patients> {
             padding: EdgeInsets.only(right: 16),
             child: GestureDetector(
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => AddPatient(payload)));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => AddIssuer(payload)));
               },
               child: Icon(Icons.add_circle_outline),
             ),
@@ -71,14 +67,14 @@ class PatientsState extends State<Patients> {
         ],
       ),
       body: FutureBuilder(
-        future: patients,
+        future: issuers,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  padding: EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(16),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -102,11 +98,11 @@ class PatientsState extends State<Patients> {
                           },
                           style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                            minimumSize: Size(100, 60),
-                            backgroundColor: Colors.deepPurple,
+                            minimumSize: const Size(100, 60),
+                            backgroundColor: Colors.green,
                             foregroundColor: Colors.white,
                           ),
-                          child: Icon(Icons.search)
+                          child: const Icon(Icons.search)
                       )
                     ],
                   ),
@@ -117,10 +113,10 @@ class PatientsState extends State<Patients> {
                     child: Table(
                       defaultVerticalAlignment: TableCellVerticalAlignment.middle,
                       columnWidths: <int, TableColumnWidth>{
-                        0: snapshot.data!.items.isEmpty ? FixedColumnWidth(MediaQuery.of(context).size.width - 32) : FixedColumnWidth(32),
-                        1: FixedColumnWidth(200),
-                        2: FixedColumnWidth(64),
-                        3: FixedColumnWidth(64),
+                        0: snapshot.data!.items.isEmpty ? FixedColumnWidth(MediaQuery.of(context).size.width - 32) : const FixedColumnWidth(32),
+                        1: const FixedColumnWidth(200),
+                        2: const FixedColumnWidth(64),
+                        3: const FixedColumnWidth(64),
                       },
                       children: [
                         if(snapshot.data!.items.isNotEmpty)... [
@@ -128,21 +124,21 @@ class PatientsState extends State<Patients> {
                             TableRow(
                                 children: [
                                   TableCell(child: Text("${i + 1}", textAlign: TextAlign.center,)),
-                                  TableCell(child: Text("${snapshot.data!.items[i].firstName} ${snapshot.data!.items[i].middleName[0]}. ${snapshot.data!.items[i].lastName}", textAlign: TextAlign.center)),
+                                  TableCell(child: Text(snapshot.data!.items[i].name, textAlign: TextAlign.center)),
                                   Container(
-                                      margin: EdgeInsets.all(9),
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          Navigator.push(context, MaterialPageRoute(builder: (context) => PatientDetails(payload, snapshot.data!.items[i].uuid!)));
-                                        },
-                                        child: const Icon(Icons.info, color: Colors.green, size: 32),
-                                      ),
+                                    margin: EdgeInsets.all(9),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => IssuerDetails(payload, snapshot.data!.items[i].uuid)));
+                                      },
+                                      child: const Icon(Icons.info, color: Colors.green, size: 32),
+                                    ),
                                   ),
                                   Container(
                                       margin: EdgeInsets.all(9),
                                       child: GestureDetector(
                                         onTap: () {
-                                          Navigator.push(context, MaterialPageRoute(builder: (context) => EditPatient(payload, snapshot.data!.items[i].uuid!)));
+                                          Navigator.push(context, MaterialPageRoute(builder: (context) => EditIssuer(payload, snapshot.data!.items[i].uuid)));
                                         },
                                         child: const Icon(Icons.edit, color: Colors.orange, size: 32),
                                       )
@@ -152,7 +148,7 @@ class PatientsState extends State<Patients> {
                           ]
                         ]
                         else... [
-                          TableRow(
+                          const TableRow(
                               children: [
                                 Text(
                                   "No Content",
@@ -166,30 +162,40 @@ class PatientsState extends State<Patients> {
                   ),
                 ),
                 Container(
-                    padding: EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(16),
                     child: Row(
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         ElevatedButton(
-                            onPressed: snapshot.data!.hasPrevious ? () {} : null,
+                            onPressed: snapshot.data!.hasPrevious ? () {
+                              pageNumber -= 1;
+                              setState(() {
+
+                              });
+                            } : null,
                             style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                              minimumSize: Size(160, 40),
-                              backgroundColor: Colors.deepPurple,
+                              minimumSize: const Size(160, 40),
+                              backgroundColor: Colors.green,
                               foregroundColor: Colors.white,
                             ),
-                            child: Text("Previous")
+                            child: const Text("Previous")
                         ),
                         ElevatedButton(
-                            onPressed: snapshot.data!.hasNext ? () {} : null,
+                            onPressed: snapshot.data!.hasNext ? () {
+                              pageNumber += 1;
+                              setState(() {
+
+                              });
+                            } : null,
                             style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                              minimumSize: Size(160, 40),
-                              backgroundColor: Colors.deepPurple,
+                              minimumSize: const Size(160, 40),
+                              backgroundColor: Colors.green,
                               foregroundColor: Colors.white,
                             ),
-                            child: Text("Next")
+                            child: const Text("Next")
                         ),
                       ],
                     )

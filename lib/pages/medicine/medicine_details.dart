@@ -1,15 +1,13 @@
 import 'package:client_android_app/models/medicine.dart';
-import 'package:client_android_app/pages/admin/company/company_details.dart';
-import 'package:client_android_app/pages/admin/issuer/issuer_details.dart';
+import 'package:client_android_app/pages/company/company_details.dart';
+import 'package:client_android_app/pages/issuer/issuer_details.dart';
 import 'package:client_android_app/widgets/text_info_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
-import '../../../auth/http_request.dart';
-import '../../../models/company.dart';
-import '../../../models/paginated_list.dart';
+import 'package:client_android_app/auth/http_request.dart';
 
 class MedicineDetails extends StatefulWidget {
   const MedicineDetails(this.payload, this.medicineUUID, {super.key});

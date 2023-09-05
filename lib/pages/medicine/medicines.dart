@@ -1,34 +1,33 @@
-import 'dart:convert';
-
 import 'package:client_android_app/auth/http_request.dart';
+import 'package:client_android_app/models/medicine.dart';
 import 'package:client_android_app/models/paginated_list.dart';
-import 'package:client_android_app/pages/admin/issuer/add_issuer.dart';
-import 'package:client_android_app/pages/admin/issuer/edit_issuer.dart';
+import 'package:client_android_app/pages/medicine/add_medicine.dart';
+import 'package:client_android_app/pages/medicine/medicine_details.dart';
 import 'package:flutter/material.dart';
 
-import '../../../models/issuer.dart';
-import '../dashboard.dart';
-import 'issuer_details.dart';
+import 'package:client_android_app/pages/admin/dashboard.dart';
+import 'edit_medicine.dart';
 
-class Issuers extends StatefulWidget {
-  Issuers({super.key, required this.payload});
+class Medicines extends StatefulWidget {
+  Medicines({super.key, required this.payload});
 
   final Map<String, dynamic> payload;
 
   @override
-  State<StatefulWidget> createState() => IssuersState();
+  State<StatefulWidget> createState() => MedicinesState();
 }
 
-class IssuersState extends State<Issuers> {
+class MedicinesState extends State<Medicines> {
 
   late Map<String, dynamic> payload;
   late String sortOrder, searchString, currentFilter;
   late int pageNumber, pageSize;
+  late String company, issuer;
 
   TextEditingController searchController = TextEditingController();
 
-  Future<PaginatedList<Issuer>?> get issuers async {
-    return await HttpRequests.getIssuers(sortOrder, searchString, currentFilter, pageNumber, pageSize);
+  Future<PaginatedList<Medicine>?> get medicines async {
+    return await HttpRequests.getMedicines(sortOrder, searchString, currentFilter, pageNumber, pageSize, company, issuer);
   }
 
   @override
@@ -40,6 +39,8 @@ class IssuersState extends State<Issuers> {
     currentFilter = "";
     pageNumber = 1;
     pageSize = 10;
+    company = "";
+    issuer = "";
   }
 
   @override
@@ -47,7 +48,7 @@ class IssuersState extends State<Issuers> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text("Issuers"),
+        title: const Text("Medicines"),
         centerTitle: true,
         automaticallyImplyLeading: false,
         leading: GestureDetector(
@@ -61,7 +62,7 @@ class IssuersState extends State<Issuers> {
             padding: EdgeInsets.only(right: 16),
             child: GestureDetector(
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => AddIssuer(payload)));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => AddMedicine(payload)));
               },
               child: Icon(Icons.add_circle_outline),
             ),
@@ -69,14 +70,14 @@ class IssuersState extends State<Issuers> {
         ],
       ),
       body: FutureBuilder(
-        future: issuers,
+        future: medicines,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  padding: const EdgeInsets.all(16),
+                  padding: EdgeInsets.all(16),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -100,11 +101,11 @@ class IssuersState extends State<Issuers> {
                           },
                           style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                            minimumSize: const Size(100, 60),
+                            minimumSize: Size(100, 60),
                             backgroundColor: Colors.green,
                             foregroundColor: Colors.white,
                           ),
-                          child: const Icon(Icons.search)
+                          child: Icon(Icons.search)
                       )
                     ],
                   ),
@@ -115,10 +116,10 @@ class IssuersState extends State<Issuers> {
                     child: Table(
                       defaultVerticalAlignment: TableCellVerticalAlignment.middle,
                       columnWidths: <int, TableColumnWidth>{
-                        0: snapshot.data!.items.isEmpty ? FixedColumnWidth(MediaQuery.of(context).size.width - 32) : const FixedColumnWidth(32),
-                        1: const FixedColumnWidth(200),
-                        2: const FixedColumnWidth(64),
-                        3: const FixedColumnWidth(64),
+                        0: snapshot.data!.items.isEmpty ? FixedColumnWidth(MediaQuery.of(context).size.width - 32) : FixedColumnWidth(32),
+                        1: FixedColumnWidth(200),
+                        2: FixedColumnWidth(64),
+                        3: FixedColumnWidth(64),
                       },
                       children: [
                         if(snapshot.data!.items.isNotEmpty)... [
@@ -131,7 +132,7 @@ class IssuersState extends State<Issuers> {
                                     margin: EdgeInsets.all(9),
                                     child: GestureDetector(
                                       onTap: () {
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => IssuerDetails(payload, snapshot.data!.items[i].uuid)));
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => MedicineDetails(payload, snapshot.data!.items[i].uuid)));
                                       },
                                       child: const Icon(Icons.info, color: Colors.green, size: 32),
                                     ),
@@ -140,7 +141,7 @@ class IssuersState extends State<Issuers> {
                                       margin: EdgeInsets.all(9),
                                       child: GestureDetector(
                                         onTap: () {
-                                          Navigator.push(context, MaterialPageRoute(builder: (context) => EditIssuer(payload, snapshot.data!.items[i].uuid)));
+                                          Navigator.push(context, MaterialPageRoute(builder: (context) => EditMedicine(payload, snapshot.data!.items[i].uuid)));
                                         },
                                         child: const Icon(Icons.edit, color: Colors.orange, size: 32),
                                       )
@@ -150,7 +151,7 @@ class IssuersState extends State<Issuers> {
                           ]
                         ]
                         else... [
-                          const TableRow(
+                          TableRow(
                               children: [
                                 Text(
                                   "No Content",
@@ -164,7 +165,7 @@ class IssuersState extends State<Issuers> {
                   ),
                 ),
                 Container(
-                    padding: const EdgeInsets.all(16),
+                    padding: EdgeInsets.all(16),
                     child: Row(
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -178,11 +179,11 @@ class IssuersState extends State<Issuers> {
                             } : null,
                             style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                              minimumSize: const Size(160, 40),
+                              minimumSize: Size(160, 40),
                               backgroundColor: Colors.green,
                               foregroundColor: Colors.white,
                             ),
-                            child: const Text("Previous")
+                            child: Text("Previous")
                         ),
                         ElevatedButton(
                             onPressed: snapshot.data!.hasNext ? () {
@@ -193,11 +194,11 @@ class IssuersState extends State<Issuers> {
                             } : null,
                             style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                              minimumSize: const Size(160, 40),
+                              minimumSize: Size(160, 40),
                               backgroundColor: Colors.green,
                               foregroundColor: Colors.white,
                             ),
-                            child: const Text("Next")
+                            child: Text("Next")
                         ),
                       ],
                     )

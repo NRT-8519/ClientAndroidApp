@@ -1,28 +1,27 @@
 import 'dart:convert';
 
 import 'package:client_android_app/auth/http_request.dart';
-import 'package:client_android_app/models/company.dart';
-import 'package:client_android_app/models/doctor.dart';
 import 'package:client_android_app/models/paginated_list.dart';
 import 'package:client_android_app/models/user.dart';
-import 'package:client_android_app/pages/admin/doctor/add_doctor.dart';
-import 'package:client_android_app/pages/admin/doctor/doctor_details.dart';
-import 'package:client_android_app/pages/admin/doctor/edit_doctor.dart';
+import 'package:client_android_app/pages/administrator/add_administrator.dart';
+import 'package:client_android_app/pages/administrator/administrator_details.dart';
+import 'package:client_android_app/pages/administrator/edit_administrator.dart';
+import 'package:client_android_app/pages/edit_profile.dart';
+import 'package:client_android_app/pages/my_profile.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 
-import '../dashboard.dart';
+import '../admin/dashboard.dart';
 
-class Doctors extends StatefulWidget {
-  Doctors({super.key, required this.payload});
+class Administrators extends StatefulWidget {
+  Administrators({super.key, required this.payload});
 
   final Map<String, dynamic> payload;
 
   @override
-  State<StatefulWidget> createState() => DoctorsState();
+  State<StatefulWidget> createState() => AdministratorsState();
 }
 
-class DoctorsState extends State<Doctors> {
+class AdministratorsState extends State<Administrators> {
 
   late Map<String, dynamic> payload;
   late String sortOrder, searchString, currentFilter;
@@ -30,8 +29,8 @@ class DoctorsState extends State<Doctors> {
 
   TextEditingController searchController = TextEditingController();
 
-  Future<PaginatedList<Doctor>?> get doctors async {
-    return await HttpRequests.getDoctors(sortOrder, searchString, currentFilter, pageNumber, pageSize);
+  Future<PaginatedList<User>?> get administrators async {
+    return await HttpRequests.getAdministrators(sortOrder, searchString, currentFilter, pageNumber, pageSize);
   }
 
   @override
@@ -50,7 +49,7 @@ class DoctorsState extends State<Doctors> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text("Doctors"),
+        title: const Text("Administrators"),
         centerTitle: true,
         automaticallyImplyLeading: false,
         leading: GestureDetector(
@@ -64,7 +63,7 @@ class DoctorsState extends State<Doctors> {
             padding: EdgeInsets.only(right: 16),
             child: GestureDetector(
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => AddDoctor(payload)));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => AddAdministrator(payload)));
               },
               child: Icon(Icons.add_circle_outline),
             ),
@@ -72,7 +71,7 @@ class DoctorsState extends State<Doctors> {
         ],
       ),
       body: FutureBuilder(
-        future: doctors,
+        future: administrators,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return Column(
@@ -104,7 +103,7 @@ class DoctorsState extends State<Doctors> {
                           style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                             minimumSize: const Size(100, 60),
-                            backgroundColor: Colors.deepPurple,
+                            backgroundColor: Colors.red,
                             foregroundColor: Colors.white,
                           ),
                           child: const Icon(Icons.search)
@@ -128,36 +127,35 @@ class DoctorsState extends State<Doctors> {
                           for(int i = 0; i < snapshot.data!.items.length; i++)... [
                             TableRow(
                                 children: [
-                                  TableCell(child: Text("${i + 1}", textAlign: TextAlign.center,)),
-                                  TableCell(child: Text("${snapshot.data!.items[i].firstName} ${snapshot.data!.items[i].middleName[0]}. ${snapshot.data!.items[i].lastName}", textAlign: TextAlign.center)),
+                                  TableCell(child: Text("${i + 1}", textAlign: TextAlign.center, style: snapshot.data!.items[i].uuid == payload["jti"].toString() ? TextStyle(fontWeight: FontWeight.bold) : TextStyle(fontWeight: FontWeight.normal),)),
+                                  TableCell(child: Text("${snapshot.data!.items[i].firstName} ${snapshot.data!.items[i].middleName[0]}. ${snapshot.data!.items[i].lastName}", textAlign: TextAlign.center, style: snapshot.data!.items[i].uuid == payload["jti"].toString() ? TextStyle(fontWeight: FontWeight.bold) : TextStyle(fontWeight: FontWeight.normal),)),
                                   Container(
                                     margin: EdgeInsets.all(9),
                                     child: GestureDetector(
                                       onTap: () {
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => DoctorDetails(payload, snapshot.data!.items[i].uuid!)));
+                                        if (snapshot.data!.items[i].uuid != payload["jti"].toString()) {
+                                          Navigator.push(context, MaterialPageRoute(builder: (context) => AdministratorDetails(payload, snapshot.data!.items[i].uuid!)));
+                                        }
+                                        else {
+                                          Navigator.push(context, MaterialPageRoute(builder: (context) => MyProfile(payload)));
+
+                                        }
                                       },
-                                      child: const Icon(Icons.info, color: Colors.green, size: 32),
+                                      child: snapshot.data!.items[i].uuid == payload["jti"].toString() ? const Icon(Icons.account_circle, color: Colors.red, size: 32) : const Icon(Icons.info, color: Colors.green, size: 32),
                                     ),
-                                    // child: ElevatedButton(
-                                    //   style: ElevatedButton.styleFrom(
-                                    //       padding: EdgeInsets.all(10),
-                                    //       backgroundColor: Colors.green,
-                                    //       foregroundColor: Colors.white
-                                    //   ),
-                                    //   child: const Icon(Icons.info, ),
-                                    //
-                                    //   onPressed: () { //TODO: Patient details
-                                    //
-                                    //   },
-                                    //)
                                   ),
                                   Container(
                                       margin: EdgeInsets.all(9),
                                       child: GestureDetector(
                                         onTap: () {
-                                          Navigator.push(context, MaterialPageRoute(builder: (context) => EditDoctor(payload, snapshot.data!.items[i].uuid!)));
+                                          if (snapshot.data!.items[i].uuid != payload["jti"].toString()) {
+                                            Navigator.push(context, MaterialPageRoute(builder: (context) => EditAdministrator(payload, snapshot.data!.items[i].uuid!)));
+                                          }
+                                          else {
+                                            Navigator.push(context, MaterialPageRoute(builder: (context) => EditProfile(payload)));
+                                          }
                                         },
-                                        child: const Icon(Icons.edit, color: Colors.orange, size: 32),
+                                        child: snapshot.data!.items[i].uuid == payload["jti"].toString() ? const Icon(Icons.edit, color: Colors.red, size: 32) : const Icon(Icons.edit, color: Colors.orange, size: 32),
                                       )
                                   )
                                 ]
@@ -194,7 +192,7 @@ class DoctorsState extends State<Doctors> {
                             style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                               minimumSize: const Size(160, 40),
-                              backgroundColor: Colors.deepPurple,
+                              backgroundColor: Colors.red,
                               foregroundColor: Colors.white,
                             ),
                             child: const Text("Previous")
@@ -209,7 +207,7 @@ class DoctorsState extends State<Doctors> {
                             style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                               minimumSize: const Size(160, 40),
-                              backgroundColor: Colors.deepPurple,
+                              backgroundColor: Colors.red,
                               foregroundColor: Colors.white,
                             ),
                             child: const Text("Next")

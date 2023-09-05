@@ -1,4 +1,4 @@
-import 'package:client_android_app/pages/admin/administrator/administrators.dart';
+import 'package:client_android_app/pages/administrator/administrators.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
