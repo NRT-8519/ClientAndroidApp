@@ -1,4 +1,8 @@
+import 'package:client_android_app/pages/admin/administrator/administrators.dart';
 import 'package:client_android_app/pages/admin/company/companies.dart';
+import 'package:client_android_app/pages/admin/doctor/doctors.dart';
+import 'package:client_android_app/pages/admin/issuer/issuers.dart';
+import 'package:client_android_app/pages/admin/medicine/medicines.dart';
 import 'package:client_android_app/pages/admin/patient/patients.dart';
 import 'package:client_android_app/widgets/dashboard_info_card.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +33,7 @@ class DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text("Administrator dashboard"),
         centerTitle: true,
@@ -48,7 +53,7 @@ class DashboardState extends State<Dashboard> {
             ),
             DashboardInfoCard(
               callback: () async {
-
+                Navigator.push(context, MaterialPageRoute(builder: (context) => Doctors(payload: payload)));
               },
               icon: Icons.person,
               text: const Text("Doctors", style: TextStyle(color: Colors.white)),
@@ -58,7 +63,7 @@ class DashboardState extends State<Dashboard> {
             ),
             DashboardInfoCard(
               callback: () async {
-
+                Navigator.push(context, MaterialPageRoute(builder: (context) => Administrators(payload: payload)));
               },
               icon: Icons.engineering,
               text: const Text("Administrators", style: TextStyle(color: Colors.white)),
@@ -69,7 +74,7 @@ class DashboardState extends State<Dashboard> {
             const Divider(),
             DashboardInfoCard(
               callback: () async {
-
+                Navigator.push(context, MaterialPageRoute(builder: (context) => Medicines(payload: payload)));
               },
               icon: Icons.medication,
               text: const Text("Medicine", style: TextStyle(color: Colors.white)),
@@ -89,7 +94,7 @@ class DashboardState extends State<Dashboard> {
             ),
             DashboardInfoCard(
               callback: () async {
-
+                Navigator.push(context, MaterialPageRoute(builder: (context) => Issuers(payload: payload)));
               },
               icon: Icons.work,
               text: const Text("Issuers", style: TextStyle(color: Colors.white)),
