@@ -42,9 +42,21 @@ class PatientsState extends State<Patients> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text("Patients"),
         centerTitle: true,
+        actions: [
+          Padding(
+            padding: EdgeInsets.only(right: 16),
+            child: GestureDetector(
+              onTap: () {
+
+              },
+              child: Icon(Icons.add_circle_outline),
+            ),
+          )
+        ],
       ),
       body: FutureBuilder(
         future: patients,
@@ -60,7 +72,7 @@ class PatientsState extends State<Patients> {
                     children: [
                       SizedBox(
                         width: MediaQuery.of(context).size.width - 150,
-                        height: 50,
+                        height: 60,
                         child: TextField(
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(),
@@ -78,7 +90,7 @@ class PatientsState extends State<Patients> {
                           },
                           style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                            minimumSize: Size(100, 50),
+                            minimumSize: Size(100, 60),
                             backgroundColor: Colors.deepPurple,
                             foregroundColor: Colors.white,
                           ),
@@ -88,7 +100,7 @@ class PatientsState extends State<Patients> {
                   ),
                 ),
                 SizedBox(
-                  height: MediaQuery.of(context).size.height - 242,
+                  height: MediaQuery.of(context).size.height - 252,
                   child: SingleChildScrollView(
                     child: Table(
                       defaultVerticalAlignment: TableCellVerticalAlignment.middle,
@@ -107,32 +119,20 @@ class PatientsState extends State<Patients> {
                                   TableCell(child: Text("${snapshot.data!.items[i].firstName} ${snapshot.data!.items[i].middleName[0]}. ${snapshot.data!.items[i].lastName}", textAlign: TextAlign.center)),
                                   Container(
                                       margin: EdgeInsets.all(9),
-                                      child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                            padding: EdgeInsets.all(10),
-                                            backgroundColor: Colors.green,
-                                            foregroundColor: Colors.white
-                                        ),
-                                        child: const Icon(Icons.info, ),
-
-                                        onPressed: () { //TODO: Patient details
+                                      child: GestureDetector(
+                                        onTap: () {
 
                                         },
-                                      )
+                                        child: const Icon(Icons.info, color: Colors.green, size: 32),
+                                      ),
                                   ),
                                   Container(
                                       margin: EdgeInsets.all(9),
-                                      child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                            padding: EdgeInsets.all(10),
-                                            backgroundColor: Colors.orangeAccent,
-                                            foregroundColor: Colors.white
-                                        ),
-                                        child: const Icon(Icons.edit, ),
-
-                                        onPressed: () { //TODO: Patient details
+                                      child: GestureDetector(
+                                        onTap: () {
 
                                         },
+                                        child: const Icon(Icons.edit, color: Colors.orange, size: 32),
                                       )
                                   )
                                 ]

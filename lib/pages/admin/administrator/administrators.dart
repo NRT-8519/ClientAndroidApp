@@ -3,21 +3,20 @@ import 'dart:convert';
 import 'package:client_android_app/auth/http_request.dart';
 import 'package:client_android_app/models/company.dart';
 import 'package:client_android_app/models/paginated_list.dart';
+import 'package:client_android_app/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 
-import 'company_details.dart';
-
-class Companies extends StatefulWidget {
-  Companies({super.key, required this.payload});
+class Administrators extends StatefulWidget {
+  Administrators({super.key, required this.payload});
 
   final Map<String, dynamic> payload;
 
   @override
-  State<StatefulWidget> createState() => CompaniesState();
+  State<StatefulWidget> createState() => AdministratorsState();
 }
 
-class CompaniesState extends State<Companies> {
+class AdministratorsState extends State<Administrators> {
 
   late Map<String, dynamic> payload;
   late String sortOrder, searchString, currentFilter;
@@ -25,8 +24,8 @@ class CompaniesState extends State<Companies> {
 
   TextEditingController searchController = TextEditingController();
 
-  Future<PaginatedList<Company>?> get companies async {
-    return await HttpRequests.getCompanies(sortOrder, searchString, currentFilter, pageNumber, pageSize);
+  Future<PaginatedList<User>?> get administrators async {
+    return await HttpRequests.getAdministrators(sortOrder, searchString, currentFilter, pageNumber, pageSize);
   }
 
   @override
@@ -45,7 +44,7 @@ class CompaniesState extends State<Companies> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text("Companies"),
+        title: const Text("Administrators"),
         centerTitle: true,
         actions: [
           Padding(
@@ -60,14 +59,14 @@ class CompaniesState extends State<Companies> {
         ],
       ),
       body: FutureBuilder(
-        future: companies,
+        future: administrators,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  padding: EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(16),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -91,11 +90,11 @@ class CompaniesState extends State<Companies> {
                           },
                           style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                            minimumSize: Size(100, 60),
-                            backgroundColor: Colors.green,
+                            minimumSize: const Size(100, 60),
+                            backgroundColor: Colors.red,
                             foregroundColor: Colors.white,
                           ),
-                          child: Icon(Icons.search)
+                          child: const Icon(Icons.search)
                       )
                     ],
                   ),
@@ -106,25 +105,25 @@ class CompaniesState extends State<Companies> {
                     child: Table(
                       defaultVerticalAlignment: TableCellVerticalAlignment.middle,
                       columnWidths: <int, TableColumnWidth>{
-                        0: snapshot.data!.items.isEmpty ? FixedColumnWidth(MediaQuery.of(context).size.width - 32) : FixedColumnWidth(32),
-                        1: FixedColumnWidth(200),
-                        2: FixedColumnWidth(64),
-                        3: FixedColumnWidth(64),
+                        0: snapshot.data!.items.isEmpty ? FixedColumnWidth(MediaQuery.of(context).size.width - 32) : const FixedColumnWidth(32),
+                        1: const FixedColumnWidth(200),
+                        2: const FixedColumnWidth(64),
+                        3: const FixedColumnWidth(64),
                       },
                       children: [
                         if(snapshot.data!.items.isNotEmpty)... [
                           for(int i = 0; i < snapshot.data!.items.length; i++)... [
                             TableRow(
                                 children: [
-                                  TableCell(child: Text("${i + 1}", textAlign: TextAlign.center,)),
-                                  TableCell(child: Text(snapshot.data!.items[i].name, textAlign: TextAlign.center)),
+                                  TableCell(child: Text("${i + 1}", textAlign: TextAlign.center, style: snapshot.data!.items[i].uuid == payload["jti"].toString() ? TextStyle(fontWeight: FontWeight.bold) : TextStyle(fontWeight: FontWeight.normal),)),
+                                  TableCell(child: Text("${snapshot.data!.items[i].firstName} ${snapshot.data!.items[i].middleName[0]}. ${snapshot.data!.items[i].lastName}", textAlign: TextAlign.center, style: snapshot.data!.items[i].uuid == payload["jti"].toString() ? TextStyle(fontWeight: FontWeight.bold) : TextStyle(fontWeight: FontWeight.normal),)),
                                   Container(
                                     margin: EdgeInsets.all(9),
                                     child: GestureDetector(
                                       onTap: () {
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => CompanyDetails(payload, snapshot.data!.items[i].uuid)));
+
                                       },
-                                      child: const Icon(Icons.info, color: Colors.green, size: 32),
+                                      child: snapshot.data!.items[i].uuid == payload["jti"].toString() ? const Icon(Icons.account_circle, color: Colors.red, size: 32) : const Icon(Icons.edit, color: Colors.orange, size: 32),
                                     ),
                                   ),
                                   Container(
@@ -133,7 +132,7 @@ class CompaniesState extends State<Companies> {
                                         onTap: () {
 
                                         },
-                                        child: const Icon(Icons.edit, color: Colors.orange, size: 32),
+                                        child: snapshot.data!.items[i].uuid == payload["jti"].toString() ? const Icon(Icons.edit, color: Colors.red, size: 32) : const Icon(Icons.edit, color: Colors.orange, size: 32),
                                       )
                                   )
                                 ]
@@ -141,7 +140,7 @@ class CompaniesState extends State<Companies> {
                           ]
                         ]
                         else... [
-                          TableRow(
+                          const TableRow(
                               children: [
                                 Text(
                                   "No Content",
@@ -155,7 +154,7 @@ class CompaniesState extends State<Companies> {
                   ),
                 ),
                 Container(
-                    padding: EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(16),
                     child: Row(
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -169,11 +168,11 @@ class CompaniesState extends State<Companies> {
                             } : null,
                             style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                              minimumSize: Size(160, 40),
-                              backgroundColor: Colors.green,
+                              minimumSize: const Size(160, 40),
+                              backgroundColor: Colors.red,
                               foregroundColor: Colors.white,
                             ),
-                            child: Text("Previous")
+                            child: const Text("Previous")
                         ),
                         ElevatedButton(
                             onPressed: snapshot.data!.hasNext ? () {
@@ -184,11 +183,11 @@ class CompaniesState extends State<Companies> {
                             } : null,
                             style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                              minimumSize: Size(160, 40),
-                              backgroundColor: Colors.green,
+                              minimumSize: const Size(160, 40),
+                              backgroundColor: Colors.red,
                               foregroundColor: Colors.white,
                             ),
-                            child: Text("Next")
+                            child: const Text("Next")
                         ),
                       ],
                     )

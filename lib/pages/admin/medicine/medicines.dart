@@ -1,32 +1,31 @@
 import 'dart:convert';
 
 import 'package:client_android_app/auth/http_request.dart';
-import 'package:client_android_app/models/company.dart';
+import 'package:client_android_app/models/medicine.dart';
 import 'package:client_android_app/models/paginated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 
-import 'company_details.dart';
-
-class Companies extends StatefulWidget {
-  Companies({super.key, required this.payload});
+class Medicines extends StatefulWidget {
+  Medicines({super.key, required this.payload});
 
   final Map<String, dynamic> payload;
 
   @override
-  State<StatefulWidget> createState() => CompaniesState();
+  State<StatefulWidget> createState() => MedicinesState();
 }
 
-class CompaniesState extends State<Companies> {
+class MedicinesState extends State<Medicines> {
 
   late Map<String, dynamic> payload;
   late String sortOrder, searchString, currentFilter;
   late int pageNumber, pageSize;
+  late String company, issuer;
 
   TextEditingController searchController = TextEditingController();
 
-  Future<PaginatedList<Company>?> get companies async {
-    return await HttpRequests.getCompanies(sortOrder, searchString, currentFilter, pageNumber, pageSize);
+  Future<PaginatedList<Medicine>?> get medicines async {
+    return await HttpRequests.getMedicines(sortOrder, searchString, currentFilter, pageNumber, pageSize, company, issuer);
   }
 
   @override
@@ -38,6 +37,8 @@ class CompaniesState extends State<Companies> {
     currentFilter = "";
     pageNumber = 1;
     pageSize = 10;
+    company = "";
+    issuer = "";
   }
 
   @override
@@ -45,7 +46,7 @@ class CompaniesState extends State<Companies> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text("Companies"),
+        title: const Text("Medicines"),
         centerTitle: true,
         actions: [
           Padding(
@@ -60,7 +61,7 @@ class CompaniesState extends State<Companies> {
         ],
       ),
       body: FutureBuilder(
-        future: companies,
+        future: medicines,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return Column(
@@ -122,10 +123,22 @@ class CompaniesState extends State<Companies> {
                                     margin: EdgeInsets.all(9),
                                     child: GestureDetector(
                                       onTap: () {
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => CompanyDetails(payload, snapshot.data!.items[i].uuid)));
+
                                       },
                                       child: const Icon(Icons.info, color: Colors.green, size: 32),
                                     ),
+                                    // child: ElevatedButton(
+                                    //   style: ElevatedButton.styleFrom(
+                                    //       padding: EdgeInsets.all(10),
+                                    //       backgroundColor: Colors.green,
+                                    //       foregroundColor: Colors.white
+                                    //   ),
+                                    //   child: const Icon(Icons.info, ),
+                                    //
+                                    //   onPressed: () { //TODO: Patient details
+                                    //
+                                    //   },
+                                    //)
                                   ),
                                   Container(
                                       margin: EdgeInsets.all(9),
