@@ -7,6 +7,7 @@ import 'package:client_android_app/models/issuer.dart';
 import 'package:client_android_app/models/paginated_list.dart';
 import 'package:client_android_app/models/patient.dart';
 import 'package:client_android_app/models/medicine.dart';
+import 'package:client_android_app/models/report.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
@@ -262,6 +263,24 @@ class HttpRequests {
     return medicine;
   }
 
+  static Future<Report?> getReport(String uuid) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    Response result = await get(
+        Uri.parse("$SERVER/api/report/$uuid"),
+        headers: headers
+    );
+
+    final Map<String, dynamic> parsed = json.decode(result.body);
+
+    final Report report = Report.fromJson(parsed);
+
+    return report;
+  }
+
   static Future<Response> putUser(User user) async {
     Map<String, String> headers = HashMap<String, String>();
     headers.addAll({
@@ -477,6 +496,49 @@ class HttpRequests {
     else {
       List<Patient> list = [];
       return PaginatedList(list, 1, 10, 0, 0, false, false);
+    }
+  }
+
+  static Future<PaginatedList<Report?>> getReports(String? sortOrder, String searchString, String currentFilter, int? pageNumber, int pageSize, String user) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    Response result = await get(Uri.parse("$SERVER/api/report/all?sortOrder=$sortOrder&searchString=$searchString&currentFilter=$currentFilter&pageNumber=$pageNumber&pageSize=$pageSize&user=$user"), headers: headers);
+
+    if (result.statusCode == 200) {
+      Map<String, dynamic> body = json.decode(result.body);
+      List<dynamic> dynamicList = body["items"];
+      List<Report> list = [];
+      if (dynamicList.isNotEmpty) {
+        for (dynamic p in dynamicList) {
+          Report report = Report.fromJson(p);
+          list.add(report);
+        }
+      }
+      return PaginatedList(list, body["pageNumber"], body["pageSize"], body["totalPages"], body["totalItems"], body["hasPrevious"], body["hasNext"]);
+    }
+    else {
+      List<Report> list = [];
+      return PaginatedList(list, 1, 10, 0, 0, false, false);
+    }
+  }
+
+  static Future<int> deleteReport(String uuid) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+
+    Response result = await delete(Uri.parse("$SERVER/api/report/remove/$uuid"), headers: headers);
+
+    if (result.statusCode == 200) {
+      return 1;
+    }
+    else {
+      return 0;
     }
   }
 

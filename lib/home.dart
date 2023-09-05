@@ -82,7 +82,7 @@ class HomePageState extends State<HomePage> {
                 title: const Text("Service Reports"),
                 onTap: () {
                   Navigator.pop(context);
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => ServiceReports()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => ServiceReports(payload)));
                 },
               ),
               ListTile(
@@ -278,7 +278,7 @@ class HomePageState extends State<HomePage> {
                                 callback: () async {
                                   Navigator.push(context, MaterialPageRoute(builder: (context) => Administrators(payload: payload)));
                                 },
-                                color:  Colors.deepPurple,
+                                color:  Colors.red,
                                 icon: Icons.engineering,
                                 text: const Text("Administrators", style: TextStyle(color: Colors.white)),
                                 count: snapshot.data!
@@ -298,7 +298,7 @@ class HomePageState extends State<HomePage> {
                                 callback: () async {
                                   Navigator.push(context, MaterialPageRoute(builder: (context) => Medicines(payload: payload)));
                                 },
-                                color:  Colors.deepPurple,
+                                color:  Colors.green,
                                 icon: Icons.medication,
                                 text: const Text("Medicines", style: TextStyle(color: Colors.white)),
                                 count: snapshot.data!
@@ -318,7 +318,7 @@ class HomePageState extends State<HomePage> {
                                 callback: () async {
                                   Navigator.push(context, MaterialPageRoute(builder: (context) => Companies(payload: payload)));
                                 },
-                                color:  Colors.deepPurple,
+                                color:  Colors.green,
                                 icon: Icons.business,
                                 text: const Text("Companies", style: TextStyle(color: Colors.white)),
                                 count: snapshot.data!
@@ -338,7 +338,7 @@ class HomePageState extends State<HomePage> {
                                 callback: () async {
                                   Navigator.push(context, MaterialPageRoute(builder: (context) => Issuers(payload: payload)));
                                 },
-                                color:  Colors.deepPurple,
+                                color:  Colors.green,
                                 icon: Icons.work,
                                 text: const Text("Issuers", style: TextStyle(color: Colors.white)),
                                 count: snapshot.data!
@@ -408,7 +408,7 @@ class HomePageState extends State<HomePage> {
                         margin: const EdgeInsets.only(left: 32, right: 32),
                         child: HomeInfoCard(
                           callback: () async {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => ServiceReports()));
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => ServiceReports(payload)));
                           },
                           icon: Icons.bug_report,
                           text: const Text("Service Reports", style: TextStyle(color: Colors.white)),
