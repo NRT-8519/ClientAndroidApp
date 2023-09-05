@@ -211,6 +211,27 @@ class HttpRequests {
     }
   }
 
+  static Future<int> getPrescriptionCount(String uuid) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+
+    Response result = await get(
+        Uri.parse("$SERVER/api/prescription/count?UUID=$uuid"),
+        headers: headers
+    );
+
+    if (result.statusCode == 200) {
+      int count = int.parse(result.body);
+      return count;
+    }
+    else {
+      return -1;
+    }
+  }
+
   static Future<User> getUser(String uuid) async {
     Map<String, String> headers = HashMap<String, String>();
     headers.addAll({

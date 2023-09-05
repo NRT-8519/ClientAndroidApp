@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'models/doctor.dart';
+import 'models/patient.dart';
 
 const storage = FlutterSecureStorage();
 
@@ -52,7 +53,11 @@ class HomePageState extends State<HomePage> {
   Future<int?> get issuerCount async { return await HttpRequests.getIssuerCount(); }
   Future<int?> get reportCount async { return await HttpRequests.getReportCount(); }
   Future<int?> get requestCount async { return await HttpRequests.getRequestCount(payload["jti"].toString()); }
-  Future<Doctor?> get doctor async { return await HttpRequests.getDoctor(payload["jti"].toString()); }
+  Future<int?> get prescriptionCount async { return await HttpRequests.getPrescriptionCount(payload["jti"].toString()); }
+
+  Future<Doctor?> getDoctor(String uuid) async { return await HttpRequests.getDoctor(uuid); }
+  Future<Patient?> get patient async { return await HttpRequests.getPatient(payload["jti"].toString()); }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -357,7 +362,7 @@ class HomePageState extends State<HomePage> {
                         }),
                       ],
                       if (payload["role"].toString() == "DOCTOR")... [
-                        FutureBuilder(future: doctor, builder: (context, snapshot) {
+                        FutureBuilder(future: getDoctor(payload["jti"].toString()), builder: (context, snapshot) {
                           if (snapshot.hasData) {
                             return HomeInfoCard(
                               callback: () async {
@@ -402,21 +407,52 @@ class HomePageState extends State<HomePage> {
                         ),
                       ],
                       if (payload["role"].toString() == "PATIENT")... [
-                        HomeInfoCard(
-                          callback: () async {
-
-                          },
-                          color: Colors.deepPurple,
-                          icon: Icons.person,
-                          text: const Text("My Doctor", style: TextStyle(color: Colors.white)),
+                        FutureBuilder(
+                          future: patient,
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              return HomeInfoCard(
+                                callback: () async {
+                                  //TODO: Doctor info
+                                },
+                                color: Colors.deepPurple,
+                                icon: Icons.person,
+                                text: const Text("My Doctor", style: TextStyle(color: Colors.white)),
+                                countVisible: false,
+                                countText: "Dr. ${snapshot.data!.assignedDoctor.firstName} ${snapshot.data!.assignedDoctor.lastName}",
+                              );
+                            }
+                            else {
+                              return Container(
+                                padding: const EdgeInsets.all(25),
+                                width: 110,
+                                child: const CircularProgressIndicator(),
+                              );
+                            }
+                          }
                         ),
-                        HomeInfoCard(
-                          callback: () async {
+                        FutureBuilder(
+                          future: prescriptionCount,
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              return HomeInfoCard(
+                                callback: () async {
 
-                          },
-                          color:  Colors.deepPurple,
-                          icon: Icons.receipt_long,
-                          text: const Text("My Prescriptions", style: TextStyle(color: Colors.white)),
+                                },
+                                color:  Colors.deepPurple,
+                                icon: Icons.receipt_long,
+                                text: const Text("My Prescriptions", style: TextStyle(color: Colors.white)),
+                                count: snapshot.data!,
+                              );
+                            }
+                            else {
+                              return Container(
+                                padding: const EdgeInsets.all(25),
+                                width: 110,
+                                child: const CircularProgressIndicator(),
+                              );
+                            }
+                          }
                         ),
                         HomeInfoCard(
                           callback: () async {

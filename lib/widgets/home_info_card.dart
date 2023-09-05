@@ -9,6 +9,7 @@ class HomeInfoCard extends StatelessWidget {
   final double width;
   final int? count;
   final bool? countVisible;
+  final String countText;
 
   const HomeInfoCard({
     super.key,
@@ -18,7 +19,8 @@ class HomeInfoCard extends StatelessWidget {
     this.text = const Text("Placeholder", style: TextStyle(color: Colors.white)),
     this.count = -1,
     this.width = 150,
-    this.countVisible = true
+    this.countVisible = true,
+    this.countText = ""
   });
 
 
@@ -57,10 +59,10 @@ class HomeInfoCard extends StatelessWidget {
                       width: 24,
                       height: 24,
                       child: const CircularProgressIndicator(),
-                    ) : Text("")
+                    ) : Text(countText, style: const TextStyle(fontSize: 12),)
                   ]
                   else... [
-                    countVisible! ? Text(count.toString()) : Text("")
+                    countVisible! ? Text(count.toString()) : Text(countText)
                   ],
                 ],
               ),
