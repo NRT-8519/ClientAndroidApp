@@ -142,7 +142,7 @@ class AddCompanyState extends State<AddCompany> {
         backgroundColor: Colors.deepPurple,
         foregroundColor: Colors.white,
         shape: const CircleBorder(),
-        child: const Icon(Icons.done),
+        child: const Icon(Icons.add),
       ),
     );
   }
