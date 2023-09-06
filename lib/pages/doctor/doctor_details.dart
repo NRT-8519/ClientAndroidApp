@@ -80,15 +80,35 @@ class DoctorDetailsState extends State<DoctorDetails> {
                             const Icon(Icons.device_unknown, size: 36, color: Colors.deepPurple),
                           ),
                         ),
-                        TextInfoCard(
-                          callback: () async {
-                            await Clipboard.setData(ClipboardData(text: "${snapshot.data!.dateOfBirth.day}/${snapshot.data!.dateOfBirth.month}/${snapshot.data!.dateOfBirth.year}"));
-                          },
-                          color: Colors.deepPurple,
-                          width: MediaQuery.of(context).size.width,
-                          title: const Text("Date of Birth", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
-                          text: Text ("${snapshot.data!.dateOfBirth.day}/${snapshot.data!.dateOfBirth.month}/${snapshot.data!.dateOfBirth.year}", textAlign: TextAlign.center,),
-                        ),
+                        if (payload["role"] == "ADMINISTRATOR" || payload["role"] == "DOCTOR")... [
+                          TextInfoCard(
+                            callback: () async {
+                              await Clipboard.setData(ClipboardData(text: "${snapshot.data!.dateOfBirth.day}/${snapshot.data!.dateOfBirth.month}/${snapshot.data!.dateOfBirth.year}"));
+                            },
+                            color: Colors.deepPurple,
+                            width: MediaQuery.of(context).size.width,
+                            title: const Text("Date of Birth", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
+                            text: Text ("${snapshot.data!.dateOfBirth.day}/${snapshot.data!.dateOfBirth.month}/${snapshot.data!.dateOfBirth.year}", textAlign: TextAlign.center,),
+                          ),
+                          TextInfoCard(
+                            callback: () async {
+                              await Clipboard.setData(ClipboardData(text: "${snapshot.data!.ssn}"));
+                            },
+                            color: Colors.deepPurple,
+                            width: MediaQuery.of(context).size.width,
+                            title: const Text("Social Security Number", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
+                            text: Text ("${snapshot.data!.ssn}", textAlign: TextAlign.center),
+                          ),
+                          TextInfoCard(
+                            callback: () async {
+                              await Clipboard.setData(ClipboardData(text: snapshot.data!.username!));
+                            },
+                            color: Colors.deepPurple,
+                            title: const Text("Username", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
+                            text: Text(snapshot.data!.username!, textAlign: TextAlign.center),
+                            width: MediaQuery.of(context).size.width,
+                          ),
+                        ],
                         TextInfoCard(
                           callback: () async {
                             await Clipboard.setData(ClipboardData(text: "${snapshot.data!.ssn}"));
@@ -107,15 +127,7 @@ class DoctorDetailsState extends State<DoctorDetails> {
                           title: const Text("Room number", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
                           text: Text ("${snapshot.data!.roomNumber}", textAlign: TextAlign.center),
                         ),
-                        TextInfoCard(
-                          callback: () async {
-                            await Clipboard.setData(ClipboardData(text: "${snapshot.data!.ssn}"));
-                          },
-                          color: Colors.deepPurple,
-                          width: MediaQuery.of(context).size.width,
-                          title: const Text("Social Security Number", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
-                          text: Text ("${snapshot.data!.ssn}", textAlign: TextAlign.center),
-                        ),
+
                         TextInfoCard(
                           callback: () async {
                             await launchUrl(Uri.parse("mailto://${snapshot.data!.email}"));
@@ -134,45 +146,39 @@ class DoctorDetailsState extends State<DoctorDetails> {
                           title: const Text("Phone Number", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
                           text: Text ("${snapshot.data!.phoneNumber}", textAlign: TextAlign.center),
                         ),
-                        TextInfoCard(
-                          callback: () async {
-                            await Clipboard.setData(ClipboardData(text: snapshot.data!.username!));
-                          },
-                          color: Colors.deepPurple,
-                          title: const Text("Username", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
-                          text: Text(snapshot.data!.username!, textAlign: TextAlign.center),
-                          width: MediaQuery.of(context).size.width,
-                        ),
-                        TextInfoCard(
-                          callback: () async {
-                            await Clipboard.setData(ClipboardData(text: expiryFormat.format(snapshot.data!.passwordExpiryDate)));
-                          },
-                          color: Colors.deepPurple,
-                          width: MediaQuery.of(context).size.width,
-                          title: const Text("Password Expiry", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
-                          text: Text (expiryFormat.format(snapshot.data!.passwordExpiryDate), textAlign: TextAlign.center,),
-                        ),
-                        TextInfoCard(
-                          color: Colors.deepPurple,
-                          width: MediaQuery.of(context).size.width,
-                          title: const Text("Is Password expired", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
-                          text: Text (snapshot.data!.isExpired ? "Yes" : "No", textAlign: TextAlign.center,),
-                        ),
-                        TextInfoCard(
-                          color: Colors.deepPurple,
-                          width: MediaQuery.of(context).size.width,
-                          title: const Text("Is Account expired", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
-                          text: Text (snapshot.data!.isDisabled ? "Yes" : "No", textAlign: TextAlign.center,),
-                        ),
-                        TextInfoCard(
-                          callback: () async {
-                            await Clipboard.setData(ClipboardData(text: snapshot.data!.uuid!));
-                          },
-                          color: Colors.deepPurple,
-                          title: const Text("UUID", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
-                          text: Text(snapshot.data!.uuid!, textAlign: TextAlign.center),
-                          width: MediaQuery.of(context).size.width,
-                        )
+
+                        if (payload["role"] == "ADMINISTRATOR")... [
+                          TextInfoCard(
+                            callback: () async {
+                              await Clipboard.setData(ClipboardData(text: expiryFormat.format(snapshot.data!.passwordExpiryDate)));
+                            },
+                            color: Colors.deepPurple,
+                            width: MediaQuery.of(context).size.width,
+                            title: const Text("Password Expiry", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
+                            text: Text (expiryFormat.format(snapshot.data!.passwordExpiryDate), textAlign: TextAlign.center,),
+                          ),
+                          TextInfoCard(
+                            color: Colors.deepPurple,
+                            width: MediaQuery.of(context).size.width,
+                            title: const Text("Is Password expired", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
+                            text: Text (snapshot.data!.isExpired ? "Yes" : "No", textAlign: TextAlign.center,),
+                          ),
+                          TextInfoCard(
+                            color: Colors.deepPurple,
+                            width: MediaQuery.of(context).size.width,
+                            title: const Text("Is Account expired", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
+                            text: Text (snapshot.data!.isDisabled ? "Yes" : "No", textAlign: TextAlign.center,),
+                          ),
+                          TextInfoCard(
+                            callback: () async {
+                              await Clipboard.setData(ClipboardData(text: snapshot.data!.uuid!));
+                            },
+                            color: Colors.deepPurple,
+                            title: const Text("UUID", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
+                            text: Text(snapshot.data!.uuid!, textAlign: TextAlign.center),
+                            width: MediaQuery.of(context).size.width,
+                          )
+                        ]
                       ],
                     ),
                   )

@@ -27,7 +27,7 @@ class Appointment {
       "id": id,
       "doctorUUID": doctorUUID,
       "patientUUID": patientUUID,
-      "scheduledDateTime": scheduledDateTime,
+      "scheduledDateTime": format.format(scheduledDateTime),
       "event": event
     };
   }

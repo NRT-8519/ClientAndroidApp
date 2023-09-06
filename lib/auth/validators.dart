@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class Validators {
@@ -106,6 +107,27 @@ class Validators {
     }
     else {
       return "Please provide a begin date";
+    }
+    return null;
+  }
+
+  static String? validateAppointmentDate(String? value) {
+    if (value!.isNotEmpty) {
+      DateFormat formatter = DateFormat("dd/MM/yyyy");
+      DateTime date = formatter.parse(value);
+      if (date.compareTo(DateTime(1901)) < 0) {
+        return "Date cannot be older than today!";
+      }
+    }
+    else {
+      return "Please provide a date";
+    }
+    return null;
+  }
+
+  static String? validateAppointmentTime(String? value) {
+    if (value!.isEmpty) {
+      return "Please provide a date";
     }
     return null;
   }

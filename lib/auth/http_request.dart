@@ -292,6 +292,31 @@ class __Doctor {
 class __Patient {
   const __Patient();
 
+  Future<List<Patient>?> getAll() async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    http.Response result = await http.get(Uri.parse("$SERVER/api/users/patients/all/"), headers: headers);
+
+    if (result.statusCode == 200) {
+      List<dynamic> dynamicList = json.decode(result.body);
+      List<Patient> list = [];
+      if (dynamicList.isNotEmpty) {
+        for (dynamic i in dynamicList) {
+          Patient patient = Patient.fromJson(i);
+          list.add(patient);
+        }
+      }
+      return list;
+    }
+    else {
+      List<Patient> list = [];
+      return list;
+    }
+  }
+
   Future<PaginatedList<Patient>?> getPaged(String? sortOrder, String searchString, String currentFilter, int? pageNumber, int pageSize, String doctor) async {
     Map<String, String> headers = HashMap<String, String>();
     headers.addAll({
@@ -916,5 +941,39 @@ class __Appointment {
       List<Appointment> list = [];
       return PaginatedList(list, 1, 10, 0, 0, false, false);
     }
+  }
+
+  Future<Appointment?> get(int id) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    http.Response result = await http.get(
+        Uri.parse("$SERVER/api/schedule/$id"),
+        headers: headers
+    );
+
+    final Map<String, dynamic> parsed = json.decode(result.body);
+
+    final Appointment report = Appointment.fromJson(parsed);
+
+    return report;
+  }
+
+  Future<http.Response> post(Appointment appointment) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Content-Type": "application/json",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    http.Response result = await http.post(
+        Uri.parse("$SERVER/api/schedule/add/"),
+        headers: headers,
+        body: appointment.asJson()
+    );
+
+    return result;
   }
 }
