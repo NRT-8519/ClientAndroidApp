@@ -3,6 +3,7 @@ import 'package:client_android_app/models/appointment.dart';
 import 'package:client_android_app/models/doctor.dart';
 import 'package:client_android_app/models/patient.dart';
 import 'package:client_android_app/pages/appointment/appointments.dart';
+import 'package:client_android_app/pages/appointment/edit_appointment.dart';
 import 'package:client_android_app/widgets/text_info_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -146,7 +147,7 @@ class AppointmentDetailsState extends State<AppointmentDetails> {
         foregroundColor: Colors.white,
         backgroundColor: Colors.blue,
         onPressed: () {
-
+          Navigator.push(context, MaterialPageRoute(builder: (context) => EditAppointment(payload, id)));
         }
       ) : null,
     );

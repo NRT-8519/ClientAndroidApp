@@ -976,4 +976,20 @@ class __Appointment {
 
     return result;
   }
+
+  Future<http.Response> put(Appointment appointment) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Content-Type": "application/json",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    http.Response result = await http.put(
+        Uri.parse("$SERVER/api/schedule/edit/"),
+        headers: headers,
+        body: appointment.asJson()
+    );
+
+    return result;
+  }
 }

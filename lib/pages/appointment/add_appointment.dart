@@ -1,4 +1,5 @@
 import 'package:client_android_app/models/appointment.dart';
+import 'package:client_android_app/models/doctor.dart';
 import 'package:client_android_app/models/issuer.dart';
 import 'package:client_android_app/models/patient.dart';
 import 'package:client_android_app/pages/appointment/appointments.dart';
@@ -33,8 +34,9 @@ class AddAppointmentState extends State<AddAppointment> {
   TextEditingController dateController = TextEditingController();
   TextEditingController timeController = TextEditingController();
   DateFormat dateFormat = DateFormat("dd/MM/yyyy");
-  Future<List<Patient>?> get patients async {
-    return await HttpRequests.patient.getAll();
+
+  Future<Doctor?> get doctor async {
+    return await HttpRequests.doctor.get(payload["jti"]);
   }
 
   @override
@@ -69,7 +71,7 @@ class AddAppointmentState extends State<AddAppointment> {
                   ),
                 ),
                 FutureBuilder(
-                  future: patients,
+                  future: doctor,
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       return Container(
@@ -89,9 +91,9 @@ class AddAppointmentState extends State<AddAppointment> {
                           ),
                           items:  [
                             const DropdownMenuItem(value: "", enabled: false, child: Text("Select...")),
-                            if (snapshot.data!.isNotEmpty)... [
-                              for(int i = 0; i < snapshot.data!.length; i++)... [
-                                DropdownMenuItem(value: snapshot.data![i].uuid, child: Text("${snapshot.data![i].firstName} ${snapshot.data![i].lastName}")),
+                            if (snapshot.data!.patients.isNotEmpty)... [
+                              for(int i = 0; i < snapshot.data!.patients.length; i++)... [
+                                DropdownMenuItem(value: snapshot.data!.patients[i].uuid, child: Text("${snapshot.data!.patients[i].firstName} ${snapshot.data!.patients[i].lastName}")),
                               ]
                             ]
                           ],
