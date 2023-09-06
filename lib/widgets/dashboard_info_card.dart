@@ -4,6 +4,7 @@ class DashboardInfoCard extends StatelessWidget {
 
   final VoidCallback? callback;
   final Color? color;
+  final Color? iconColor;
   final IconData? icon;
   final Text? text;
   final Text? descriptionText;
@@ -13,8 +14,9 @@ class DashboardInfoCard extends StatelessWidget {
     super.key,
     this.callback,
     this.color = Colors.lightBlue,
+    this.iconColor = Colors.lightBlue,
     this.icon,
-    this.text = const Text("Placeholder", style: TextStyle(color: Colors.white)),
+    this.text,
     this.descriptionText = const Text("Placeholder description", style: TextStyle(color: Colors.black)),
     this.width = 150
   });
@@ -49,7 +51,7 @@ class DashboardInfoCard extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Icon(icon, size: 36, color: color),
+                  Icon(icon, size: 36, color: iconColor ?? color),
                   descriptionText!
                 ],
               ),

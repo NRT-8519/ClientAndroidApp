@@ -602,9 +602,9 @@ class HomePageState extends State<HomePage> {
                                         Container(
                                           margin: const EdgeInsets.only(left: 8, right: 8),
                                           child: DashboardInfoCard(
-                                            color: Colors.deepPurple,
+                                            color: Colors.white,
+                                            iconColor: Colors.deepPurple,
                                             icon: Icons.done_all,
-                                            text: const Text("No Appointments", style: TextStyle(color: Colors.white),),
                                             descriptionText: const Text("No Appointments for today!"),
                                             width: MediaQuery.of(context).size.width,
                                           ),
