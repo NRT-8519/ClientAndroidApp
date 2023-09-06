@@ -35,62 +35,64 @@ class PatientDetailsState extends State<PatientDetails> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+        title: Text("Patient details"),
+        centerTitle: true,
+      ),
+      body: FutureBuilder(
         future: patient,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return Scaffold(
-              resizeToAvoidBottomInset: false,
-              appBar: AppBar(
-                title: Text("Patient: ${snapshot.data!.firstName} ${snapshot.data!.middleName[0]}. ${snapshot.data!.lastName}"),
-                centerTitle: true,
-              ),
-              body: Center(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(Icons.personal_injury, size: 78, color: Colors.deepPurple,),
-                        const Divider(indent: 16, endIndent: 16,),
-                        GestureDetector(
-                          onTap: () async {
-                            await Clipboard.setData(ClipboardData(text: "${snapshot.data!.firstName} ${snapshot.data!.middleName[0]}. ${snapshot.data!.lastName}"));
-                          },
-                          child: Text(
-                            "${snapshot.data!.firstName} ${snapshot.data!.middleName[0]}. ${snapshot.data!.lastName}",
-                            style: const TextStyle(fontSize: 24),
-                            textAlign: TextAlign.center,
+            return Center(
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.personal_injury, size: 78, color: Colors.deepPurple,),
+                      const Divider(indent: 16, endIndent: 16,),
+                      GestureDetector(
+                        onTap: () async {
+                          await Clipboard.setData(ClipboardData(text: "${snapshot.data!.firstName} ${snapshot.data!.middleName[0]}. ${snapshot.data!.lastName}"));
+                        },
+                        child: Text(
+                          "${snapshot.data!.firstName} ${snapshot.data!.middleName[0]}. ${snapshot.data!.lastName}",
+                          style: const TextStyle(fontSize: 24),
+                          textAlign: TextAlign.center,
 
-                          ),
                         ),
-                        Text("${snapshot.data!.title}", style: const TextStyle(fontSize: 14),),
-                        const Divider(indent: 16, endIndent: 16,),
-                        TextInfoCard(
-                          callback: () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: snapshot.data!.gender == "M" ? const Text("Male") : const Text("Female"))
-                            );
-                          },
-                          color: Colors.deepPurple,
-                          width: MediaQuery.of(context).size.width,
-                          title: const Text("Gender", textAlign: TextAlign.center, style: TextStyle(color: Colors.white),),
-                          text: Container(
-                            child: snapshot.data!.gender == "M" ?
-                            const Icon(Icons.male, size: 36, color: Colors.lightBlue,) :
-                            snapshot.data!.gender == "F" ?
-                            const Icon(Icons.female, size: 36, color: Colors.pinkAccent) :
-                            const Icon(Icons.device_unknown, size: 36, color: Colors.deepPurple),
-                          ),
+                      ),
+                      Text("${snapshot.data!.title}", style: const TextStyle(fontSize: 14),),
+                      const Divider(indent: 16, endIndent: 16,),
+                      TextInfoCard(
+                        callback: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: snapshot.data!.gender == "M" ? const Text("Male") : const Text("Female"))
+                          );
+                        },
+                        color: Colors.deepPurple,
+                        width: MediaQuery.of(context).size.width,
+                        title: const Text("Gender", textAlign: TextAlign.center, style: TextStyle(color: Colors.white),),
+                        text: Container(
+                          child: snapshot.data!.gender == "M" ?
+                          const Icon(Icons.male, size: 36, color: Colors.lightBlue,) :
+                          snapshot.data!.gender == "F" ?
+                          const Icon(Icons.female, size: 36, color: Colors.pinkAccent) :
+                          const Icon(Icons.device_unknown, size: 36, color: Colors.deepPurple),
                         ),
-                        TextInfoCard(
-                          callback: () async {
-                            await Clipboard.setData(ClipboardData(text: "${snapshot.data!.dateOfBirth.day}/${snapshot.data!.dateOfBirth.month}/${snapshot.data!.dateOfBirth.year}"));
-                          },
-                          color: Colors.deepPurple,
-                          width: MediaQuery.of(context).size.width,
-                          title: const Text("Date of Birth", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
-                          text: Text ("${snapshot.data!.dateOfBirth.day}/${snapshot.data!.dateOfBirth.month}/${snapshot.data!.dateOfBirth.year}", textAlign: TextAlign.center,),
-                        ),
+                      ),
+                      TextInfoCard(
+                        callback: () async {
+                          await Clipboard.setData(ClipboardData(text: "${snapshot.data!.dateOfBirth.day}/${snapshot.data!.dateOfBirth.month}/${snapshot.data!.dateOfBirth.year}"));
+                        },
+                        color: Colors.deepPurple,
+                        width: MediaQuery.of(context).size.width,
+                        title: const Text("Date of Birth", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
+                        text: Text ("${snapshot.data!.dateOfBirth.day}/${snapshot.data!.dateOfBirth.month}/${snapshot.data!.dateOfBirth.year}", textAlign: TextAlign.center,),
+                      ),
+                      if(payload["jti"] == "ADMINISTRATOR")... [
+
                         TextInfoCard(
                           callback: () async {
                             Navigator.push(context, MaterialPageRoute(builder: (context) => DoctorDetails(payload, snapshot.data!.assignedDoctor.uuid!)));
@@ -100,33 +102,35 @@ class PatientDetailsState extends State<PatientDetails> {
                           title: const Text("Assigned Doctor", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
                           text: Text (snapshot.data!.assignedDoctor.uuid! == "00000000-0000-0000-0000-000000000000" ? "Not yet assigned" : "Dr. ${snapshot.data!.assignedDoctor.firstName} ${snapshot.data!.assignedDoctor.middleName[0]}. ${snapshot.data!.assignedDoctor.lastName}", textAlign: TextAlign.center),
                         ),
-                        TextInfoCard(
-                          callback: () async {
-                            await Clipboard.setData(ClipboardData(text: snapshot.data!.ssn));
-                          },
-                          color: Colors.deepPurple,
-                          width: MediaQuery.of(context).size.width,
-                          title: const Text("Social Security Number", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
-                          text: Text (snapshot.data!.ssn, textAlign: TextAlign.center),
-                        ),
-                        TextInfoCard(
-                          callback: () async {
-                            await launchUrl(Uri.parse("mailto://${snapshot.data!.email}"));
-                          },
-                          color: Colors.deepPurple,
-                          width: MediaQuery.of(context).size.width,
-                          title: const Text("Email", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
-                          text: Text (snapshot.data!.email, textAlign: TextAlign.center),
-                        ),
-                        TextInfoCard(
-                          callback: () async {
-                            await launchUrl(Uri.parse("tel://${snapshot.data!.phoneNumber}"));
-                          },
-                          color: Colors.deepPurple,
-                          width: MediaQuery.of(context).size.width,
-                          title: const Text("Phone Number", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
-                          text: Text (snapshot.data!.phoneNumber, textAlign: TextAlign.center),
-                        ),
+                      ],
+                      TextInfoCard(
+                        callback: () async {
+                          await Clipboard.setData(ClipboardData(text: snapshot.data!.ssn));
+                        },
+                        color: Colors.deepPurple,
+                        width: MediaQuery.of(context).size.width,
+                        title: const Text("Social Security Number", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
+                        text: Text (snapshot.data!.ssn, textAlign: TextAlign.center),
+                      ),
+                      TextInfoCard(
+                        callback: () async {
+                          await launchUrl(Uri.parse("mailto://${snapshot.data!.email}"));
+                        },
+                        color: Colors.deepPurple,
+                        width: MediaQuery.of(context).size.width,
+                        title: const Text("Email", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
+                        text: Text (snapshot.data!.email, textAlign: TextAlign.center),
+                      ),
+                      TextInfoCard(
+                        callback: () async {
+                          await launchUrl(Uri.parse("tel://${snapshot.data!.phoneNumber}"));
+                        },
+                        color: Colors.deepPurple,
+                        width: MediaQuery.of(context).size.width,
+                        title: const Text("Phone Number", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
+                        text: Text (snapshot.data!.phoneNumber, textAlign: TextAlign.center),
+                      ),
+                      if(payload["jti"] == "ADMINISTRATOR")... [
                         TextInfoCard(
                           callback: () async {
                             await Clipboard.setData(ClipboardData(text: snapshot.data!.username!));
@@ -166,16 +170,21 @@ class PatientDetailsState extends State<PatientDetails> {
                           text: Text(snapshot.data!.uuid!, textAlign: TextAlign.center),
                           width: MediaQuery.of(context).size.width,
                         )
-                      ],
-                    ),
-                  )
-              ),
+                      ]
+                    ],
+                  ),
+                )
             );
           }
           else {
-            return const CircularProgressIndicator();
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
           }
         }
+    ),
+
     );
+
   }
 }

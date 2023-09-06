@@ -63,15 +63,17 @@ class PatientsState extends State<Patients> {
           child: Icon(Icons.arrow_back),
         ),
         actions: [
-          Padding(
-            padding: EdgeInsets.only(right: 16),
-            child: GestureDetector(
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => AddPatient(payload)));
-              },
-              child: Icon(Icons.add_circle_outline),
-            ),
-          )
+          if(payload["jti"] == "ADMINISTRATOR")... [
+            Padding(
+              padding: EdgeInsets.only(right: 16),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => AddPatient(payload)));
+                },
+                child: Icon(Icons.add_circle_outline),
+              ),
+            )
+          ]
         ],
       ),
       body: FutureBuilder(
@@ -142,15 +144,17 @@ class PatientsState extends State<Patients> {
                                         child: const Icon(Icons.info, color: Colors.green, size: 32),
                                       ),
                                   ),
-                                  Container(
-                                      margin: EdgeInsets.all(9),
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          Navigator.push(context, MaterialPageRoute(builder: (context) => EditPatient(payload, snapshot.data!.items[i].uuid!)));
-                                        },
-                                        child: const Icon(Icons.edit, color: Colors.orange, size: 32),
-                                      )
-                                  )
+                                  if(payload["jti"] == "ADMINISTRATOR")... [
+                                    Container(
+                                        margin: EdgeInsets.all(9),
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(context, MaterialPageRoute(builder: (context) => EditPatient(payload, snapshot.data!.items[i].uuid!)));
+                                          },
+                                          child: const Icon(Icons.edit, color: Colors.orange, size: 32),
+                                        )
+                                    )
+                                  ]
                                 ]
                             ),
                           ]
