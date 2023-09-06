@@ -49,9 +49,13 @@ class AppointmentInfoCard extends StatelessWidget {
               ],
             ),
           ),
-          Container(
-            width: width,
-            height: height,
+          ConstrainedBox(
+            constraints: BoxConstraints(
+              minWidth: width!,
+              maxWidth: width!,
+              minHeight: 0,
+              maxHeight: height!
+            ),
             child: ListView(
               padding: const EdgeInsets.only(top: 8, bottom: 8),
               scrollDirection: Axis.vertical,

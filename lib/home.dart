@@ -569,11 +569,10 @@ class HomePageState extends State<HomePage> {
                             builder: (context, snapshot) {
                               if (snapshot.hasData) {
                                 return Container(
-                                  height: 450,
                                   margin: const EdgeInsets.only(left: 32, right: 32),
                                   child: AppointmentInfoCard(
                                     width: MediaQuery.of(context).size.width,
-                                    height: 366,
+                                    height: MediaQuery.of(context).size.height - 376 - 32, //Screen size - above widgets height - margin
                                     icon: Icons.calendar_today,
                                     text: const Text("Appointments for today", style: TextStyle(color: Colors.white),),
                                     color: Colors.blue,
