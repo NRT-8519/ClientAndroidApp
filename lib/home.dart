@@ -571,6 +571,10 @@ class HomePageState extends State<HomePage> {
                                 return Container(
                                   margin: const EdgeInsets.only(left: 32, right: 32),
                                   child: AppointmentInfoCard(
+                                    callback: () async {
+                                      await appointments;
+                                      setState(() {});
+                                    },
                                     width: MediaQuery.of(context).size.width,
                                     height: MediaQuery.of(context).size.height - 376 - 32, //Screen size - above widgets height - margin
                                     icon: Icons.calendar_today,

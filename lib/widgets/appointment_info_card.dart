@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class AppointmentInfoCard extends StatelessWidget {
 
-  final VoidCallback? callback;
+  final Future<void> Function() callback;
   final double? width;
   final double? height;
   final IconData? icon;
@@ -12,7 +12,7 @@ class AppointmentInfoCard extends StatelessWidget {
   final Text? descriptionText;
   final List<Widget> children;
 
-  const AppointmentInfoCard({this.callback, this.width, this.height, this.icon, required this.children, this.color = Colors.white, this.iconColor = Colors.white, this.text = const Text(""), this.descriptionText = const Text(""), super.key});
+  const AppointmentInfoCard({required this.callback, this.width, this.height, this.icon, required this.children, this.color = Colors.white, this.iconColor = Colors.white, this.text = const Text(""), this.descriptionText = const Text(""), super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -56,12 +56,15 @@ class AppointmentInfoCard extends StatelessWidget {
               minHeight: 0,
               maxHeight: height!
             ),
-            child: ListView(
-              padding: const EdgeInsets.only(top: 8, bottom: 8),
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              children: children,
-            ),
+            child: RefreshIndicator(
+              onRefresh: callback,
+              child: ListView(
+                padding: const EdgeInsets.only(top: 8, bottom: 8),
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                children: children,
+              ),
+            )
           )
         ],
       ),
