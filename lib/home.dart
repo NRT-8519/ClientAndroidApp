@@ -9,11 +9,16 @@ import 'package:client_android_app/pages/medicine/medicines.dart';
 import 'package:client_android_app/pages/patient/patients.dart';
 import 'package:client_android_app/pages/admin/service_reports.dart';
 import 'package:client_android_app/pages/my_profile.dart';
+import 'package:client_android_app/widgets/appointment_info_card.dart';
+import 'package:client_android_app/widgets/dashboard_info_card.dart';
 import 'package:client_android_app/widgets/home_info_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:intl/intl.dart';
 
+import 'models/appointment.dart';
 import 'models/doctor.dart';
+import 'models/paginated_list.dart';
 import 'models/patient.dart';
 
 const storage = FlutterSecureStorage();
@@ -45,18 +50,33 @@ class HomePageState extends State<HomePage> {
     payload = widget.payload;
   }
 
-  Future<int?> get adminCount async { return await HttpRequests.getAdminCount(); }
-  Future<int?> get doctorCount async { return await HttpRequests.getDoctorCount(); }
-  Future<int?> get patientCount async { return await HttpRequests.getPatientCount(); }
-  Future<int?> get medicineCount async { return await HttpRequests.getMedicineCount(); }
-  Future<int?> get companyCount async { return await HttpRequests.getCompanyCount(); }
-  Future<int?> get issuerCount async { return await HttpRequests.getIssuerCount(); }
-  Future<int?> get reportCount async { return await HttpRequests.getReportCount(); }
-  Future<int?> get requestCount async { return await HttpRequests.getRequestCount(payload["jti"].toString()); }
-  Future<int?> get prescriptionCount async { return await HttpRequests.getPrescriptionCount(payload["jti"].toString()); }
+  Future<int?> get adminCount async { return await HttpRequests.administrator.getCount(); }
+  Future<int?> get doctorCount async { return await HttpRequests.doctor.getCount(); }
+  Future<int?> get patientCount async { return await HttpRequests.patient.getCount(); }
+  Future<int?> get medicineCount async { return await HttpRequests.medicine.getCount(); }
+  Future<int?> get companyCount async { return await HttpRequests.company.getCount(); }
+  Future<int?> get issuerCount async { return await HttpRequests.issuer.getCount(); }
+  Future<int?> get reportCount async { return await HttpRequests.report.getCount(); }
+  Future<int?> get requestCount async { return await HttpRequests.request.getCount(payload["jti"].toString()); }
+  Future<int?> get prescriptionCount async { return await HttpRequests.prescription.getCount(payload["jti"].toString()); }
 
-  Future<Doctor?> getDoctor(String uuid) async { return await HttpRequests.getDoctor(uuid); }
-  Future<Patient?> get patient async { return await HttpRequests.getPatient(payload["jti"].toString()); }
+  Future<Doctor?> getDoctor(String uuid) async { return await HttpRequests.doctor.get(uuid); }
+  Future<Patient?> get patient async { return await HttpRequests.patient.get(payload["jti"].toString()); }
+
+  static DateFormat timeFormat = DateFormat("HH:mm");
+  static DateFormat dateFormat = DateFormat("dd/MM/yyyy");
+
+  Future<PaginatedList<Appointment?>> get appointments async {
+    if (payload["role"] == "DOCTOR") {
+      return await HttpRequests.appointment.getPaged("", "", "", 1, 25, payload["jti"], "", dateTime: DateTime.now());
+    }
+    else if (payload["role"] == "PATIENT") {
+      return await HttpRequests.appointment.getPaged("", "", "", 1, 25, "", payload["jti"], dateTime: DateTime.now());
+    }
+    else {
+      return await HttpRequests.appointment.getPaged("", "", "", 1, 25, "", "", dateTime: DateTime.now());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +115,7 @@ class HomePageState extends State<HomePage> {
               ),
               ListTile(
                 leading: const Icon(Icons.admin_panel_settings),
-                title: Text("Administrator Dashboard"),
+                title: const Text("Administrator Dashboard"),
                 onTap: () {
                   Navigator.pop(context);
                   Navigator.push(context, MaterialPageRoute(builder: (context) => Dashboard(payload)));
@@ -115,8 +135,8 @@ class HomePageState extends State<HomePage> {
                 leading: const Icon(Icons.personal_injury),
                 title: const Text("Patients"),
                 onTap: () {
-
                   Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => Patients(payload: payload, doctor: payload["jti"])));
                 },
               ),
               ListTile(
@@ -366,7 +386,7 @@ class HomePageState extends State<HomePage> {
                           if (snapshot.hasData) {
                             return HomeInfoCard(
                               callback: () async {
-
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => Patients(payload: payload, doctor: payload["jti"])));
                               },
                               color: Colors.deepPurple,
                               icon: Icons.person,
@@ -454,14 +474,30 @@ class HomePageState extends State<HomePage> {
                             }
                           }
                         ),
-                        HomeInfoCard(
-                          callback: () async {
+                        FutureBuilder(
+                          future: requestCount,
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              return HomeInfoCard(
+                                callback: () async {
 
-                          },
-                          color:  Colors.deepPurple,
-                          icon: Icons.question_mark,
-                          text: const Text("My Requests", style: TextStyle(color: Colors.white)),
-                        ),
+                                },
+                                color:  Colors.deepPurple,
+                                icon: Icons.question_mark,
+                                text: const Text("My Requests", style: TextStyle(color: Colors.white)),
+                                count: snapshot.data!
+                              );
+                            }
+                            else {
+                              return Container(
+                                padding: const EdgeInsets.all(25),
+                                width: 110,
+                                child: const CircularProgressIndicator(),
+                              );
+                            }
+                          }
+
+                        )
                       ]
                     ],
                   ),
@@ -505,6 +541,70 @@ class HomePageState extends State<HomePage> {
                       countVisible: false,
                     ),
                   )
+                ],
+                if (payload["role"] == "DOCTOR" || payload["role"] == "PATIENT")... [
+                  FutureBuilder(
+                    future: appointments,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return Container(
+                          height: 450,
+                          margin: const EdgeInsets.only(left: 32, right: 32),
+                          child: AppointmentInfoCard(
+                            width: MediaQuery.of(context).size.width,
+                            height: 366,
+                            icon: Icons.calendar_today,
+                            text: const Text("Appointments for today", style: TextStyle(color: Colors.white),),
+                            color: Colors.blue,
+                            children: [
+                              if(snapshot.data!.items.isNotEmpty)... [
+                                for(int i = 0; i < snapshot.data!.items.length; i++)... [
+                                  GestureDetector(
+                                    onTap: () {
+
+                                    },
+                                    child: Container(
+                                      margin: const EdgeInsets.only(left: 8, right: 8),
+                                      child: HomeInfoCard(
+                                        text: Text(snapshot.data!.items[i]!.event, style: const TextStyle(color: Colors.white),),
+                                        countText: timeFormat.format(snapshot.data!.items[i]!.scheduledDateTime),
+                                        icon: Icons.access_time,
+                                        width: MediaQuery.of(context).size.width,
+                                        color: Colors.blue,
+                                        countVisible: false,
+                                      ),
+                                    ),
+                                  )
+                                ]
+                              ]
+                              else... [
+                                Container(
+                                  margin: const EdgeInsets.only(left: 8, right: 8),
+                                  child: DashboardInfoCard(
+                                      color: Colors.deepPurple,
+                                      icon: Icons.done_all,
+                                      text: const Text("No Appointments", style: TextStyle(color: Colors.white),),
+                                      descriptionText: const Text("No Appointments for today!"),
+                                      width: MediaQuery.of(context).size.width,
+                                  ),
+                                )
+                              ]
+                            ],
+                          ),
+                        );
+                      }
+                      else {
+                        return Container(
+                          padding: const EdgeInsets.all(25),
+                          width: 88,
+                          child: const CircularProgressIndicator(),
+                        );
+                      }
+                    }
+                  )
+                ],
+                if (payload["role"] == "PATIENT")... [
+
                 ]
               ],
             )

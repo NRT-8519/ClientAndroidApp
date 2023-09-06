@@ -30,7 +30,7 @@ class EditDoctorState extends State<EditDoctor> {
   Doctor? doctorModel;
 
   Future<Doctor> get doctor async {
-    doctorModel = await HttpRequests.getDoctor(doctorUUID);
+    doctorModel = await HttpRequests.doctor.get(doctorUUID);
     return doctorModel!;
   }
 
@@ -306,7 +306,7 @@ class EditDoctorState extends State<EditDoctor> {
                 doctorModel!.patients
             );
 
-            Response response = await HttpRequests.putDoctor(doctor);
+            Response response = await HttpRequests.doctor.put(doctor);
 
             if (response.statusCode != 200) {
               ScaffoldMessenger.of(context).showSnackBar(

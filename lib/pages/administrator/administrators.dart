@@ -30,7 +30,7 @@ class AdministratorsState extends State<Administrators> {
   TextEditingController searchController = TextEditingController();
 
   Future<PaginatedList<User>?> get administrators async {
-    return await HttpRequests.getAdministrators(sortOrder, searchString, currentFilter, pageNumber, pageSize);
+    return await HttpRequests.administrator.getPaged(sortOrder, searchString, currentFilter, pageNumber, pageSize);
   }
 
   @override

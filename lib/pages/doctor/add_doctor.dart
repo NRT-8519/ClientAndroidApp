@@ -275,7 +275,7 @@ class AddDoctorState extends State<AddDoctor> {
                 []
             );
 
-            Response response = await HttpRequests.postDoctor(doctor);
+            Response response = await HttpRequests.doctor.post(doctor);
 
             if (response.statusCode != 200) {
               ScaffoldMessenger.of(context).showSnackBar(

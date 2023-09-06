@@ -240,7 +240,7 @@ class AddAdministratorState extends State<AddAdministrator> {
                 false
             );
 
-            Response response = await HttpRequests.postUser(user);
+            Response response = await HttpRequests.administrator.post(user);
 
             if (response.statusCode != 200) {
               ScaffoldMessenger.of(context).showSnackBar(

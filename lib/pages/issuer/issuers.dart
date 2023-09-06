@@ -26,7 +26,7 @@ class IssuersState extends State<Issuers> {
   TextEditingController searchController = TextEditingController();
 
   Future<PaginatedList<Issuer>?> get issuers async {
-    return await HttpRequests.getIssuers(sortOrder, searchString, currentFilter, pageNumber, pageSize);
+    return await HttpRequests.issuer.getPaged(sortOrder, searchString, currentFilter, pageNumber, pageSize);
   }
 
   @override

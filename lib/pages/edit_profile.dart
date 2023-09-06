@@ -29,7 +29,7 @@ class EditProfileState extends State<EditProfile> {
   User? userModel;
 
   Future<User> get user async {
-    userModel = await HttpRequests.getUser(payload["jti"].toString());
+    userModel = await HttpRequests.administrator.get(payload["jti"].toString());
     return userModel!;
   }
 
@@ -281,7 +281,7 @@ class EditProfileState extends State<EditProfile> {
               userModel!.isExpired
             );
 
-            Response response = await HttpRequests.putUser(user);
+            Response response = await HttpRequests.administrator.put(user);
 
             if (response.statusCode != 200) {
               ScaffoldMessenger.of(context).showSnackBar(

@@ -25,7 +25,7 @@ class AdministratorDetailsState extends State<AdministratorDetails> {
   late String administratorUUID;
   DateFormat expiryFormat = DateFormat("dd/MM/yyyy HH:mm");
   Future<User> get administrator async {
-    return await HttpRequests.getUser(administratorUUID);
+    return await HttpRequests.administrator.get(administratorUUID);
   }
   @override
   void initState() {

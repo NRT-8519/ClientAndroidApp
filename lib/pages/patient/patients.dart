@@ -1,20 +1,19 @@
-import 'dart:convert';
-
 import 'package:client_android_app/auth/http_request.dart';
+import 'package:client_android_app/home.dart';
 import 'package:client_android_app/models/paginated_list.dart';
 import 'package:client_android_app/models/patient.dart';
 import 'package:client_android_app/pages/patient/add_patient.dart';
 import 'package:client_android_app/pages/patient/edit_patient.dart';
 import 'package:client_android_app/pages/patient/patient_details.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 
 import 'package:client_android_app/pages/admin/dashboard.dart';
 
 class Patients extends StatefulWidget {
-  Patients({super.key, required this.payload});
+  const Patients({super.key, required this.payload, this.doctor = ""});
 
   final Map<String, dynamic> payload;
+  final String doctor;
 
   @override
   State<StatefulWidget> createState() => PatientsState();
@@ -29,17 +28,17 @@ class PatientsState extends State<Patients> {
   TextEditingController searchController = TextEditingController();
 
   Future<PaginatedList<Patient>?> get patients async {
-    return await HttpRequests.getPatients(sortOrder, searchString, currentFilter, pageNumber, pageSize, doctor);
+    return await HttpRequests.patient.getPaged(sortOrder, searchString, currentFilter, pageNumber, pageSize, doctor);
   }
 
   @override
   void initState() {
     super.initState();
     payload = widget.payload;
+    doctor = widget.doctor;
     sortOrder = "";
     searchString = "";
     currentFilter = "";
-    doctor = "";
     pageNumber = 1;
     pageSize = 10;
   }
@@ -54,7 +53,12 @@ class PatientsState extends State<Patients> {
         automaticallyImplyLeading: false,
         leading: GestureDetector(
           onTap: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => Dashboard(payload)));
+            if (payload["role"] == "ADMINISTRATOR") {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => Dashboard(payload)));
+            }
+            else {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(payload)));
+            }
           },
           child: Icon(Icons.arrow_back),
         ),

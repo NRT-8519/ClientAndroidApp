@@ -36,19 +36,19 @@ class EditMedicineState extends State<EditMedicine> {
   late List<Issuer?> issuersList;
 
   Future<Medicine?> get medicine async {
-    medicineModel = await HttpRequests.getMedicine(medicineUUID);
+    medicineModel = await HttpRequests.medicine.get(medicineUUID);
 
     return medicineModel;
   }
 
   Future<List<Company?>> get companies async {
-    companiesList = await HttpRequests.getAllCompanies();
+    companiesList = await HttpRequests.company.getAll();
 
     return companiesList;
   }
 
   Future<List<Issuer?>> get issuers async {
-    issuersList = await HttpRequests.getAllIssuers();
+    issuersList = await HttpRequests.issuer.getAll();
 
     return issuersList;
   }
@@ -448,12 +448,12 @@ class EditMedicineState extends State<EditMedicine> {
               uniqueClassificationController.text,
               innController.text,
               prescriptionTypeController.text,
-              await HttpRequests.getCompany(companyController.text),
-              await HttpRequests.getIssuer(issuerController.text),
+              await HttpRequests.company.get(companyController.text),
+              await HttpRequests.issuer.get(issuerController.text),
               Clearance(medicineModel!.clearance.uuid, clearanceController.text, format.parse(clearanceDateBeginController.text), format.parse(clearanceDateExpiryController.text))
             );
 
-            Response response = await HttpRequests.putMedicine(medicine);
+            Response response = await HttpRequests.medicine.put(medicine);
 
             if (response.statusCode != 200) {
               ScaffoldMessenger.of(context).showSnackBar(

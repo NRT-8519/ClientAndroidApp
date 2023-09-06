@@ -104,7 +104,7 @@ class AddIssuerState extends State<AddIssuer> {
                 areaController.text
             );
 
-            Response response = await HttpRequests.postIssuer(issuer);
+            Response response = await HttpRequests.issuer.post(issuer);
 
             if (response.statusCode != 200) {
               ScaffoldMessenger.of(context).showSnackBar(

@@ -27,7 +27,7 @@ class DoctorsState extends State<Doctors> {
   TextEditingController searchController = TextEditingController();
 
   Future<PaginatedList<Doctor>?> get doctors async {
-    return await HttpRequests.getDoctors(sortOrder, searchString, currentFilter, pageNumber, pageSize);
+    return await HttpRequests.doctor.getPaged(sortOrder, searchString, currentFilter, pageNumber, pageSize);
   }
 
   @override

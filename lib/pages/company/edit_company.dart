@@ -27,7 +27,7 @@ class EditCompanyState extends State<EditCompany> {
   Company? companyModel;
 
   Future<Company?> get company async {
-    companyModel = await HttpRequests.getCompany(companyUUID);
+    companyModel = await HttpRequests.company.get(companyUUID);
     return companyModel;
   }
 
@@ -148,7 +148,7 @@ class EditCompanyState extends State<EditCompany> {
                 addressController.text
             );
 
-            Response response = await HttpRequests.putCompany(company);
+            Response response = await HttpRequests.company.put(company);
 
             if (response.statusCode != 200) {
               ScaffoldMessenger.of(context).showSnackBar(

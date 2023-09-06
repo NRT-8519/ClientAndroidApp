@@ -119,7 +119,7 @@ class AddCompanyState extends State<AddCompany> {
                 addressController.text
             );
 
-            Response response = await HttpRequests.postCompany(company);
+            Response response = await HttpRequests.company.post(company);
 
             if (response.statusCode != 200) {
               ScaffoldMessenger.of(context).showSnackBar(

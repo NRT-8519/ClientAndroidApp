@@ -31,7 +31,7 @@ class AddPatientState extends State<AddPatient> {
   List<Doctor>? doctorsList;
 
   Future<List<Doctor>> get doctors async {
-    doctorsList = await HttpRequests.getAllDoctors();
+    doctorsList = await HttpRequests.doctor.getAll();
     return doctorsList!;
   }
 
@@ -290,7 +290,7 @@ class AddPatientState extends State<AddPatient> {
                 UserBasic(assignedDoctorController.text, "", "", "", "", "")
             );
 
-            Response response = await HttpRequests.postPatient(patient);
+            Response response = await HttpRequests.patient.post(patient);
 
             if (response.statusCode != 200) {
               ScaffoldMessenger.of(context).showSnackBar(

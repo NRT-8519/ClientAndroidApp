@@ -24,7 +24,7 @@ class IssuerDetailsState extends State<IssuerDetails> {
   late String issuerUUID;
 
   Future<Issuer> get issuer async {
-    return await HttpRequests.getIssuer(issuerUUID);
+    return await HttpRequests.issuer.get(issuerUUID);
   }
 
   @override

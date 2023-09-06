@@ -22,7 +22,7 @@ class MyProfileState extends State<MyProfile> {
 
   late Map<String, dynamic> payload;
 
-  Future<User> get user async {return await HttpRequests.getUser(payload["jti"].toString()); }
+  Future<User> get user async {return await HttpRequests.administrator.get(payload["jti"].toString()); }
 
   @override
   void initState() {

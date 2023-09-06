@@ -3,31 +3,50 @@ import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:client_android_app/models/appointment.dart';
 import 'package:client_android_app/models/issuer.dart';
 import 'package:client_android_app/models/paginated_list.dart';
 import 'package:client_android_app/models/patient.dart';
 import 'package:client_android_app/models/medicine.dart';
 import 'package:client_android_app/models/report.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:http/http.dart';
+import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
 import '../models/company.dart';
 import '../models/doctor.dart';
 import '../models/user.dart';
 
-class HttpRequests {
-  static const STORAGE = FlutterSecureStorage();
-  static const SERVER = "https://10.0.2.2:7215";
+const SERVER = "https://10.0.2.2:7215";
+const STORAGE = FlutterSecureStorage();
 
-  static Future<Response?> authenticate(String username, String password) async {
+class HttpRequests {
+
+  static var authentication = const __Authentication();
+  static var administrator = const __Administrator();
+  static var doctor = const __Doctor();
+  static var patient = const __Patient();
+  static var medicine = const __Medicine();
+  static var company = const __Company();
+  static var issuer = const __Issuer();
+  static var report = const __Report();
+  static var request = const __Request();
+  static var prescription = const __Prescription();
+  static var appointment = const __Appointment();
+}
+
+class __Authentication {
+  const __Authentication();
+
+  Future<http.Response?> authenticate(String username, String password) async {
     final body = json.encode({
       "username": username,
       "password": password
     });
 
     try {
-      Response result = await post(
+      http.Response result = await http.post(
           Uri.parse("$SERVER/api/users/authenticate/"),
           headers: {
             "accept": "*/*",
@@ -42,691 +61,17 @@ class HttpRequests {
       return null;
     }
   }
+}
 
-  static Future<int> getAdminCount() async {
+class __Administrator {
+  const __Administrator();
+  Future<PaginatedList<User>?> getPaged(String? sortOrder, String searchString, String currentFilter, int? pageNumber, int pageSize) async {
     Map<String, String> headers = HashMap<String, String>();
     headers.addAll({
       "accept": "*/*",
       "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
     });
-
-    Response result = await get(
-        Uri.parse("$SERVER/api/users/administrators/count/"),
-      headers: headers
-    );
-
-    if (result.statusCode == 200) {
-      int count = int.parse(result.body);
-      return count;
-    }
-    else {
-      return -1;
-    }
-  }
-
-  static Future<int> getPatientCount() async {
-    Map<String, String> headers = HashMap<String, String>();
-    headers.addAll({
-      "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
-    });
-
-    Response result = await get(
-        Uri.parse("$SERVER/api/users/patients/count/"),
-        headers: headers
-    );
-
-    if (result.statusCode == 200) {
-      int count = int.parse(result.body);
-      return count;
-    }
-    else {
-      return -1;
-    }
-  }
-
-  static Future<int> getDoctorCount() async {
-    Map<String, String> headers = HashMap<String, String>();
-    headers.addAll({
-      "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
-    });
-
-    Response result = await get(
-        Uri.parse("$SERVER/api/users/doctors/count/"),
-        headers: headers
-    );
-
-    if (result.statusCode == 200) {
-      int count = int.parse(result.body);
-      return count;
-    }
-    else {
-      return -1;
-    }
-  }
-
-  static Future<int> getMedicineCount() async {
-    Map<String, String> headers = HashMap<String, String>();
-    headers.addAll({
-      "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
-    });
-
-    Response result = await get(
-        Uri.parse("$SERVER/api/medicine/count/"),
-        headers: headers
-    );
-
-    if (result.statusCode == 200) {
-      int count = int.parse(result.body);
-      return count;
-    }
-    else {
-      return -1;
-    }
-  }
-
-  static Future<int> getCompanyCount() async {
-    Map<String, String> headers = HashMap<String, String>();
-    headers.addAll({
-      "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
-    });
-
-    Response result = await get(
-        Uri.parse("$SERVER/api/company/count/"),
-        headers: headers
-    );
-
-    if (result.statusCode == 200) {
-      int count = int.parse(result.body);
-      return count;
-    }
-    else {
-      return -1;
-    }
-  }
-
-  static Future<int> getIssuerCount() async {
-    Map<String, String> headers = HashMap<String, String>();
-    headers.addAll({
-      "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
-    });
-
-    Response result = await get(
-        Uri.parse("$SERVER/api/issuer/count/"),
-        headers: headers
-    );
-
-    if (result.statusCode == 200) {
-      int count = int.parse(result.body);
-      return count;
-    }
-    else {
-      return -1;
-    }
-  }
-
-  static Future<int> getReportCount() async {
-    Map<String, String> headers = HashMap<String, String>();
-    headers.addAll({
-      "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
-    });
-
-    Response result = await get(
-        Uri.parse("$SERVER/api/report/count/"),
-        headers: headers
-    );
-
-    if (result.statusCode == 200) {
-      int count = int.parse(result.body);
-      return count;
-    }
-    else {
-      return -1;
-    }
-  }
-
-  static Future<int> getRequestCount(String uuid) async {
-    Map<String, String> headers = HashMap<String, String>();
-    headers.addAll({
-      "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
-    });
-
-    Response result = await get(
-        Uri.parse("$SERVER/api/request/count?UUID=$uuid&status=AWAITING"),
-        headers: headers
-    );
-
-    if (result.statusCode == 200) {
-      int count = int.parse(result.body);
-      return count;
-    }
-    else {
-      return -1;
-    }
-  }
-
-  static Future<int> getPrescriptionCount(String uuid) async {
-    Map<String, String> headers = HashMap<String, String>();
-    headers.addAll({
-      "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
-    });
-
-    Response result = await get(
-        Uri.parse("$SERVER/api/prescription/count?UUID=$uuid"),
-        headers: headers
-    );
-
-    if (result.statusCode == 200) {
-      int count = int.parse(result.body);
-      return count;
-    }
-    else {
-      return -1;
-    }
-  }
-
-  static Future<User> getUser(String uuid) async {
-    Map<String, String> headers = HashMap<String, String>();
-    headers.addAll({
-      "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
-    });
-    Response result = await get(
-        Uri.parse("$SERVER/api/users/$uuid"),
-        headers: headers
-    );
-
-    final Map<String, dynamic> parsed = json.decode(result.body);
-
-    final User user = User.fromJson(parsed);
-
-    return user;
-  }
-
-  static Future<Patient> getPatient(String uuid) async {
-    Map<String, String> headers = HashMap<String, String>();
-    headers.addAll({
-      "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
-    });
-    Response result = await get(
-        Uri.parse("$SERVER/api/users/patients/$uuid"),
-        headers: headers
-    );
-
-    final Map<String, dynamic> parsed = json.decode(result.body);
-
-    final Patient patient = Patient.fromJson(parsed);
-
-    return patient;
-  }
-
-  static Future<Doctor> getDoctor(String uuid) async {
-    Map<String, String> headers = HashMap<String, String>();
-    headers.addAll({
-      "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
-    });
-    Response result = await get(
-        Uri.parse("$SERVER/api/users/doctors/$uuid"),
-        headers: headers
-    );
-
-    final Map<String, dynamic> parsed = json.decode(result.body);
-
-    final Doctor doctor = Doctor.fromJson(parsed);
-
-    return doctor;
-  }
-
-  static Future<Company> getCompany(String uuid) async {
-    Map<String, String> headers = HashMap<String, String>();
-    headers.addAll({
-      "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
-    });
-    Response result = await get(
-        Uri.parse("$SERVER/api/company/$uuid"),
-        headers: headers
-    );
-
-    final Map<String, dynamic> parsed = json.decode(result.body);
-
-    final Company company = Company.fromJson(parsed);
-
-    return company;
-  }
-
-  static Future<Issuer> getIssuer(String uuid) async {
-    Map<String, String> headers = HashMap<String, String>();
-    headers.addAll({
-      "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
-    });
-    Response result = await get(
-        Uri.parse("$SERVER/api/issuer/$uuid"),
-        headers: headers
-    );
-
-    final Map<String, dynamic> parsed = json.decode(result.body);
-
-    final Issuer issuer = Issuer.fromJson(parsed);
-
-    return issuer;
-  }
-
-  static Future<Medicine> getMedicine(String uuid) async {
-    Map<String, String> headers = HashMap<String, String>();
-    headers.addAll({
-      "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
-    });
-    Response result = await get(
-        Uri.parse("$SERVER/api/medicine/$uuid"),
-        headers: headers
-    );
-
-    final Map<String, dynamic> parsed = json.decode(result.body);
-
-    final Medicine medicine = Medicine.fromJson(parsed);
-
-    return medicine;
-  }
-
-  static Future<Report?> getReport(String uuid) async {
-    Map<String, String> headers = HashMap<String, String>();
-    headers.addAll({
-      "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
-    });
-    Response result = await get(
-        Uri.parse("$SERVER/api/report/$uuid"),
-        headers: headers
-    );
-
-    final Map<String, dynamic> parsed = json.decode(result.body);
-
-    final Report report = Report.fromJson(parsed);
-
-    return report;
-  }
-
-  static Future<Response> putUser(User user) async {
-    Map<String, String> headers = HashMap<String, String>();
-    headers.addAll({
-      "accept": "*/*",
-      "Content-Type": "application/json",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
-    });
-    Response result = await put(
-        Uri.parse("$SERVER/api/users/edit/"),
-        headers: headers,
-      body: user.asJson()
-    );
-
-    return result;
-  }
-
-  static Future<Response> putPatient(Patient patient) async {
-    Map<String, String> headers = HashMap<String, String>();
-    headers.addAll({
-      "accept": "*/*",
-      "Content-Type": "application/json",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
-    });
-    Response result = await put(
-        Uri.parse("$SERVER/api/users/patients/edit/"),
-        headers: headers,
-        body: patient.asJson()
-    );
-
-    return result;
-  }
-
-  static Future<Response> putCompany(Company company) async {
-    Map<String, String> headers = HashMap<String, String>();
-    headers.addAll({
-      "accept": "*/*",
-      "Content-Type": "application/json",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
-    });
-    Response result = await put(
-        Uri.parse("$SERVER/api/company/edit/"),
-        headers: headers,
-        body: company.asJson()
-    );
-
-    return result;
-  }
-
-  static Future<Response> putIssuer(Issuer issuer) async {
-    Map<String, String> headers = HashMap<String, String>();
-    headers.addAll({
-      "accept": "*/*",
-      "Content-Type": "application/json",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
-    });
-    Response result = await put(
-        Uri.parse("$SERVER/api/issuer/edit/"),
-        headers: headers,
-        body: issuer.asJson()
-    );
-
-    return result;
-  }
-
-  static Future<Response> putMedicine(Medicine medicine) async {
-    Map<String, String> headers = HashMap<String, String>();
-    headers.addAll({
-      "accept": "*/*",
-      "Content-Type": "application/json",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
-    });
-    Response result = await put(
-        Uri.parse("$SERVER/api/medicine/edit/"),
-        headers: headers,
-        body: medicine.asJson()
-    );
-
-    return result;
-  }
-
-  static Future<Response> putDoctor(Doctor doctor) async {
-    Map<String, String> headers = HashMap<String, String>();
-    headers.addAll({
-      "accept": "*/*",
-      "Content-Type": "application/json",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
-    });
-    Response result = await put(
-        Uri.parse("$SERVER/api/users/doctors/edit/"),
-        headers: headers,
-        body: doctor.asJson()
-    );
-
-    return result;
-  }
-
-  static Future<Response> postUser(User user) async {
-    Map<String, String> headers = HashMap<String, String>();
-    headers.addAll({
-      "accept": "*/*",
-      "Content-Type": "application/json",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
-    });
-    Response result = await post(
-        Uri.parse("$SERVER/api/users/add/"),
-        headers: headers,
-        body: user.asJson()
-    );
-
-    return result;
-  }
-
-  static Future<Response> postPatient(Patient patient) async {
-    Map<String, String> headers = HashMap<String, String>();
-    headers.addAll({
-      "accept": "*/*",
-      "Content-Type": "application/json",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
-    });
-    Response result = await post(
-        Uri.parse("$SERVER/api/users/patients/add/"),
-        headers: headers,
-        body: patient.asJson()
-    );
-
-    return result;
-  }
-
-  static Future<Response> postDoctor(Doctor doctor) async {
-    Map<String, String> headers = HashMap<String, String>();
-    headers.addAll({
-      "accept": "*/*",
-      "Content-Type": "application/json",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
-    });
-    Response result = await post(
-        Uri.parse("$SERVER/api/users/doctors/add/"),
-        headers: headers,
-        body: doctor.asJson()
-    );
-
-    return result;
-  }
-
-  static Future<Response> postCompany(Company company) async {
-    Map<String, String> headers = HashMap<String, String>();
-    headers.addAll({
-      "accept": "*/*",
-      "Content-Type": "application/json",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
-    });
-    Response result = await post(
-        Uri.parse("$SERVER/api/company/add/"),
-        headers: headers,
-        body: company.asJson()
-    );
-
-    return result;
-  }
-
-  static Future<Response> postIssuer(Issuer issuer) async {
-    Map<String, String> headers = HashMap<String, String>();
-    headers.addAll({
-      "accept": "*/*",
-      "Content-Type": "application/json",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
-    });
-    Response result = await post(
-        Uri.parse("$SERVER/api/issuer/add/"),
-        headers: headers,
-        body: issuer.asJson()
-    );
-
-    return result;
-  }
-
-  static Future<Response> postMedicine(Medicine medicine) async {
-    Map<String, String> headers = HashMap<String, String>();
-    headers.addAll({
-      "accept": "*/*",
-      "Content-Type": "application/json",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
-    });
-    Response result = await post(
-        Uri.parse("$SERVER/api/medicine/add/"),
-        headers: headers,
-        body: medicine.asJson()
-    );
-
-    return result;
-  }
-
-  static Future<PaginatedList<Patient>?> getPatients(String? sortOrder, String searchString, String currentFilter, int? pageNumber, int pageSize, String doctor) async {
-    Map<String, String> headers = HashMap<String, String>();
-    headers.addAll({
-      "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
-    });
-    Response result = await get(Uri.parse("$SERVER/api/users/patients/all/basic?sortOrder=$sortOrder&searchString=$searchString&currentFilter=$currentFilter&pageNumber=$pageNumber&pageSize=$pageSize&doctor=$doctor"), headers: headers);
-
-    if (result.statusCode == 200) {
-      Map<String, dynamic> body = json.decode(result.body);
-      List<dynamic> dynamicList = body["items"];
-      List<Patient> list = [];
-      if (dynamicList.isNotEmpty) {
-        for (dynamic p in dynamicList) {
-          Patient patient = Patient.fromJson(p);
-          list.add(patient);
-        }
-      }
-      return PaginatedList(list, body["pageNumber"], body["pageSize"], body["totalPages"], body["totalItems"], body["hasPrevious"], body["hasNext"]);
-    }
-    else {
-      List<Patient> list = [];
-      return PaginatedList(list, 1, 10, 0, 0, false, false);
-    }
-  }
-
-  static Future<PaginatedList<Report?>> getReports(String? sortOrder, String searchString, String currentFilter, int? pageNumber, int pageSize, String user) async {
-    Map<String, String> headers = HashMap<String, String>();
-    headers.addAll({
-      "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
-    });
-    Response result = await get(Uri.parse("$SERVER/api/report/all?sortOrder=$sortOrder&searchString=$searchString&currentFilter=$currentFilter&pageNumber=$pageNumber&pageSize=$pageSize&user=$user"), headers: headers);
-
-    if (result.statusCode == 200) {
-      Map<String, dynamic> body = json.decode(result.body);
-      List<dynamic> dynamicList = body["items"];
-      List<Report> list = [];
-      if (dynamicList.isNotEmpty) {
-        for (dynamic p in dynamicList) {
-          Report report = Report.fromJson(p);
-          list.add(report);
-        }
-      }
-      return PaginatedList(list, body["pageNumber"], body["pageSize"], body["totalPages"], body["totalItems"], body["hasPrevious"], body["hasNext"]);
-    }
-    else {
-      List<Report> list = [];
-      return PaginatedList(list, 1, 10, 0, 0, false, false);
-    }
-  }
-
-  static Future<int> deleteReport(String uuid) async {
-    Map<String, String> headers = HashMap<String, String>();
-    headers.addAll({
-      "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
-    });
-
-    Response result = await delete(Uri.parse("$SERVER/api/report/remove/$uuid"), headers: headers);
-
-    if (result.statusCode == 200) {
-      return 1;
-    }
-    else {
-      return 0;
-    }
-  }
-
-  static Future<PaginatedList<Doctor>?> getDoctors(String? sortOrder, String searchString, String currentFilter, int? pageNumber, int pageSize) async {
-    Map<String, String> headers = HashMap<String, String>();
-    headers.addAll({
-      "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
-    });
-    Response result = await get(Uri.parse("$SERVER/api/users/doctors/all/basic?sortOrder=$sortOrder&searchString=$searchString&currentFilter=$currentFilter&pageNumber=$pageNumber&pageSize=$pageSize"), headers: headers);
-
-    if (result.statusCode == 200) {
-      Map<String, dynamic> body = json.decode(result.body);
-      List<dynamic> dynamicList = body["items"];
-      List<Doctor> list = [];
-      if (dynamicList.isNotEmpty) {
-        for (dynamic i in dynamicList) {
-          Doctor doctor = Doctor.fromJson(i);
-          list.add(doctor);
-        }
-      }
-      return PaginatedList(list, body["pageNumber"], body["pageSize"], body["totalPages"], body["totalItems"], body["hasPrevious"], body["hasNext"]);
-    }
-    else {
-      List<Doctor> list = [];
-      return PaginatedList(list, 1, 10, 0, 0, false, false);
-    }
-  }
-
-  static Future<List<Doctor>?> getAllDoctors() async {
-    Map<String, String> headers = HashMap<String, String>();
-    headers.addAll({
-      "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
-    });
-    Response result = await get(Uri.parse("$SERVER/api/users/doctors/all/"), headers: headers);
-
-    if (result.statusCode == 200) {
-      List<dynamic> dynamicList = json.decode(result.body);
-      List<Doctor> list = [];
-      if (dynamicList.isNotEmpty) {
-        for (dynamic i in dynamicList) {
-          Doctor doctor = Doctor.fromJson(i);
-          list.add(doctor);
-        }
-      }
-      return list;
-    }
-    else {
-      List<Doctor> list = [];
-      return list;
-    }
-  }
-
-  static Future<List<Company?>> getAllCompanies() async {
-    Map<String, String> headers = HashMap<String, String>();
-    headers.addAll({
-      "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
-    });
-    Response result = await get(Uri.parse("$SERVER/api/company/all/all/"), headers: headers);
-
-    if (result.statusCode == 200) {
-      List<dynamic> dynamicList = json.decode(result.body);
-      List<Company> list = [];
-      if (dynamicList.isNotEmpty) {
-        for (dynamic i in dynamicList) {
-          Company company = Company.fromJson(i);
-          list.add(company);
-        }
-      }
-      return list;
-    }
-    else {
-      List<Company> list = [];
-      return list;
-    }
-  }
-
-  static Future<List<Issuer?>> getAllIssuers() async {
-    Map<String, String> headers = HashMap<String, String>();
-    headers.addAll({
-      "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
-    });
-    Response result = await get(Uri.parse("$SERVER/api/issuer/all/all/"), headers: headers);
-
-    if (result.statusCode == 200) {
-      List<dynamic> dynamicList = json.decode(result.body);
-      List<Issuer> list = [];
-      if (dynamicList.isNotEmpty) {
-        for (dynamic i in dynamicList) {
-          Issuer issuer = Issuer.fromJson(i);
-          list.add(issuer);
-        }
-      }
-      return list;
-    }
-    else {
-      List<Issuer> list = [];
-      return list;
-    }
-  }
-
-  static Future<PaginatedList<User>?> getAdministrators(String? sortOrder, String searchString, String currentFilter, int? pageNumber, int pageSize) async {
-    Map<String, String> headers = HashMap<String, String>();
-    headers.addAll({
-      "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
-    });
-    Response result = await get(Uri.parse("$SERVER/api/users/all/basic?sortOrder=$sortOrder&searchString=$searchString&currentFilter=$currentFilter&pageNumber=$pageNumber&pageSize=$pageSize"), headers: headers);
+    http.Response result = await http.get(Uri.parse("$SERVER/api/users/all/basic?sortOrder=$sortOrder&searchString=$searchString&currentFilter=$currentFilter&pageNumber=$pageNumber&pageSize=$pageSize"), headers: headers);
 
     if (result.statusCode == 200) {
       Map<String, dynamic> body = json.decode(result.body);
@@ -745,14 +90,417 @@ class HttpRequests {
       return PaginatedList(list, 1, 10, 0, 0, false, false);
     }
   }
-
-  static Future<PaginatedList<Company>?> getCompanies(String? sortOrder, String searchString, String currentFilter, int? pageNumber, int pageSize) async {
+  
+  Future<int> getCount() async {
     Map<String, String> headers = HashMap<String, String>();
     headers.addAll({
       "accept": "*/*",
       "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
     });
-    Response result = await get(Uri.parse("$SERVER/api/company/all?sortOrder=$sortOrder&searchString=$searchString&currentFilter=$currentFilter&pageNumber=$pageNumber&pageSize=$pageSize"), headers: headers);
+
+    http.Response result = await http.get(
+        Uri.parse("$SERVER/api/users/administrators/count/"),
+        headers: headers
+    );
+
+    if (result.statusCode == 200) {
+      int count = int.parse(result.body);
+      return count;
+    }
+    else {
+      return -1;
+    }
+  }
+
+  Future<User> get(String uuid) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    http.Response result = await http.get(
+        Uri.parse("$SERVER/api/users/$uuid"),
+        headers: headers
+    );
+
+    final Map<String, dynamic> parsed = json.decode(result.body);
+
+    final User user = User.fromJson(parsed);
+
+    return user;
+  }
+
+  Future<http.Response> post(User user) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Content-Type": "application/json",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    http.Response result = await http.post(
+        Uri.parse("$SERVER/api/users/add/"),
+        headers: headers,
+        body: user.asJson()
+    );
+
+    return result;
+  }
+
+  Future<http.Response> put(User user) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Content-Type": "application/json",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    http.Response result = await http.put(
+        Uri.parse("$SERVER/api/users/edit/"),
+        headers: headers,
+        body: user.asJson()
+    );
+
+    return result;
+  }
+}
+
+class __Doctor {
+  const __Doctor();
+
+  Future<PaginatedList<Doctor>?> getPaged(String? sortOrder, String searchString, String currentFilter, int? pageNumber, int pageSize) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    http.Response result = await http.get(Uri.parse("$SERVER/api/users/doctors/all/basic?sortOrder=$sortOrder&searchString=$searchString&currentFilter=$currentFilter&pageNumber=$pageNumber&pageSize=$pageSize"), headers: headers);
+
+    if (result.statusCode == 200) {
+      Map<String, dynamic> body = json.decode(result.body);
+      List<dynamic> dynamicList = body["items"];
+      List<Doctor> list = [];
+      if (dynamicList.isNotEmpty) {
+        for (dynamic i in dynamicList) {
+          Doctor doctor = Doctor.fromJson(i);
+          list.add(doctor);
+        }
+      }
+      return PaginatedList(list, body["pageNumber"], body["pageSize"], body["totalPages"], body["totalItems"], body["hasPrevious"], body["hasNext"]);
+    }
+    else {
+      List<Doctor> list = [];
+      return PaginatedList(list, 1, 10, 0, 0, false, false);
+    }
+  }
+
+  Future<List<Doctor>?> getAll() async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    http.Response result = await http.get(Uri.parse("$SERVER/api/users/doctors/all/"), headers: headers);
+
+    if (result.statusCode == 200) {
+      List<dynamic> dynamicList = json.decode(result.body);
+      List<Doctor> list = [];
+      if (dynamicList.isNotEmpty) {
+        for (dynamic i in dynamicList) {
+          Doctor doctor = Doctor.fromJson(i);
+          list.add(doctor);
+        }
+      }
+      return list;
+    }
+    else {
+      List<Doctor> list = [];
+      return list;
+    }
+  }
+  
+  Future<int> getCount() async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+
+    http.Response result = await http.get(
+        Uri.parse("$SERVER/api/users/doctors/count/"),
+        headers: headers
+    );
+
+    if (result.statusCode == 200) {
+      int count = int.parse(result.body);
+      return count;
+    }
+    else {
+      return -1;
+    }
+  }
+
+  Future<Doctor> get(String uuid) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    http.Response result = await http.get(
+        Uri.parse("$SERVER/api/users/doctors/$uuid"),
+        headers: headers
+    );
+
+    final Map<String, dynamic> parsed = json.decode(result.body);
+
+    final Doctor doctor = Doctor.fromJson(parsed);
+
+    return doctor;
+  }
+
+  Future<http.Response> post(Doctor doctor) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Content-Type": "application/json",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    http.Response result = await http.post(
+        Uri.parse("$SERVER/api/users/doctors/add/"),
+        headers: headers,
+        body: doctor.asJson()
+    );
+
+    return result;
+  }
+
+  Future<http.Response> put(Doctor doctor) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Content-Type": "application/json",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    http.Response result = await http.put(
+        Uri.parse("$SERVER/api/users/doctors/edit/"),
+        headers: headers,
+        body: doctor.asJson()
+    );
+
+    return result;
+  }
+}
+
+class __Patient {
+  const __Patient();
+
+  Future<PaginatedList<Patient>?> getPaged(String? sortOrder, String searchString, String currentFilter, int? pageNumber, int pageSize, String doctor) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    http.Response result = await http.get(Uri.parse("$SERVER/api/users/patients/all/basic?sortOrder=$sortOrder&searchString=$searchString&currentFilter=$currentFilter&pageNumber=$pageNumber&pageSize=$pageSize&doctor=$doctor"), headers: headers);
+
+    if (result.statusCode == 200) {
+      Map<String, dynamic> body = json.decode(result.body);
+      List<dynamic> dynamicList = body["items"];
+      List<Patient> list = [];
+      if (dynamicList.isNotEmpty) {
+        for (dynamic p in dynamicList) {
+          Patient patient = Patient.fromJson(p);
+          list.add(patient);
+        }
+      }
+      return PaginatedList(list, body["pageNumber"], body["pageSize"], body["totalPages"], body["totalItems"], body["hasPrevious"], body["hasNext"]);
+    }
+    else {
+      List<Patient> list = [];
+      return PaginatedList(list, 1, 10, 0, 0, false, false);
+    }
+  }
+  
+  Future<int> getCount() async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+
+    http.Response result = await http.get(
+        Uri.parse("$SERVER/api/users/patients/count/"),
+        headers: headers
+    );
+
+    if (result.statusCode == 200) {
+      int count = int.parse(result.body);
+      return count;
+    }
+    else {
+      return -1;
+    }
+  }
+
+  Future<Patient> get(String uuid) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    http.Response result = await http.get(
+        Uri.parse("$SERVER/api/users/patients/$uuid"),
+        headers: headers
+    );
+
+    final Map<String, dynamic> parsed = json.decode(result.body);
+
+    final Patient patient = Patient.fromJson(parsed);
+
+    return patient;
+  }
+
+  Future<http.Response> post(Patient patient) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Content-Type": "application/json",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    http.Response result = await http.post(
+        Uri.parse("$SERVER/api/users/patients/add/"),
+        headers: headers,
+        body: patient.asJson()
+    );
+
+    return result;
+  }
+
+  Future<http.Response> put(Patient patient) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Content-Type": "application/json",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    http.Response result = await http.put(
+        Uri.parse("$SERVER/api/users/patients/edit/"),
+        headers: headers,
+        body: patient.asJson()
+    );
+
+    return result;
+  }
+}
+
+class __Medicine {
+  const __Medicine();
+  
+  Future<PaginatedList<Medicine>?> getPaged(String? sortOrder, String searchString, String currentFilter, int? pageNumber, int pageSize, String company, String issuer) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    http.Response result = await http.get(Uri.parse("$SERVER/api/medicine/all?sortOrder=$sortOrder&searchString=$searchString&currentFilter=$currentFilter&pageNumber=$pageNumber&pageSize=$pageSize&company=$company&issuer=$issuer"), headers: headers);
+
+    if (result.statusCode == 200) {
+      Map<String, dynamic> body = json.decode(result.body);
+      List<dynamic> dynamicList = body["items"];
+      List<Medicine> list = [];
+      if (dynamicList.isNotEmpty) {
+        for (dynamic i in dynamicList) {
+          Medicine medicine = Medicine.fromJson(i);
+          list.add(medicine);
+        }
+      }
+      return PaginatedList(list, body["pageNumber"], body["pageSize"], body["totalPages"], body["totalItems"], body["hasPrevious"], body["hasNext"]);
+    }
+    else {
+      List<Medicine> list = [];
+      return PaginatedList(list, 1, 10, 0, 0, false, false);
+    }
+  }
+  
+  Future<int> getCount() async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+
+    http.Response result = await http.get(
+        Uri.parse("$SERVER/api/medicine/count/"),
+        headers: headers
+    );
+
+    if (result.statusCode == 200) {
+      int count = int.parse(result.body);
+      return count;
+    }
+    else {
+      return -1;
+    }
+  }
+
+  Future<Medicine> get(String uuid) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    http.Response result = await http.get(
+        Uri.parse("$SERVER/api/medicine/$uuid"),
+        headers: headers
+    );
+
+    final Map<String, dynamic> parsed = json.decode(result.body);
+
+    final Medicine medicine = Medicine.fromJson(parsed);
+
+    return medicine;
+  }
+
+  Future<http.Response> post(Medicine medicine) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Content-Type": "application/json",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    http.Response result = await http.post(
+        Uri.parse("$SERVER/api/medicine/add/"),
+        headers: headers,
+        body: medicine.asJson()
+    );
+
+    return result;
+  }
+
+  Future<http.Response> put(Medicine medicine) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Content-Type": "application/json",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    http.Response result = await http.put(
+        Uri.parse("$SERVER/api/medicine/edit/"),
+        headers: headers,
+        body: medicine.asJson()
+    );
+
+    return result;
+  }
+}
+
+class __Company {
+  const __Company();
+
+  Future<PaginatedList<Company>?> getPaged(String? sortOrder, String searchString, String currentFilter, int? pageNumber, int pageSize) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    http.Response result = await http.get(Uri.parse("$SERVER/api/company/all?sortOrder=$sortOrder&searchString=$searchString&currentFilter=$currentFilter&pageNumber=$pageNumber&pageSize=$pageSize"), headers: headers);
 
     if (result.statusCode == 200) {
       Map<String, dynamic> body = json.decode(result.body);
@@ -771,14 +519,114 @@ class HttpRequests {
       return PaginatedList(list, 1, 10, 0, 0, false, false);
     }
   }
-
-  static Future<PaginatedList<Issuer>?> getIssuers(String? sortOrder, String searchString, String currentFilter, int? pageNumber, int pageSize) async {
+  
+  Future<List<Company?>> getAll() async {
     Map<String, String> headers = HashMap<String, String>();
     headers.addAll({
       "accept": "*/*",
       "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
     });
-    Response result = await get(Uri.parse("$SERVER/api/issuer/all?sortOrder=$sortOrder&searchString=$searchString&currentFilter=$currentFilter&pageNumber=$pageNumber&pageSize=$pageSize"), headers: headers);
+    http.Response result = await http.get(Uri.parse("$SERVER/api/company/all/all/"), headers: headers);
+
+    if (result.statusCode == 200) {
+      List<dynamic> dynamicList = json.decode(result.body);
+      List<Company> list = [];
+      if (dynamicList.isNotEmpty) {
+        for (dynamic i in dynamicList) {
+          Company company = Company.fromJson(i);
+          list.add(company);
+        }
+      }
+      return list;
+    }
+    else {
+      List<Company> list = [];
+      return list;
+    }
+  }
+  
+  Future<int> getCount() async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+
+    http.Response result = await http.get(
+        Uri.parse("$SERVER/api/company/count/"),
+        headers: headers
+    );
+
+    if (result.statusCode == 200) {
+      int count = int.parse(result.body);
+      return count;
+    }
+    else {
+      return -1;
+    }
+  }
+
+  Future<Company> get(String uuid) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    http.Response result = await http.get(
+        Uri.parse("$SERVER/api/company/$uuid"),
+        headers: headers
+    );
+
+    final Map<String, dynamic> parsed = json.decode(result.body);
+
+    final Company company = Company.fromJson(parsed);
+
+    return company;
+  }
+
+  Future<http.Response> post(Company company) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Content-Type": "application/json",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    http.Response result = await http.post(
+        Uri.parse("$SERVER/api/company/add/"),
+        headers: headers,
+        body: company.asJson()
+    );
+
+    return result;
+  }
+
+  Future<http.Response> put(Company company) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Content-Type": "application/json",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    http.Response result = await http.put(
+        Uri.parse("$SERVER/api/company/edit/"),
+        headers: headers,
+        body: company.asJson()
+    );
+
+    return result;
+  }
+}
+
+class __Issuer {
+  const __Issuer();
+
+   Future<PaginatedList<Issuer>?> getPaged(String? sortOrder, String searchString, String currentFilter, int? pageNumber, int pageSize) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    http.Response result = await http.get(Uri.parse("$SERVER/api/issuer/all?sortOrder=$sortOrder&searchString=$searchString&currentFilter=$currentFilter&pageNumber=$pageNumber&pageSize=$pageSize"), headers: headers);
 
     if (result.statusCode == 200) {
       Map<String, dynamic> body = json.decode(result.body);
@@ -797,29 +645,275 @@ class HttpRequests {
       return PaginatedList(list, 1, 10, 0, 0, false, false);
     }
   }
-
-  static Future<PaginatedList<Medicine>?> getMedicines(String? sortOrder, String searchString, String currentFilter, int? pageNumber, int pageSize, String company, String issuer) async {
+  
+  Future<List<Issuer?>> getAll() async {
     Map<String, String> headers = HashMap<String, String>();
     headers.addAll({
       "accept": "*/*",
       "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
     });
-    Response result = await get(Uri.parse("$SERVER/api/medicine/all?sortOrder=$sortOrder&searchString=$searchString&currentFilter=$currentFilter&pageNumber=$pageNumber&pageSize=$pageSize&company=$company&issuer=$issuer"), headers: headers);
+    http.Response result = await http.get(Uri.parse("$SERVER/api/issuer/all/all/"), headers: headers);
+
+    if (result.statusCode == 200) {
+      List<dynamic> dynamicList = json.decode(result.body);
+      List<Issuer> list = [];
+      if (dynamicList.isNotEmpty) {
+        for (dynamic i in dynamicList) {
+          Issuer issuer = Issuer.fromJson(i);
+          list.add(issuer);
+        }
+      }
+      return list;
+    }
+    else {
+      List<Issuer> list = [];
+      return list;
+    }
+  }
+  
+  Future<int> getCount() async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+
+    http.Response result = await http.get(
+        Uri.parse("$SERVER/api/issuer/count/"),
+        headers: headers
+    );
+
+    if (result.statusCode == 200) {
+      int count = int.parse(result.body);
+      return count;
+    }
+    else {
+      return -1;
+    }
+  }
+  
+  Future<Issuer> get(String uuid) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    http.Response result = await http.get(
+        Uri.parse("$SERVER/api/issuer/$uuid"),
+        headers: headers
+    );
+
+    final Map<String, dynamic> parsed = json.decode(result.body);
+
+    final Issuer issuer = Issuer.fromJson(parsed);
+
+    return issuer;
+  }
+
+  Future<http.Response> post(Issuer issuer) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Content-Type": "application/json",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    http.Response result = await http.post(
+        Uri.parse("$SERVER/api/issuer/add/"),
+        headers: headers,
+        body: issuer.asJson()
+    );
+
+    return result;
+  }
+
+  Future<http.Response> put(Issuer issuer) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Content-Type": "application/json",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    http.Response result = await http.put(
+        Uri.parse("$SERVER/api/issuer/edit/"),
+        headers: headers,
+        body: issuer.asJson()
+    );
+
+    return result;
+  }
+
+  
+}
+
+class __Report {
+  const __Report();
+
+  Future<PaginatedList<Report?>> getPaged(String? sortOrder, String searchString, String currentFilter, int? pageNumber, int pageSize, String user) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    http.Response result = await http.get(Uri.parse("$SERVER/api/report/all?sortOrder=$sortOrder&searchString=$searchString&currentFilter=$currentFilter&pageNumber=$pageNumber&pageSize=$pageSize&user=$user"), headers: headers);
 
     if (result.statusCode == 200) {
       Map<String, dynamic> body = json.decode(result.body);
       List<dynamic> dynamicList = body["items"];
-      List<Medicine> list = [];
+      List<Report> list = [];
       if (dynamicList.isNotEmpty) {
-        for (dynamic i in dynamicList) {
-          Medicine medicine = Medicine.fromJson(i);
-          list.add(medicine);
+        for (dynamic p in dynamicList) {
+          Report report = Report.fromJson(p);
+          list.add(report);
         }
       }
       return PaginatedList(list, body["pageNumber"], body["pageSize"], body["totalPages"], body["totalItems"], body["hasPrevious"], body["hasNext"]);
     }
     else {
-      List<Medicine> list = [];
+      List<Report> list = [];
+      return PaginatedList(list, 1, 10, 0, 0, false, false);
+    }
+  }
+  
+  Future<int> getCount() async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+
+    http.Response result = await http.get(
+        Uri.parse("$SERVER/api/report/count/"),
+        headers: headers
+    );
+
+    if (result.statusCode == 200) {
+      int count = int.parse(result.body);
+      return count;
+    }
+    else {
+      return -1;
+    }
+  }
+
+  Future<Report?> get(String uuid) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    http.Response result = await http.get(
+        Uri.parse("$SERVER/api/report/$uuid"),
+        headers: headers
+    );
+
+    final Map<String, dynamic> parsed = json.decode(result.body);
+
+    final Report report = Report.fromJson(parsed);
+
+    return report;
+  }
+
+  Future<int> delete(String uuid) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+
+    http.Response result = await http.delete(Uri.parse("$SERVER/api/report/remove/$uuid"), headers: headers);
+
+    if (result.statusCode == 200) {
+      return 1;
+    }
+    else {
+      return 0;
+    }
+  }
+}
+
+class __Request {
+  const __Request();
+
+  Future<int> getCount(String uuid) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+
+    http.Response result = await http.get(
+        Uri.parse("$SERVER/api/request/count?UUID=$uuid&status=AWAITING"),
+        headers: headers
+    );
+
+    if (result.statusCode == 200) {
+      int count = int.parse(result.body);
+      return count;
+    }
+    else {
+      return -1;
+    }
+  }
+}
+
+class __Prescription {
+  const __Prescription();
+
+  Future<int> getCount(String uuid) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+
+    http.Response result = await http.get(
+        Uri.parse("$SERVER/api/prescription/count?UUID=$uuid"),
+        headers: headers
+    );
+
+    if (result.statusCode == 200) {
+      int count = int.parse(result.body);
+      return count;
+    }
+    else {
+      return -1;
+    }
+  }
+}
+
+class __Appointment {
+  const __Appointment();
+
+  Future<PaginatedList<Appointment?>> getPaged(String? sortOrder, String searchString, String currentFilter, int? pageNumber, int pageSize, String doctor, String patient,
+      {DateTime? dateTime}) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    http.Response result;
+    if (dateTime == null) {
+      result = await http.get(Uri.parse("$SERVER/api/schedule/all?sortOrder=$sortOrder&searchString=$searchString&currentFilter=$currentFilter&pageNumber=$pageNumber&pageSize=$pageSize&doctor=$doctor&patient=$patient"), headers: headers);
+    }
+    else {
+      DateFormat format = DateFormat("yyyy-MM-ddTHH:mm:ss");
+      result  = await http.get(Uri.parse("$SERVER/api/schedule/all?sortOrder=$sortOrder&searchString=$searchString&currentFilter=$currentFilter&pageNumber=$pageNumber&pageSize=$pageSize&doctor=$doctor&patient=$patient&date=${format.format(dateTime)}"), headers: headers);
+    }
+
+    if (result.statusCode == 200) {
+      Map<String, dynamic> body = json.decode(result.body);
+      List<dynamic> dynamicList = body["items"];
+      List<Appointment> list = [];
+      if (dynamicList.isNotEmpty) {
+        for (dynamic a in dynamicList) {
+          Appointment appointment = Appointment.fromJson(a);
+          list.add(appointment);
+        }
+      }
+      return PaginatedList(list, body["pageNumber"], body["pageSize"], body["totalPages"], body["totalItems"], body["hasPrevious"], body["hasNext"]);
+    }
+    else {
+      List<Appointment> list = [];
       return PaginatedList(list, 1, 10, 0, 0, false, false);
     }
   }

@@ -22,7 +22,7 @@ class DoctorDetailsState extends State<DoctorDetails> {
   late String doctorUUID;
   DateFormat expiryFormat = DateFormat("dd/MM/yyyy HH:mm");
   Future<Doctor> get doctor async {
-    return await HttpRequests.getDoctor(doctorUUID);
+    return await HttpRequests.doctor.get(doctorUUID);
   }
   @override
   void initState() {

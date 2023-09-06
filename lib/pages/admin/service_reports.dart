@@ -28,7 +28,7 @@ class ServiceReportsState extends State<ServiceReports> {
   TextEditingController searchController = TextEditingController();
 
   Future<PaginatedList<Report?>> get reports async {
-    return await HttpRequests.getReports(sortOrder, searchString, currentFilter, pageNumber, pageSize, user);
+    return await HttpRequests.report.getPaged(sortOrder, searchString, currentFilter, pageNumber, pageSize, user);
   }
 
 
@@ -129,7 +129,7 @@ class ServiceReportsState extends State<ServiceReports> {
                                       margin: EdgeInsets.all(9),
                                       child: GestureDetector(
                                         onTap: () async {
-                                          int result = await HttpRequests.deleteReport(snapshot.data!.items[i]!.uuid);
+                                          int result = await HttpRequests.report.delete(snapshot.data!.items[i]!.uuid);
 
                                           if (result == 1) {
                                             ScaffoldMessenger.of(context).showSnackBar(

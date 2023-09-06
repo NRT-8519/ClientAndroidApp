@@ -30,7 +30,7 @@ class EditAdministratorState extends State<EditAdministrator> {
   User? userModel;
 
   Future<User> get user async {
-    userModel = await HttpRequests.getUser(administratorUUID);
+    userModel = await HttpRequests.administrator.get(administratorUUID);
     return userModel!;
   }
 
@@ -271,7 +271,7 @@ class EditAdministratorState extends State<EditAdministrator> {
                 userModel!.isExpired
             );
 
-            Response response = await HttpRequests.putUser(user);
+            Response response = await HttpRequests.administrator.put(user);
 
             if (response.statusCode != 200) {
               ScaffoldMessenger.of(context).showSnackBar(

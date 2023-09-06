@@ -27,7 +27,7 @@ class MedicineDetailsState extends State<MedicineDetails> {
   DateFormat dateFormat = DateFormat("dd/MM/yyyy");
 
   Future<Medicine> get medicine async {
-    return await HttpRequests.getMedicine(medicineUUID);
+    return await HttpRequests.medicine.get(medicineUUID);
   }
 
   @override

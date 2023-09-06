@@ -23,7 +23,7 @@ class CompanyDetailsState extends State<CompanyDetails> {
   late String companyUUID;
 
   Future<Company> get company async {
-    return await HttpRequests.getCompany(companyUUID);
+    return await HttpRequests.company.get(companyUUID);
   }
 
   @override

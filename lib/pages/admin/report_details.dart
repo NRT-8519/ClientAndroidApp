@@ -31,13 +31,13 @@ class ReportDetailsState extends State<ReportDetails> {
   User? userModel;
 
   Future<Report?> get report async {
-    reportModel = await HttpRequests.getReport(reportUUID);
+    reportModel = await HttpRequests.report.get(reportUUID);
 
     return reportModel;
   }
 
   Future<User?> get user async {
-    userModel = await HttpRequests.getUser(reportModel!.reportedBy);
+    userModel = await HttpRequests.administrator.get(reportModel!.reportedBy);
 
     return userModel;
   }

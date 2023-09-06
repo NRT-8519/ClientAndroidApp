@@ -32,7 +32,7 @@ class EditIssuerState extends State<EditIssuer> {
   TextEditingController areaController = TextEditingController();
 
   Future<Issuer?> get issuer async {
-    issuerModel = await HttpRequests.getIssuer(issuerUUID);
+    issuerModel = await HttpRequests.issuer.get(issuerUUID);
     return issuerModel;
   }
 
@@ -133,7 +133,7 @@ class EditIssuerState extends State<EditIssuer> {
                 areaController.text
             );
 
-            Response response = await HttpRequests.putIssuer(issuer);
+            Response response = await HttpRequests.issuer.put(issuer);
 
             if (response.statusCode != 200) {
               ScaffoldMessenger.of(context).showSnackBar(

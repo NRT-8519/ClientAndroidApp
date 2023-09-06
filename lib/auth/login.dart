@@ -109,7 +109,7 @@ class LoginPageState extends State<LoginPage> {
 
                         if (username != "" && password != "") {
 
-                          Response? authResponse = await HttpRequests.authenticate(username, password);
+                          Response? authResponse = await HttpRequests.authentication.authenticate(username, password);
 
                           if (authResponse != null) {
 

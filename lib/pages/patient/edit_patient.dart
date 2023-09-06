@@ -33,12 +33,12 @@ class EditPatientState extends State<EditPatient> {
   List<Doctor>? doctorsList;
 
   Future<Patient> get patient async {
-    patientModel = await HttpRequests.getPatient(patientUUID);
+    patientModel = await HttpRequests.patient.get(patientUUID);
     return patientModel!;
   }
 
   Future<List<Doctor>> get doctors async {
-    doctorsList = await HttpRequests.getAllDoctors();
+    doctorsList = await HttpRequests.doctor.getAll();
     return doctorsList!;
   }
 
@@ -322,7 +322,7 @@ class EditPatientState extends State<EditPatient> {
                 UserBasic(assignedDoctorController.text, "", "", "", "", "")
             );
 
-            Response response = await HttpRequests.putPatient(patient);
+            Response response = await HttpRequests.patient.put(patient);
 
             if (response.statusCode != 200) {
               ScaffoldMessenger.of(context).showSnackBar(

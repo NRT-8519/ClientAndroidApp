@@ -29,7 +29,7 @@ class CompaniesState extends State<Companies> {
   TextEditingController searchController = TextEditingController();
 
   Future<PaginatedList<Company>?> get companies async {
-    return await HttpRequests.getCompanies(sortOrder, searchString, currentFilter, pageNumber, pageSize);
+    return await HttpRequests.company.getPaged(sortOrder, searchString, currentFilter, pageNumber, pageSize);
   }
 
   @override
