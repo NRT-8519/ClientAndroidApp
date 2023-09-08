@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:client_android_app/models/Note.dart';
 import 'package:client_android_app/models/appointment.dart';
 import 'package:client_android_app/models/issuer.dart';
 import 'package:client_android_app/models/paginated_list.dart';
@@ -34,6 +35,7 @@ class HttpRequests {
   static var request = const __Request();
   static var prescription = const __Prescription();
   static var appointment = const __Appointment();
+  static var notes = const __Notes();
 }
 
 class __Authentication {
@@ -991,5 +993,103 @@ class __Appointment {
     );
 
     return result;
+  }
+}
+
+class __Notes {
+  const __Notes();
+
+  Future<PaginatedList<Note?>> getPaged(String? sortOrder, int? pageNumber, int pageSize, String doctor, String patient) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    http.Response result = await http.get(Uri.parse("$SERVER/api/notes/all?sortOrder=$sortOrder&pageNumber=$pageNumber&pageSize=$pageSize&doctor=$doctor&patient=$patient"), headers: headers);
+
+
+    if (result.statusCode == 200) {
+      Map<String, dynamic> body = json.decode(result.body);
+      List<dynamic> dynamicList = body["items"];
+      List<Note> list = [];
+      if (dynamicList.isNotEmpty) {
+        for (dynamic a in dynamicList) {
+          Note note = Note.fromJson(a);
+          list.add(note);
+        }
+      }
+      return PaginatedList(list, body["pageNumber"], body["pageSize"], body["totalPages"], body["totalItems"], body["hasPrevious"], body["hasNext"]);
+    }
+    else {
+      List<Note> list = [];
+      return PaginatedList(list, 1, 10, 0, 0, false, false);
+    }
+  }
+
+  Future<Note?> get(int id) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    http.Response result = await http.get(
+        Uri.parse("$SERVER/api/notes/$id"),
+        headers: headers
+    );
+
+    final Map<String, dynamic> parsed = json.decode(result.body);
+
+    final Note note = Note.fromJson(parsed);
+
+    return note;
+  }
+
+  Future<http.Response> post(Note note) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Content-Type": "application/json",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    http.Response result = await http.post(
+        Uri.parse("$SERVER/api/notes/add/"),
+        headers: headers,
+        body: note.asJson()
+    );
+
+    return result;
+  }
+
+  Future<http.Response> put(Note note) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Content-Type": "application/json",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    http.Response result = await http.put(
+        Uri.parse("$SERVER/api/notes/edit/"),
+        headers: headers,
+        body: note.asJson()
+    );
+
+    return result;
+  }
+
+  Future<int> delete(int id) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+
+    http.Response result = await http.delete(Uri.parse("$SERVER/api/notes/remove/$id"), headers: headers);
+
+    if (result.statusCode == 200) {
+      return 1;
+    }
+    else {
+      return 0;
+    }
   }
 }

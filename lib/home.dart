@@ -9,6 +9,7 @@ import 'package:client_android_app/pages/doctor/doctor_details.dart';
 import 'package:client_android_app/pages/doctor/doctors.dart';
 import 'package:client_android_app/pages/issuer/issuers.dart';
 import 'package:client_android_app/pages/medicine/medicines.dart';
+import 'package:client_android_app/pages/notes/notes.dart';
 import 'package:client_android_app/pages/patient/patients.dart';
 import 'package:client_android_app/pages/admin/service_reports.dart';
 import 'package:client_android_app/pages/my_profile.dart';
@@ -133,8 +134,8 @@ class HomePageState extends State<HomePage> {
                         leading: const Icon(Icons.summarize),
                         title: const Text("Notes"),
                         onTap: () {
-
                           Navigator.pop(context);
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => Notes(payload)));
                         },
                       ),
                       ListTile(
