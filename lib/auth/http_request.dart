@@ -11,6 +11,7 @@ import 'package:client_android_app/models/patient.dart';
 import 'package:client_android_app/models/medicine.dart';
 import 'package:client_android_app/models/prescription.dart';
 import 'package:client_android_app/models/report.dart';
+import 'package:client_android_app/models/request.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -806,13 +807,13 @@ class __Issuer {
 class __Report {
   const __Report();
 
-  Future<PaginatedList<Report?>> getPaged(String? sortOrder, String searchString, String currentFilter, int? pageNumber, int pageSize, String user) async {
+  Future<PaginatedList<Report?>> getPaged(String? sortOrder, int? pageNumber, int pageSize, String user) async {
     Map<String, String> headers = HashMap<String, String>();
     headers.addAll({
       "accept": "*/*",
       "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
     });
-    http.Response result = await http.get(Uri.parse("$SERVER/api/report/all?sortOrder=$sortOrder&searchString=$searchString&currentFilter=$currentFilter&pageNumber=$pageNumber&pageSize=$pageSize&user=$user"), headers: headers);
+    http.Response result = await http.get(Uri.parse("$SERVER/api/report/all?sortOrder=$sortOrder&pageNumber=$pageNumber&pageSize=$pageSize&user=$user"), headers: headers);
 
     if (result.statusCode == 200) {
       Map<String, dynamic> body = json.decode(result.body);
@@ -908,6 +909,32 @@ class __Report {
 class __Request {
   const __Request();
 
+  Future<PaginatedList<Request?>> getPaged(String? sortOrder, int? pageNumber, int pageSize, String patient, String doctor) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    http.Response result = await http.get(Uri.parse("$SERVER/api/request/all?sortOrder=$sortOrder&pageNumber=$pageNumber&pageSize=$pageSize&patient=$patient&doctor=$doctor"), headers: headers);
+
+    if (result.statusCode == 200) {
+      Map<String, dynamic> body = json.decode(result.body);
+      List<dynamic> dynamicList = body["items"];
+      List<Request> list = [];
+      if (dynamicList.isNotEmpty) {
+        for (dynamic p in dynamicList) {
+          Request request = Request.fromJson(p);
+          list.add(request);
+        }
+      }
+      return PaginatedList(list, body["pageNumber"], body["pageSize"], body["totalPages"], body["totalItems"], body["hasPrevious"], body["hasNext"]);
+    }
+    else {
+      List<Request> list = [];
+      return PaginatedList(list, 1, 10, 0, 0, false, false);
+    }
+  }
+
   Future<int> getCount(String uuid) async {
     Map<String, String> headers = HashMap<String, String>();
     headers.addAll({
@@ -927,6 +954,56 @@ class __Request {
     else {
       return -1;
     }
+  }
+
+  Future<Request?> get(String uuid) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    http.Response result = await http.get(
+        Uri.parse("$SERVER/api/request/$uuid"),
+        headers: headers
+    );
+
+    final Map<String, dynamic> parsed = json.decode(result.body);
+
+    final Request request = Request.fromJson(parsed);
+
+    return request;
+  }
+
+  Future<http.Response> post(Request request) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Content-Type": "application/json",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    http.Response result = await http.post(
+        Uri.parse("$SERVER/api/request/add/"),
+        headers: headers,
+        body: request.asJson()
+    );
+
+    return result;
+  }
+
+  Future<http.Response> put(Request request) async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*",
+      "Content-Type": "application/json",
+      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+    });
+    http.Response result = await http.put(
+        Uri.parse("$SERVER/api/request/edit/"),
+        headers: headers,
+        body: request.asJson()
+    );
+
+    return result;
   }
 }
 

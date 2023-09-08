@@ -22,13 +22,11 @@ class ServiceReports extends StatefulWidget {
 class ServiceReportsState extends State<ServiceReports> {
 
   late Map<String, dynamic> payload;
-  late String sortOrder, searchString, currentFilter, user;
+  late String sortOrder, user;
   late int pageNumber, pageSize;
 
-  TextEditingController searchController = TextEditingController();
-
   Future<PaginatedList<Report?>> get reports async {
-    return await HttpRequests.report.getPaged(sortOrder, searchString, currentFilter, pageNumber, pageSize, user);
+    return await HttpRequests.report.getPaged(sortOrder, pageNumber, pageSize, user);
   }
 
 
@@ -37,8 +35,6 @@ class ServiceReportsState extends State<ServiceReports> {
     super.initState();
     payload = widget.payload;
     sortOrder = "";
-    searchString = "";
-    currentFilter = "";
     user = "";
     pageNumber = 1;
     pageSize = 10;
@@ -64,40 +60,6 @@ class ServiceReportsState extends State<ServiceReports> {
             return Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
-                  padding: EdgeInsets.all(16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width - 150,
-                        height: 60,
-                        child: TextField(
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            labelText: "Search",
-                          ),
-                          controller: searchController,
-                        ),
-                      ),
-                      ElevatedButton(
-                          onPressed: () {
-                            searchString = currentFilter = searchController.text;
-                            setState(() {
-
-                            });
-                          },
-                          style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                            minimumSize: Size(100, 60),
-                            backgroundColor: Colors.lightBlue,
-                            foregroundColor: Colors.white,
-                          ),
-                          child: Icon(Icons.search)
-                      )
-                    ],
-                  ),
-                ),
                 SizedBox(
                   height: MediaQuery.of(context).size.height - 252,
                   child: SingleChildScrollView(

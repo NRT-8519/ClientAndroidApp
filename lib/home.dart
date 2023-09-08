@@ -15,6 +15,7 @@ import 'package:client_android_app/pages/patient/patients.dart';
 import 'package:client_android_app/pages/admin/service_reports.dart';
 import 'package:client_android_app/pages/my_profile.dart';
 import 'package:client_android_app/pages/prescription/prescriptions.dart';
+import 'package:client_android_app/pages/request/requests.dart';
 import 'package:client_android_app/widgets/appointment_info_card.dart';
 import 'package:client_android_app/widgets/dashboard_info_card.dart';
 import 'package:client_android_app/widgets/home_info_card.dart';
@@ -168,8 +169,8 @@ class HomePageState extends State<HomePage> {
                         leading: const Icon(Icons.question_mark),
                         title: const Text("My Requests"),
                         onTap: () {
-
                           Navigator.pop(context);
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => Requests(payload: payload)));
                         },
                       ),
                       ListTile(
@@ -225,8 +226,8 @@ class HomePageState extends State<HomePage> {
                         leading: const Icon(Icons.question_mark),
                         title: const Text("My Requests"),
                         onTap: () {
-
                           Navigator.pop(context);
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => Requests(payload: payload)));
                         },
                       ),
                       ListTile(
