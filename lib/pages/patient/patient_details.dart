@@ -38,7 +38,7 @@ class PatientDetailsState extends State<PatientDetails> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text("Patient details"),
+        title: const Text("Patient details"),
         centerTitle: true,
       ),
       body: FutureBuilder(
