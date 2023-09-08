@@ -139,75 +139,140 @@ class NotesState extends State<Notes> {
                     builder: (context, notesSnapshot) {
                       if (notesSnapshot.hasData) {
                         if (notesSnapshot.data!.items.isNotEmpty) {
-                          return Container(
-                            margin: const EdgeInsets.only(left: 16, right: 16),
-                            child: ConstrainedBox(
-                                constraints: BoxConstraints(
-                                    minHeight: 50,
-                                    maxHeight: MediaQuery.of(context).size.height - 172 - 16,
-                                    minWidth: 250,
-                                    maxWidth: MediaQuery.of(context).size.width
+                          return Column(
+                            children: [
+                              Container(
+                                margin: const EdgeInsets.only(left: 16, right: 16),
+                                child: ConstrainedBox(
+                                    constraints: BoxConstraints(
+                                        minHeight: 50,
+                                        maxHeight: MediaQuery.of(context).size.height - 252,
+                                        minWidth: 250,
+                                        maxWidth: MediaQuery.of(context).size.width
 
-                                ),
-                                child: RefreshIndicator(
-                                  onRefresh: () async {
+                                    ),
+                                    child: RefreshIndicator(
+                                      onRefresh: () async {
 
-                                    setState(() {
-                                      isRefreshing = true;
-                                    });
+                                        setState(() {
+                                          isRefreshing = true;
+                                        });
 
-                                    String temp = patientUUID;
-                                    patientUUID = "";
-                                    refresh();
-                                    await Future.delayed(Duration(seconds: 1));
-                                    patientUUID = temp;
-                                    refresh();
+                                        String temp = patientUUID;
+                                        patientUUID = "";
+                                        refresh();
+                                        await Future.delayed(Duration(seconds: 1));
+                                        patientUUID = temp;
+                                        refresh();
 
-                                    setState(() {
-                                      isRefreshing = false;
-                                    });
-                                  },
-                                  child: ListView(
-                                    children: [
-                                      if(notesSnapshot.data!.items.isNotEmpty)... [
-                                        for(int i = 0; i < notesSnapshot.data!.items.length; i++)... [
-                                          GestureDetector(
-                                            onTap: () async {
-                                              await editNote(notesSnapshot.data!.items[i]!.id, notesSnapshot.data!.items[i]!.noteTitle, notesSnapshot.data!.items[i]!.note, patientUUID);
-                                              setState(() {
-                                                isRefreshing = true;
-                                              });
+                                        setState(() {
+                                          isRefreshing = false;
+                                        });
+                                      },
+                                      child: ListView(
+                                        children: [
+                                          if(notesSnapshot.data!.items.isNotEmpty)... [
+                                            for(int i = 0; i < notesSnapshot.data!.items.length; i++)... [
+                                              GestureDetector(
+                                                onTap: () async {
+                                                  await editNote(notesSnapshot.data!.items[i]!.id, notesSnapshot.data!.items[i]!.noteTitle, notesSnapshot.data!.items[i]!.note, patientUUID);
+                                                  setState(() {
+                                                    isRefreshing = true;
+                                                  });
 
-                                              String temp = patientUUID;
-                                              patientUUID = "";
-                                              refresh();
-                                              await Future.delayed(Duration(seconds: 1));
-                                              patientUUID = temp;
-                                              refresh();
+                                                  String temp = patientUUID;
+                                                  patientUUID = "";
+                                                  refresh();
+                                                  await Future.delayed(Duration(seconds: 1));
+                                                  patientUUID = temp;
+                                                  refresh();
 
-                                              setState(() {
-                                                isRefreshing = false;
-                                              });
-                                            },
-                                            child: NotesCard(
-                                              noteTitle: Text(notesSnapshot.data!.items[i]!.noteTitle, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
-                                              noteTimestamp: Text(format.format(notesSnapshot.data!.items[i]!.noteDate), style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: CupertinoColors.systemGrey)),
-                                              noteContent: Text(
-                                                notesSnapshot.data!.items[i]!.note,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: const TextStyle(
-                                                  fontSize: 12,
+                                                  setState(() {
+                                                    isRefreshing = false;
+                                                  });
+                                                },
+                                                child: TimestampCard(
+                                                  title: Text(notesSnapshot.data!.items[i]!.noteTitle, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                                                  timestamp: Text(format.format(notesSnapshot.data!.items[i]!.noteDate), style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: CupertinoColors.systemGrey)),
+                                                  content: Text(
+                                                    notesSnapshot.data!.items[i]!.note,
+                                                    overflow: TextOverflow.ellipsis,
+                                                    style: const TextStyle(
+                                                      fontSize: 12,
+                                                    ),
+                                                  ),
+                                                  width: MediaQuery.of(context).size.width,
                                                 ),
-                                              ),
-                                              width: MediaQuery.of(context).size.width,
-                                            ),
-                                          )
-                                        ]
-                                      ]
+                                              )
+                                            ]
+                                          ]
+                                        ],
+                                      ),
+                                    )
+                                ),
+                              ),
+                              Container(
+                                  margin: EdgeInsets.all(16),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      ElevatedButton(
+                                          onPressed: notesSnapshot.data!.hasPrevious ? () async {
+                                            pageNumber -= 1;
+                                            setState(() {
+                                              isRefreshing = true;
+                                            });
+
+                                            String temp = patientUUID;
+                                            patientUUID = "";
+                                            refresh();
+                                            await Future.delayed(Duration(milliseconds: 100));
+                                            patientUUID = temp;
+                                            refresh();
+
+                                            setState(() {
+                                              isRefreshing = false;
+                                            });
+                                          } : null,
+                                          style: ElevatedButton.styleFrom(
+                                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                                            minimumSize: Size(160, 40),
+                                            backgroundColor: Colors.green,
+                                            foregroundColor: Colors.white,
+                                          ),
+                                          child: Text("Previous")
+                                      ),
+                                      ElevatedButton(
+                                          onPressed: notesSnapshot.data!.hasNext ? () async {
+                                            pageNumber += 1;
+                                            setState(() {
+                                              isRefreshing = true;
+                                            });
+
+                                            String temp = patientUUID;
+                                            patientUUID = "";
+                                            refresh();
+                                            await Future.delayed(Duration(milliseconds: 100));
+                                            patientUUID = temp;
+                                            refresh();
+
+                                            setState(() {
+                                              isRefreshing = false;
+                                            });
+                                          } : null,
+                                          style: ElevatedButton.styleFrom(
+                                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                                            minimumSize: Size(160, 40),
+                                            backgroundColor: Colors.green,
+                                            foregroundColor: Colors.white,
+                                          ),
+                                          child: Text("Next")
+                                      ),
                                     ],
-                                  ),
-                                )
-                            ),
+                                  )
+                              ),
+                            ],
                           );
                         }
                         else {

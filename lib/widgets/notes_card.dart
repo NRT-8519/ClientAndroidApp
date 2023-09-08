@@ -5,20 +5,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class NotesCard extends StatefulWidget {
+class TimestampCard extends StatefulWidget {
   final double? width;
-  final Text? noteTitle;
-  final Text? noteContent;
-  final Text? noteTimestamp;
-  const NotesCard({super.key, this.width, required this.noteTitle, required this.noteContent, required this.noteTimestamp});
+  final Text? title;
+  final Text? content;
+  final Text? timestamp;
+  const TimestampCard({super.key, this.width, required this.title, required this.content, required this.timestamp});
 
 
 
   @override
-  State<StatefulWidget> createState() => NotesCardState();
+  State<StatefulWidget> createState() => TimestampCardState();
 }
 
-class NotesCardState extends State<NotesCard> {
+class TimestampCardState extends State<TimestampCard> {
   late double? width;
 
   late Text noteTitle;
@@ -30,9 +30,9 @@ class NotesCardState extends State<NotesCard> {
     super.initState();
     width = widget.width;
 
-    noteTitle = widget.noteTitle!;
-    noteContent = widget.noteContent!;
-    noteTimestamp = widget.noteTimestamp!;
+    noteTitle = widget.title!;
+    noteContent = widget.content!;
+    noteTimestamp = widget.timestamp!;
   }
 
   @override

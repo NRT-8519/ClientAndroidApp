@@ -18,7 +18,7 @@ class HomeInfoCard extends StatelessWidget {
     this.icon,
     this.text = const Text("Placeholder", style: TextStyle(color: Colors.white)),
     this.count = -1,
-    this.width = 150,
+    this.width = 180,
     this.countVisible = true,
     this.countText = ""
   });

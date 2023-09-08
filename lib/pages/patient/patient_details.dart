@@ -23,7 +23,7 @@ class PatientDetailsState extends State<PatientDetails> {
   late Map<String, dynamic> payload;
   late String patientUUID;
   DateFormat expiryFormat = DateFormat("dd/MM/yyyy HH:mm");
-  Future<Patient> get patient async {
+  Future<Patient?> get patient async {
     return await HttpRequests.patient.get(patientUUID);
   }
   @override

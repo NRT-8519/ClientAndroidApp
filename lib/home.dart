@@ -1,5 +1,6 @@
 import 'package:client_android_app/auth/http_request.dart';
 import 'package:client_android_app/auth/login.dart';
+import 'package:client_android_app/pages/admin/report_page.dart';
 import 'package:client_android_app/pages/administrator/administrators.dart';
 import 'package:client_android_app/pages/appointment/appointment_details.dart';
 import 'package:client_android_app/pages/appointment/appointments.dart';
@@ -13,6 +14,7 @@ import 'package:client_android_app/pages/notes/notes.dart';
 import 'package:client_android_app/pages/patient/patients.dart';
 import 'package:client_android_app/pages/admin/service_reports.dart';
 import 'package:client_android_app/pages/my_profile.dart';
+import 'package:client_android_app/pages/prescription/prescriptions.dart';
 import 'package:client_android_app/widgets/appointment_info_card.dart';
 import 'package:client_android_app/widgets/dashboard_info_card.dart';
 import 'package:client_android_app/widgets/home_info_card.dart';
@@ -150,8 +152,8 @@ class HomePageState extends State<HomePage> {
                         leading: const Icon(Icons.receipt_long),
                         title: const Text("My Prescriptions"),
                         onTap: () {
-
                           Navigator.pop(context);
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => Prescriptions(payload)));
                         },
                       ),
                       ListTile(
@@ -174,8 +176,8 @@ class HomePageState extends State<HomePage> {
                         leading: const Icon(Icons.report_problem),
                         title: const Text("Report"),
                         onTap: () {
-
                           Navigator.pop(context);
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => Report(payload: payload)));
                         },
                       ),
                     ],
@@ -207,8 +209,8 @@ class HomePageState extends State<HomePage> {
                         leading: const Icon(Icons.receipt_long),
                         title: const Text("My Prescriptions"),
                         onTap: () {
-
                           Navigator.pop(context);
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => Prescriptions(payload, patientUUID: payload["jti"])));
                         },
                       ),
                       ListTile(
@@ -231,8 +233,8 @@ class HomePageState extends State<HomePage> {
                         leading: const Icon(Icons.report_problem),
                         title: const Text("Report"),
                         onTap: () {
-
                           Navigator.pop(context);
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => Report(payload: payload)));
                         },
                       )
                     ],
@@ -479,7 +481,7 @@ class HomePageState extends State<HomePage> {
                                     if (snapshot.hasData) {
                                       return HomeInfoCard(
                                         callback: () async {
-
+                                          Navigator.push(context, MaterialPageRoute(builder: (context) => Prescriptions(payload, patientUUID: payload["jti"])));
                                         },
                                         color:  Colors.deepPurple,
                                         icon: Icons.receipt_long,
