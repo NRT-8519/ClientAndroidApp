@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:client_android_app/auth/http_request.dart';
+import 'package:client_android_app/auth/http_requests.dart';
 import 'package:client_android_app/auth/validators.dart';
 import 'package:client_android_app/home.dart';
 import 'package:client_android_app/models/jwt.dart';

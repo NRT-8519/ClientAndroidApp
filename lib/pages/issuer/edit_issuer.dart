@@ -4,7 +4,7 @@ import 'package:client_android_app/pages/issuer/issuers.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 
-import '../../../auth/http_request.dart';
+import '../../../auth/http_requests.dart';
 import '../../../auth/validators.dart';
 
 class EditIssuer extends StatefulWidget {

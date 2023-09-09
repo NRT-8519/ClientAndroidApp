@@ -1,10 +1,12 @@
+import 'package:client_android_app/home.dart';
 import 'package:client_android_app/models/doctor.dart';
+import 'package:client_android_app/pages/doctor/doctors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../../auth/http_request.dart';
+import '../../../auth/http_requests.dart';
 import '../../../widgets/text_info_card.dart';
 
 class DoctorDetails extends StatefulWidget {
@@ -42,6 +44,18 @@ class DoctorDetailsState extends State<DoctorDetails> {
               appBar: AppBar(
                 title: Text("Doctor: ${snapshot.data!.firstName} ${snapshot.data!.middleName[0]}. ${snapshot.data!.lastName}"),
                 centerTitle: true,
+                automaticallyImplyLeading: false,
+                leading: GestureDetector(
+                  onTap: () {
+                    if (payload["role"] == "ADMINISTRATOR") {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => Doctors(payload: payload)));
+                    }
+                    else {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(payload)));
+                    }
+                  },
+                  child: Icon(Icons.arrow_back),
+                ),
               ),
               body: Center(
                   child: SingleChildScrollView(
@@ -166,7 +180,7 @@ class DoctorDetailsState extends State<DoctorDetails> {
                           TextInfoCard(
                             color: Colors.deepPurple,
                             width: MediaQuery.of(context).size.width,
-                            title: const Text("Is Account expired", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
+                            title: const Text("Is Account disabled", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
                             text: Text (snapshot.data!.isDisabled ? "Yes" : "No", textAlign: TextAlign.center,),
                           ),
                           TextInfoCard(
@@ -177,6 +191,126 @@ class DoctorDetailsState extends State<DoctorDetails> {
                             title: const Text("UUID", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
                             text: Text(snapshot.data!.uuid!, textAlign: TextAlign.center),
                             width: MediaQuery.of(context).size.width,
+                          ),
+                          Container(
+                            padding: EdgeInsets.all(16),
+                            width: MediaQuery.of(context).size.width,
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                ElevatedButton(
+                                    onPressed: snapshot.data!.isExpired ? null : () async {
+
+                                      Doctor doc = Doctor(
+                                        snapshot.data!.uuid,
+                                        snapshot.data!.firstName,
+                                        snapshot.data!.middleName,
+                                        snapshot.data!.lastName,
+                                        snapshot.data!.title,
+                                        snapshot.data!.username,
+                                        snapshot.data!.password,
+                                        snapshot.data!.email,
+                                        snapshot.data!.phoneNumber,
+                                        snapshot.data!.dateOfBirth,
+                                        snapshot.data!.gender,
+                                        snapshot.data!.ssn,
+                                        DateTime.now(),
+                                        snapshot.data!.isDisabled,
+                                        true,
+                                        snapshot.data!.areaOfExpertise,
+                                        snapshot.data!.roomNumber,
+                                        snapshot.data!.patients
+                                      );
+
+                                      await HttpRequests.doctor.put(doc);
+
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => DoctorDetails(payload, doctorUUID)));
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                                      minimumSize: Size(160, 40),
+                                      backgroundColor: Colors.orange,
+                                      foregroundColor: Colors.white,
+                                    ),
+                                    child: Text("Force password expiry")
+                                ),
+                                if (!snapshot.data!.isDisabled)... [
+                                  ElevatedButton(
+                                      onPressed: () async {
+                                        Doctor doc = Doctor(
+                                            snapshot.data!.uuid,
+                                            snapshot.data!.firstName,
+                                            snapshot.data!.middleName,
+                                            snapshot.data!.lastName,
+                                            snapshot.data!.title,
+                                            snapshot.data!.username,
+                                            snapshot.data!.password,
+                                            snapshot.data!.email,
+                                            snapshot.data!.phoneNumber,
+                                            snapshot.data!.dateOfBirth,
+                                            snapshot.data!.gender,
+                                            snapshot.data!.ssn,
+                                            snapshot.data!.passwordExpiryDate,
+                                            true,
+                                            snapshot.data!.isExpired,
+                                            snapshot.data!.areaOfExpertise,
+                                            snapshot.data!.roomNumber,
+                                            snapshot.data!.patients
+                                        );
+
+                                        await HttpRequests.doctor.put(doc);
+
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => DoctorDetails(payload, doctorUUID)));
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                                        minimumSize: Size(160, 40),
+                                        backgroundColor: Colors.red,
+                                        foregroundColor: Colors.white,
+                                      ),
+                                      child: Text("Disable account")
+                                  ),
+                                ]
+                                else... [
+                                  ElevatedButton(
+                                      onPressed: () async {
+                                        Doctor doc = Doctor(
+                                            snapshot.data!.uuid,
+                                            snapshot.data!.firstName,
+                                            snapshot.data!.middleName,
+                                            snapshot.data!.lastName,
+                                            snapshot.data!.title,
+                                            snapshot.data!.username,
+                                            snapshot.data!.password,
+                                            snapshot.data!.email,
+                                            snapshot.data!.phoneNumber,
+                                            snapshot.data!.dateOfBirth,
+                                            snapshot.data!.gender,
+                                            snapshot.data!.ssn,
+                                            snapshot.data!.passwordExpiryDate,
+                                            true,
+                                            snapshot.data!.isExpired,
+                                            snapshot.data!.areaOfExpertise,
+                                            snapshot.data!.roomNumber,
+                                            snapshot.data!.patients
+                                        );
+
+                                        await HttpRequests.doctor.put(doc);
+
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => DoctorDetails(payload, doctorUUID)));
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                                        minimumSize: Size(160, 40),
+                                        backgroundColor: Colors.green,
+                                        foregroundColor: Colors.white,
+                                      ),
+                                      child: Text("Enable account")
+                                  ),
+                                ]
+                              ],
+                            ),
                           )
                         ]
                       ],

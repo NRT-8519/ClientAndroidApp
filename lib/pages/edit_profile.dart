@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 
-import '../auth/http_request.dart';
+import '../auth/http_requests.dart';
 import '../models/user.dart';
 
 class EditProfile extends StatefulWidget {

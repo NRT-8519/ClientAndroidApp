@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../../auth/http_request.dart';
+import '../../../auth/http_requests.dart';
 import '../../../models/company.dart';
 import '../../../models/paginated_list.dart';
 

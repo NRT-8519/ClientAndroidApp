@@ -1,4 +1,4 @@
-import 'package:client_android_app/auth/http_request.dart';
+import 'package:client_android_app/auth/http_requests.dart';
 import 'package:client_android_app/auth/login.dart';
 import 'package:client_android_app/pages/admin/report_page.dart';
 import 'package:client_android_app/pages/administrator/administrators.dart';

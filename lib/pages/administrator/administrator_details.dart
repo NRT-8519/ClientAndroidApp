@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../../auth/http_request.dart';
+import '../../../auth/http_requests.dart';
 import '../../../widgets/text_info_card.dart';
 import '../doctor/doctor_details.dart';
 

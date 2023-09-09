@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:client_android_app/auth/http_request.dart';
+import 'package:client_android_app/auth/http_requests.dart';
 import 'package:client_android_app/models/company.dart';
 import 'package:client_android_app/models/paginated_list.dart';
 import 'package:client_android_app/pages/company/add_company.dart';

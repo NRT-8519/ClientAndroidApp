@@ -1,4 +1,4 @@
-import 'package:client_android_app/auth/http_request.dart';
+import 'package:client_android_app/auth/http_requests.dart';
 import 'package:client_android_app/home.dart';
 import 'package:client_android_app/models/paginated_list.dart';
 import 'package:client_android_app/models/patient.dart';
@@ -63,7 +63,7 @@ class PatientsState extends State<Patients> {
           child: Icon(Icons.arrow_back),
         ),
         actions: [
-          if(payload["jti"] == "ADMINISTRATOR")... [
+          if(payload["role"] == "ADMINISTRATOR")... [
             Padding(
               padding: EdgeInsets.only(right: 16),
               child: GestureDetector(
@@ -144,7 +144,7 @@ class PatientsState extends State<Patients> {
                                         child: const Icon(Icons.info, color: Colors.green, size: 32),
                                       ),
                                   ),
-                                  if(payload["jti"] == "ADMINISTRATOR")... [
+                                  if(payload["role"] == "ADMINISTRATOR")... [
                                     Container(
                                         margin: EdgeInsets.all(9),
                                         child: GestureDetector(

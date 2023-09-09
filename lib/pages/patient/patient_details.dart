@@ -1,11 +1,12 @@
 import 'package:client_android_app/models/patient.dart';
+import 'package:client_android_app/pages/patient/patients.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../../auth/http_request.dart';
+import '../../../auth/http_requests.dart';
 import '../../../widgets/text_info_card.dart';
 import '../doctor/doctor_details.dart';
 
@@ -40,6 +41,18 @@ class PatientDetailsState extends State<PatientDetails> {
       appBar: AppBar(
         title: const Text("Patient details"),
         centerTitle: true,
+        automaticallyImplyLeading: false,
+        leading: GestureDetector(
+          onTap: () {
+            if (payload["role"] == "ADMINISTRATOR") {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => Patients(payload: payload)));
+            }
+            else {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => Patients(payload: payload, doctor: payload["jti"])));
+            }
+          },
+          child: Icon(Icons.arrow_back),
+        ),
       ),
       body: FutureBuilder(
         future: patient,
@@ -91,7 +104,7 @@ class PatientDetailsState extends State<PatientDetails> {
                         title: const Text("Date of Birth", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
                         text: Text ("${snapshot.data!.dateOfBirth.day}/${snapshot.data!.dateOfBirth.month}/${snapshot.data!.dateOfBirth.year}", textAlign: TextAlign.center,),
                       ),
-                      if(payload["jti"] == "ADMINISTRATOR")... [
+                      if(payload["role"] == "ADMINISTRATOR")... [
 
                         TextInfoCard(
                           callback: () async {
@@ -130,7 +143,7 @@ class PatientDetailsState extends State<PatientDetails> {
                         title: const Text("Phone Number", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
                         text: Text (snapshot.data!.phoneNumber, textAlign: TextAlign.center),
                       ),
-                      if(payload["jti"] == "ADMINISTRATOR")... [
+                      if(payload["role"] == "ADMINISTRATOR")... [
                         TextInfoCard(
                           callback: () async {
                             await Clipboard.setData(ClipboardData(text: snapshot.data!.username!));
@@ -158,7 +171,7 @@ class PatientDetailsState extends State<PatientDetails> {
                         TextInfoCard(
                           color: Colors.deepPurple,
                           width: MediaQuery.of(context).size.width,
-                          title: const Text("Is Account expired", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
+                          title: const Text("Is Account disabled", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
                           text: Text (snapshot.data!.isDisabled ? "Yes" : "No", textAlign: TextAlign.center,),
                         ),
                         TextInfoCard(
@@ -169,6 +182,120 @@ class PatientDetailsState extends State<PatientDetails> {
                           title: const Text("UUID", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
                           text: Text(snapshot.data!.uuid!, textAlign: TextAlign.center),
                           width: MediaQuery.of(context).size.width,
+                        ),
+                        Container(
+                          padding: EdgeInsets.all(16),
+                          width: MediaQuery.of(context).size.width,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              ElevatedButton(
+                                  onPressed: snapshot.data!.isExpired ? null : () async {
+
+                                    Patient pat = Patient(
+                                        snapshot.data!.uuid,
+                                        snapshot.data!.firstName,
+                                        snapshot.data!.middleName,
+                                        snapshot.data!.lastName,
+                                        snapshot.data!.title,
+                                        snapshot.data!.username,
+                                        snapshot.data!.password,
+                                        snapshot.data!.email,
+                                        snapshot.data!.phoneNumber,
+                                        snapshot.data!.dateOfBirth,
+                                        snapshot.data!.gender,
+                                        snapshot.data!.ssn,
+                                        DateTime.now(),
+                                        false,
+                                        true,
+                                        snapshot.data!.assignedDoctor,
+                                    );
+
+                                    await HttpRequests.patient.put(pat);
+
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => PatientDetails(payload, patientUUID)));
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                                    minimumSize: Size(160, 40),
+                                    backgroundColor: Colors.orange,
+                                    foregroundColor: Colors.white,
+                                  ),
+                                  child: Text("Force password Expiry")
+                              ),
+                              if(!snapshot.data!.isDisabled)... [
+                                ElevatedButton(
+                                    onPressed: () async {
+                                      Patient pat = Patient(
+                                          snapshot.data!.uuid,
+                                          snapshot.data!.firstName,
+                                          snapshot.data!.middleName,
+                                          snapshot.data!.lastName,
+                                          snapshot.data!.title,
+                                          snapshot.data!.username,
+                                          snapshot.data!.password,
+                                          snapshot.data!.email,
+                                          snapshot.data!.phoneNumber,
+                                          snapshot.data!.dateOfBirth,
+                                          snapshot.data!.gender,
+                                          snapshot.data!.ssn,
+                                          snapshot.data!.passwordExpiryDate,
+                                          true,
+                                          snapshot.data!.isExpired,
+                                          snapshot.data!.assignedDoctor
+                                      );
+
+                                      await HttpRequests.patient.put(pat);
+
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => PatientDetails(payload, patientUUID)));
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                                      minimumSize: Size(160, 40),
+                                      backgroundColor: Colors.red,
+                                      foregroundColor: Colors.white,
+                                    ),
+                                    child: Text("Disable account")
+                                ),
+                              ]
+                              else... [
+                                ElevatedButton(
+                                    onPressed: () async {
+                                      Patient pat = Patient(
+                                          snapshot.data!.uuid,
+                                          snapshot.data!.firstName,
+                                          snapshot.data!.middleName,
+                                          snapshot.data!.lastName,
+                                          snapshot.data!.title,
+                                          snapshot.data!.username,
+                                          snapshot.data!.password,
+                                          snapshot.data!.email,
+                                          snapshot.data!.phoneNumber,
+                                          snapshot.data!.dateOfBirth,
+                                          snapshot.data!.gender,
+                                          snapshot.data!.ssn,
+                                          snapshot.data!.passwordExpiryDate,
+                                          false,
+                                          snapshot.data!.isExpired,
+                                          snapshot.data!.assignedDoctor
+                                      );
+
+                                      await HttpRequests.patient.put(pat);
+
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => PatientDetails(payload, patientUUID)));
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                                      minimumSize: Size(160, 40),
+                                      backgroundColor: Colors.green,
+                                      foregroundColor: Colors.white,
+                                    ),
+                                    child: Text("Enable account")
+                                ),
+                              ]
+                            ],
+                          ),
                         )
                       ]
                     ],

@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 
-import '../../../auth/http_request.dart';
+import '../../../auth/http_requests.dart';
 import '../../../auth/validators.dart';
 
 class AddAppointment extends StatefulWidget {

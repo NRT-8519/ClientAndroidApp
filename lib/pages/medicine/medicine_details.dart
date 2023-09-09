@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
-import 'package:client_android_app/auth/http_request.dart';
+import 'package:client_android_app/auth/http_requests.dart';
 
 class MedicineDetails extends StatefulWidget {
   const MedicineDetails(this.payload, this.medicineUUID, {super.key});
