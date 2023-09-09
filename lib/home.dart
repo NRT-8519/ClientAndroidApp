@@ -186,6 +186,7 @@ class HomePageState extends State<HomePage> {
                       FutureBuilder(future: patient, builder: (context, snapshot) {
                         if (snapshot.hasData) {
                           return ListTile(
+                            enabled: snapshot.data!.assignedDoctor.uuid != "00000000-0000-0000-0000-000000000000",
                             leading: const Icon(Icons.person),
                             title: const Text("My Doctor"),
                             onTap: () {
@@ -433,7 +434,7 @@ class HomePageState extends State<HomePage> {
                                     if (snapshot.hasData) {
                                       return HomeInfoCard(
                                         callback: () async {
-
+                                          Navigator.push(context, MaterialPageRoute(builder: (context) => Requests(payload: payload)));
                                         },
                                         color:  Colors.deepPurple,
                                         icon: Icons.question_mark,
@@ -457,14 +458,14 @@ class HomePageState extends State<HomePage> {
                                   builder: (context, snapshot) {
                                     if (snapshot.hasData) {
                                       return HomeInfoCard(
-                                        callback: () async {
+                                        callback: snapshot.data!.assignedDoctor.uuid == "00000000-0000-0000-0000-000000000000" ? null : () async {
                                           Navigator.push(context, MaterialPageRoute(builder: (context) => DoctorDetails(payload, snapshot.data!.assignedDoctor.uuid!)));
                                         },
-                                        color: Colors.deepPurple,
+                                        color: snapshot.data!.assignedDoctor.uuid == "00000000-0000-0000-0000-000000000000" ? Colors.grey : Colors.deepPurple,
                                         icon: Icons.person,
                                         text: const Text("My Doctor", style: TextStyle(color: Colors.white)),
                                         countVisible: false,
-                                        countText: "Dr. ${snapshot.data!.assignedDoctor.firstName} ${snapshot.data!.assignedDoctor.lastName}",
+                                        countText: snapshot.data!.assignedDoctor.uuid == "00000000-0000-0000-0000-000000000000" ? "Not assigned" : "Dr. ${snapshot.data!.assignedDoctor.firstName} ${snapshot.data!.assignedDoctor.lastName}",
                                       );
                                     }
                                     else {
@@ -501,16 +502,16 @@ class HomePageState extends State<HomePage> {
                               ),
                               FutureBuilder(
                                   future: requestCount,
-                                  builder: (context, snapshot) {
-                                    if (snapshot.hasData) {
+                                  builder: (context, requestCountSnapshot) {
+                                    if (requestCountSnapshot.hasData) {
                                       return HomeInfoCard(
                                           callback: () async {
-
+                                            Navigator.push(context, MaterialPageRoute(builder: (context) => Requests(payload: payload)));
                                           },
                                           color:  Colors.deepPurple,
                                           icon: Icons.question_mark,
                                           text: const Text("My Requests", style: TextStyle(color: Colors.white)),
-                                          count: snapshot.data!
+                                          count: requestCountSnapshot.data!
                                       );
                                     }
                                     else {
