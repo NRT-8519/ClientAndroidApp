@@ -133,7 +133,7 @@ class PatientsState extends State<Patients> {
                           for(int i = 0; i < snapshot.data!.items.length; i++)... [
                             TableRow(
                                 children: [
-                                  TableCell(child: Text("${i + 1}", textAlign: TextAlign.center,)),
+                                  TableCell(child: Text("${(i + 1) + (pageNumber == 1 ? 0 : (pageNumber - 1) * pageSize)}", textAlign: TextAlign.center,)),
                                   TableCell(child: Text("${snapshot.data!.items[i].firstName} ${snapshot.data!.items[i].middleName[0]}. ${snapshot.data!.items[i].lastName}", textAlign: TextAlign.center)),
                                   Container(
                                       margin: EdgeInsets.all(9),
@@ -180,7 +180,12 @@ class PatientsState extends State<Patients> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         ElevatedButton(
-                            onPressed: snapshot.data!.hasPrevious ? () {} : null,
+                            onPressed: snapshot.data!.hasPrevious ? () {
+                              pageNumber -= 1;
+                              setState(() {
+
+                              });
+                            } : null,
                             style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                               minimumSize: Size(160, 40),
@@ -190,7 +195,12 @@ class PatientsState extends State<Patients> {
                             child: Text("Previous")
                         ),
                         ElevatedButton(
-                            onPressed: snapshot.data!.hasNext ? () {} : null,
+                            onPressed: snapshot.data!.hasNext ? () {
+                              pageNumber += 1;
+                              setState(() {
+
+                              });
+                            } : null,
                             style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                               minimumSize: Size(160, 40),

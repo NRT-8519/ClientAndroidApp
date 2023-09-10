@@ -564,5 +564,4 @@ class PrescriptionsState extends State<Prescriptions> {
         }
     );
   }
-
 }

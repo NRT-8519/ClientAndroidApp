@@ -127,7 +127,7 @@ class AdministratorsState extends State<Administrators> {
                           for(int i = 0; i < snapshot.data!.items.length; i++)... [
                             TableRow(
                                 children: [
-                                  TableCell(child: Text("${i + 1}", textAlign: TextAlign.center, style: snapshot.data!.items[i].uuid == payload["jti"].toString() ? TextStyle(fontWeight: FontWeight.bold) : TextStyle(fontWeight: FontWeight.normal),)),
+                                  TableCell(child: Text("${(i + 1) + (pageNumber == 1 ? 0 : (pageNumber - 1) * pageSize)}", textAlign: TextAlign.center, style: snapshot.data!.items[i].uuid == payload["jti"].toString() ? TextStyle(fontWeight: FontWeight.bold) : TextStyle(fontWeight: FontWeight.normal),)),
                                   TableCell(child: Text("${snapshot.data!.items[i].firstName} ${snapshot.data!.items[i].middleName[0]}. ${snapshot.data!.items[i].lastName}", textAlign: TextAlign.center, style: snapshot.data!.items[i].uuid == payload["jti"].toString() ? TextStyle(fontWeight: FontWeight.bold) : TextStyle(fontWeight: FontWeight.normal),)),
                                   Container(
                                     margin: EdgeInsets.all(9),

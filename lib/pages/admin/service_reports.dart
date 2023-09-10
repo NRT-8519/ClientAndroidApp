@@ -76,7 +76,7 @@ class ServiceReportsState extends State<ServiceReports> {
                           for(int i = 0; i < snapshot.data!.items.length; i++)... [
                             TableRow(
                                 children: [
-                                  TableCell(child: Text("${i + 1}", textAlign: TextAlign.center,)),
+                                  TableCell(child: Text("${(i + 1) + (pageNumber == 1 ? 0 : (pageNumber - 1) * pageSize)}", textAlign: TextAlign.center,)),
                                   TableCell(child: Text(snapshot.data!.items[i]!.title, textAlign: TextAlign.center)),
                                   Container(
                                     margin: EdgeInsets.all(9),
