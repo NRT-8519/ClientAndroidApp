@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'globals.dart';
 import 'package:client_android_app/auth/http_requests.dart';
 import 'package:client_android_app/auth/validators.dart';
 import 'package:client_android_app/home.dart';
@@ -40,6 +40,8 @@ class LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
+    storage.delete(key: "token");
+
     setState(() {
       submitting = false;
     });
@@ -118,6 +120,8 @@ class LoginPageState extends State<LoginPage> {
 
                             if(jwtToken.isAuthSuccessful) {
                               storage.write(key: "token", value: jwtToken.token);
+                              Globals.isLoggedIn = true;
+                              Globals.keepSession();
                               Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(JwtDecoder.decode(jwtToken.token))));
                             }
                             else {

@@ -65,6 +65,18 @@ class __Authentication {
       return null;
     }
   }
+
+  Future<bool> validate() async {
+    Map<String, String> headers = HashMap<String, String>();
+    headers.addAll({
+      "accept": "*/*"
+    });
+
+    var token = await STORAGE.read(key: "token");
+
+    http.Response result = await http.get(Uri.parse("$SERVER/api/users/validate?token=$token"));
+    return bool.parse(result.body);
+  }
 }
 
 class __Administrator {
