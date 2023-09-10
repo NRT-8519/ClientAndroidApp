@@ -1,25 +1,28 @@
 import 'dart:io';
 
 import 'package:client_android_app/auth/http_overrides.dart';
+import 'package:client_android_app/auth/http_requests.dart';
 import 'package:client_android_app/auth/login.dart';
 import 'package:client_android_app/unsupported_role.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
+import 'auth/globals.dart';
 import 'home.dart';
-
-
-
-void main() async {
-  HttpOverrides.global = LocalHttpOverrides();
-  runApp(const ClientWebApp());
-}
 
 var storage = const FlutterSecureStorage();
 
+void main() async {
+  HttpOverrides.global = LocalHttpOverrides();
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(const ClientWebApp());
+}
+
 class ClientWebApp extends StatelessWidget {
   const ClientWebApp({super.key});
+
+  static final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
   Future<String> get jwtToken async {
     var jwt = await storage.read(key: "token");
@@ -31,6 +34,7 @@ class ClientWebApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: navigatorKey,
       title: 'Client Web App',
       theme: ThemeData(
         // This is the theme of your application.
@@ -57,10 +61,14 @@ class ClientWebApp extends StatelessWidget {
           if(!snapshot.hasData) { return const CircularProgressIndicator();}
           if(snapshot.data != "") {
             var jwt = JwtDecoder.decode(snapshot.data!);
+
             if (JwtDecoder.isExpired(snapshot.data!)) {
               return LoginPage();
             }
             else {
+              print(navigatorKey.currentState!.toString());
+              Globals.isLoggedIn = true;
+              Globals.keepSession();
               switch (jwt["role"].toString()) {
                 case "ADMINISTRATOR":
                 case "DOCTOR":
@@ -79,5 +87,7 @@ class ClientWebApp extends StatelessWidget {
       ),
     );
   }
+
+
 }
 
