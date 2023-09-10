@@ -200,9 +200,9 @@ class Validators {
         return "ATC is 7 characters long!";
       }
       else {
-        final digits = RegExp(r"^[A-Z](\d+([A-Z]{1,2}(\d+)?)?)?$");
+        final digits = RegExp(r"(^[ABCDGHJLMNPRSV][0-1][0-9][A-Z]{2}[0-9]{2})?");
         if(!digits.hasMatch(value)) {
-          return "Invalid ATC.\nExample of a valid ATC: A10BA02";
+          return "Invalid ATC.\nExample of a valid ATC: A10BA02 or empty";
         }
       }
     }
