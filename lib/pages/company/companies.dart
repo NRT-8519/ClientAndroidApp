@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:client_android_app/auth/http_requests.dart';
 import 'package:client_android_app/models/company.dart';
 import 'package:client_android_app/models/paginated_list.dart';
@@ -7,12 +5,11 @@ import 'package:client_android_app/pages/company/add_company.dart';
 import 'package:client_android_app/pages/company/edit_company.dart';
 import 'package:client_android_app/pages/admin/dashboard.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 
 import 'company_details.dart';
 
 class Companies extends StatefulWidget {
-  Companies({super.key, required this.payload});
+  const Companies({super.key, required this.payload});
 
   final Map<String, dynamic> payload;
 
@@ -55,16 +52,16 @@ class CompaniesState extends State<Companies> {
           onTap: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) => Dashboard(payload)));
           },
-          child: Icon(Icons.arrow_back),
+          child: const Icon(Icons.arrow_back),
         ),
         actions: [
           Padding(
-            padding: EdgeInsets.only(right: 16),
+            padding: const EdgeInsets.only(right: 16),
             child: GestureDetector(
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => AddCompany(payload)));
               },
-              child: Icon(Icons.add_circle_outline),
+              child: const Icon(Icons.add_circle_outline),
             ),
           )
         ],
@@ -77,7 +74,7 @@ class CompaniesState extends State<Companies> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  padding: EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(16),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -101,11 +98,11 @@ class CompaniesState extends State<Companies> {
                           },
                           style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                            minimumSize: Size(100, 60),
+                            minimumSize: const Size(100, 60),
                             backgroundColor: Colors.green,
                             foregroundColor: Colors.white,
                           ),
-                          child: Icon(Icons.search)
+                          child: const Icon(Icons.search)
                       )
                     ],
                   ),
@@ -116,10 +113,10 @@ class CompaniesState extends State<Companies> {
                     child: Table(
                       defaultVerticalAlignment: TableCellVerticalAlignment.middle,
                       columnWidths: <int, TableColumnWidth>{
-                        0: snapshot.data!.items.isEmpty ? FixedColumnWidth(MediaQuery.of(context).size.width - 32) : FixedColumnWidth(32),
-                        1: FixedColumnWidth(200),
-                        2: FixedColumnWidth(64),
-                        3: FixedColumnWidth(64),
+                        0: snapshot.data!.items.isEmpty ? FixedColumnWidth(MediaQuery.of(context).size.width - 32) : const FixedColumnWidth(32),
+                        1: const FixedColumnWidth(200),
+                        2: const FixedColumnWidth(64),
+                        3: const FixedColumnWidth(64),
                       },
                       children: [
                         if(snapshot.data!.items.isNotEmpty)... [
@@ -129,7 +126,7 @@ class CompaniesState extends State<Companies> {
                                   TableCell(child: Text("${(i + 1) + (pageNumber == 1 ? 0 : (pageNumber - 1) * pageSize)}", textAlign: TextAlign.center,)),
                                   TableCell(child: Text(snapshot.data!.items[i].name, textAlign: TextAlign.center)),
                                   Container(
-                                    margin: EdgeInsets.all(9),
+                                    margin: const EdgeInsets.all(9),
                                     child: GestureDetector(
                                       onTap: () {
                                         Navigator.push(context, MaterialPageRoute(builder: (context) => CompanyDetails(payload, snapshot.data!.items[i].uuid)));
@@ -138,7 +135,7 @@ class CompaniesState extends State<Companies> {
                                     ),
                                   ),
                                   Container(
-                                    margin: EdgeInsets.all(9),
+                                    margin: const EdgeInsets.all(9),
                                     child: GestureDetector(
                                       onTap: () {
                                         Navigator.push(context, MaterialPageRoute(builder: (context) => EditCompany(payload, snapshot.data!.items[i].uuid)));
@@ -151,7 +148,7 @@ class CompaniesState extends State<Companies> {
                           ]
                         ]
                         else... [
-                          TableRow(
+                          const TableRow(
                               children: [
                                 Text(
                                   "No Content",
@@ -165,7 +162,7 @@ class CompaniesState extends State<Companies> {
                   ),
                 ),
                 Container(
-                    padding: EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(16),
                     child: Row(
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -179,11 +176,11 @@ class CompaniesState extends State<Companies> {
                             } : null,
                             style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                              minimumSize: Size(160, 40),
+                              minimumSize: const Size(160, 40),
                               backgroundColor: Colors.green,
                               foregroundColor: Colors.white,
                             ),
-                            child: Text("Previous")
+                            child: const Text("Previous")
                         ),
                         ElevatedButton(
                             onPressed: snapshot.data!.hasNext ? () {
@@ -194,11 +191,11 @@ class CompaniesState extends State<Companies> {
                             } : null,
                             style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                              minimumSize: Size(160, 40),
+                              minimumSize: const Size(160, 40),
                               backgroundColor: Colors.green,
                               foregroundColor: Colors.white,
                             ),
-                            child: Text("Next")
+                            child: const Text("Next")
                         ),
                       ],
                     )

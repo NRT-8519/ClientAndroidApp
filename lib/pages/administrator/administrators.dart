@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:client_android_app/auth/http_requests.dart';
 import 'package:client_android_app/models/paginated_list.dart';
 import 'package:client_android_app/models/user.dart';
@@ -13,7 +11,7 @@ import 'package:flutter/material.dart';
 import '../admin/dashboard.dart';
 
 class Administrators extends StatefulWidget {
-  Administrators({super.key, required this.payload});
+  const Administrators({super.key, required this.payload});
 
   final Map<String, dynamic> payload;
 
@@ -56,16 +54,16 @@ class AdministratorsState extends State<Administrators> {
           onTap: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) => Dashboard(payload)));
           },
-          child: Icon(Icons.arrow_back),
+          child: const Icon(Icons.arrow_back),
         ),
         actions: [
           Padding(
-            padding: EdgeInsets.only(right: 16),
+            padding: const EdgeInsets.only(right: 16),
             child: GestureDetector(
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => AddAdministrator(payload)));
               },
-              child: Icon(Icons.add_circle_outline),
+              child: const Icon(Icons.add_circle_outline),
             ),
           )
         ],
@@ -127,10 +125,10 @@ class AdministratorsState extends State<Administrators> {
                           for(int i = 0; i < snapshot.data!.items.length; i++)... [
                             TableRow(
                                 children: [
-                                  TableCell(child: Text("${(i + 1) + (pageNumber == 1 ? 0 : (pageNumber - 1) * pageSize)}", textAlign: TextAlign.center, style: snapshot.data!.items[i].uuid == payload["jti"].toString() ? TextStyle(fontWeight: FontWeight.bold) : TextStyle(fontWeight: FontWeight.normal),)),
-                                  TableCell(child: Text("${snapshot.data!.items[i].firstName} ${snapshot.data!.items[i].middleName[0]}. ${snapshot.data!.items[i].lastName}", textAlign: TextAlign.center, style: snapshot.data!.items[i].uuid == payload["jti"].toString() ? TextStyle(fontWeight: FontWeight.bold) : TextStyle(fontWeight: FontWeight.normal),)),
+                                  TableCell(child: Text("${(i + 1) + (pageNumber == 1 ? 0 : (pageNumber - 1) * pageSize)}", textAlign: TextAlign.center, style: snapshot.data!.items[i].uuid == payload["jti"].toString() ? const TextStyle(fontWeight: FontWeight.bold) : const TextStyle(fontWeight: FontWeight.normal),)),
+                                  TableCell(child: Text("${snapshot.data!.items[i].firstName} ${snapshot.data!.items[i].middleName[0]}. ${snapshot.data!.items[i].lastName}", textAlign: TextAlign.center, style: snapshot.data!.items[i].uuid == payload["jti"].toString() ? const TextStyle(fontWeight: FontWeight.bold) : const TextStyle(fontWeight: FontWeight.normal),)),
                                   Container(
-                                    margin: EdgeInsets.all(9),
+                                    margin: const EdgeInsets.all(9),
                                     child: GestureDetector(
                                       onTap: () {
                                         if (snapshot.data!.items[i].uuid != payload["jti"].toString()) {
@@ -145,7 +143,7 @@ class AdministratorsState extends State<Administrators> {
                                     ),
                                   ),
                                   Container(
-                                      margin: EdgeInsets.all(9),
+                                      margin: const EdgeInsets.all(9),
                                       child: GestureDetector(
                                         onTap: () {
                                           if (snapshot.data!.items[i].uuid != payload["jti"].toString()) {

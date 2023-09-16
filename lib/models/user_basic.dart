@@ -1,7 +1,3 @@
-import 'dart:convert';
-
-import 'package:intl/intl.dart';
-
 class UserBasic {
   final String? uuid;
   final String firstName, middleName, lastName;

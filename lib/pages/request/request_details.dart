@@ -3,7 +3,6 @@ import 'package:client_android_app/auth/validators.dart';
 import 'package:client_android_app/models/request.dart' as rqst;
 import 'package:client_android_app/pages/request/requests.dart';
 import 'package:client_android_app/widgets/text_info_card.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
@@ -81,7 +80,7 @@ class RequestDetailsState extends State<RequestDetails> {
                     if(payload["role"] == "DOCTOR")... [
                       TextInfoCard(
                         width: MediaQuery.of(context).size.width,
-                        title: Text("Patient", textAlign: TextAlign.center,
+                        title: const Text("Patient", textAlign: TextAlign.center,
                             style: TextStyle(color: Colors.white)),
                         text: Text(
                           snapshot.data!.patient,
@@ -93,7 +92,7 @@ class RequestDetailsState extends State<RequestDetails> {
                     if(payload["role"] == "PATIENT")... [
                       TextInfoCard(
                         width: MediaQuery.of(context).size.width,
-                        title: Text("Doctor", textAlign: TextAlign.center,
+                        title: const Text("Doctor", textAlign: TextAlign.center,
                             style: TextStyle(color: Colors.white)),
                         text: Text(snapshot.data!.doctor, textAlign: TextAlign.center),
                         color: Colors.deepPurple,
@@ -101,21 +100,21 @@ class RequestDetailsState extends State<RequestDetails> {
                     ],
                     TextInfoCard(
                       width: MediaQuery.of(context).size.width,
-                      title: Text("Description", textAlign: TextAlign.center,
+                      title: const Text("Description", textAlign: TextAlign.center,
                           style: TextStyle(color: Colors.white)),
                       text: Text(snapshot.data!.description, textAlign: TextAlign.center),
                       color: Colors.deepPurple,
                     ),
                     TextInfoCard(
                       width: MediaQuery.of(context).size.width,
-                      title: Text("Type", textAlign: TextAlign.center,
+                      title: const Text("Type", textAlign: TextAlign.center,
                           style: TextStyle(color: Colors.white)),
                       text: Text(getType(snapshot.data!.type), textAlign: TextAlign.center),
                       color: Colors.deepPurple,
                     ),
                     TextInfoCard(
                       width: MediaQuery.of(context).size.width,
-                      title: Text("Status", textAlign: TextAlign.center,
+                      title: const Text("Status", textAlign: TextAlign.center,
                           style: TextStyle(color: Colors.white)),
                       color: Colors.deepPurple,
                       text: Text(
@@ -130,7 +129,7 @@ class RequestDetailsState extends State<RequestDetails> {
                     ),
                     TextInfoCard(
                       width: MediaQuery.of(context).size.width,
-                      title: Text("Reason", textAlign: TextAlign.center,
+                      title: const Text("Reason", textAlign: TextAlign.center,
                           style: TextStyle(color: Colors.white)),
                       color: Colors.deepPurple,
                       text: Text(snapshot.data!.reason == "" ? "Not yet reviewed" : snapshot.data!.reason, textAlign: TextAlign.center),
@@ -152,7 +151,7 @@ class RequestDetailsState extends State<RequestDetails> {
                               ),
                             ),
                             Container(
-                              padding: EdgeInsets.all(16),
+                              padding: const EdgeInsets.all(16),
                               width: MediaQuery.of(context).size.width,
                               child: Row(
                                 mainAxisSize: MainAxisSize.max,
@@ -178,11 +177,11 @@ class RequestDetailsState extends State<RequestDetails> {
                                       },
                                       style: ElevatedButton.styleFrom(
                                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                                        minimumSize: Size(160, 40),
+                                        minimumSize: const Size(160, 40),
                                         backgroundColor: Colors.red,
                                         foregroundColor: Colors.white,
                                       ),
-                                      child: Text("Deny")
+                                      child: const Text("Deny")
                                   ),
                                   ElevatedButton(
                                       onPressed: () async {
@@ -225,11 +224,11 @@ class RequestDetailsState extends State<RequestDetails> {
                                       },
                                       style: ElevatedButton.styleFrom(
                                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                                        minimumSize: Size(160, 40),
+                                        minimumSize: const Size(160, 40),
                                         backgroundColor: Colors.green,
                                         foregroundColor: Colors.white,
                                       ),
-                                      child: Text("Approve")
+                                      child: const Text("Approve")
                                   ),
                                 ],
                               ),

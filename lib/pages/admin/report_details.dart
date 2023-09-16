@@ -1,10 +1,8 @@
 import 'package:client_android_app/auth/http_requests.dart';
-import 'package:client_android_app/home.dart';
 import 'package:client_android_app/models/report.dart';
 import 'package:client_android_app/models/user.dart';
 import 'package:client_android_app/pages/admin/service_reports.dart';
 import 'package:client_android_app/widgets/text_info_card.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -54,11 +52,11 @@ class ReportDetailsState extends State<ReportDetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Report details"),
+        title: const Text("Report details"),
         centerTitle: true,
         automaticallyImplyLeading: false,
         leading: GestureDetector(
-          child: Icon(Icons.arrow_back),
+          child: const Icon(Icons.arrow_back),
           onTap: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) => ServiceReports(payload)));
           },

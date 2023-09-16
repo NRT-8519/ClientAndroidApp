@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:client_android_app/auth/http_requests.dart';
 import 'package:client_android_app/models/doctor.dart';
 import 'package:client_android_app/models/paginated_list.dart';
@@ -10,7 +8,7 @@ import 'package:client_android_app/pages/doctor/edit_doctor.dart';
 import 'package:flutter/material.dart';
 
 class Doctors extends StatefulWidget {
-  Doctors({super.key, required this.payload});
+  const Doctors({super.key, required this.payload});
 
   final Map<String, dynamic> payload;
 
@@ -53,16 +51,16 @@ class DoctorsState extends State<Doctors> {
           onTap: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) => Dashboard(payload)));
           },
-          child: Icon(Icons.arrow_back),
+          child: const Icon(Icons.arrow_back),
         ),
         actions: [
           Padding(
-            padding: EdgeInsets.only(right: 16),
+            padding: const EdgeInsets.only(right: 16),
             child: GestureDetector(
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => AddDoctor(payload)));
               },
-              child: Icon(Icons.add_circle_outline),
+              child: const Icon(Icons.add_circle_outline),
             ),
           )
         ],
@@ -127,7 +125,7 @@ class DoctorsState extends State<Doctors> {
                                   TableCell(child: Text("${(i + 1) + (pageNumber == 1 ? 0 : (pageNumber - 1) * pageSize)}", textAlign: TextAlign.center,)),
                                   TableCell(child: Text("${snapshot.data!.items[i].firstName} ${snapshot.data!.items[i].middleName[0]}. ${snapshot.data!.items[i].lastName}", textAlign: TextAlign.center)),
                                   Container(
-                                    margin: EdgeInsets.all(9),
+                                    margin: const EdgeInsets.all(9),
                                     child: GestureDetector(
                                       onTap: () {
                                         Navigator.push(context, MaterialPageRoute(builder: (context) => DoctorDetails(payload, snapshot.data!.items[i].uuid!)));
@@ -148,7 +146,7 @@ class DoctorsState extends State<Doctors> {
                                     //)
                                   ),
                                   Container(
-                                      margin: EdgeInsets.all(9),
+                                      margin: const EdgeInsets.all(9),
                                       child: GestureDetector(
                                         onTap: () {
                                           Navigator.push(context, MaterialPageRoute(builder: (context) => EditDoctor(payload, snapshot.data!.items[i].uuid!)));

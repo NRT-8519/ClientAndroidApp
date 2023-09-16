@@ -54,7 +54,7 @@ class DoctorDetailsState extends State<DoctorDetails> {
                       Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(payload)));
                     }
                   },
-                  child: Icon(Icons.arrow_back),
+                  child: const Icon(Icons.arrow_back),
                 ),
               ),
               body: Center(
@@ -106,12 +106,12 @@ class DoctorDetailsState extends State<DoctorDetails> {
                           ),
                           TextInfoCard(
                             callback: () async {
-                              await Clipboard.setData(ClipboardData(text: "${snapshot.data!.ssn}"));
+                              await Clipboard.setData(ClipboardData(text: snapshot.data!.ssn));
                             },
                             color: Colors.deepPurple,
                             width: MediaQuery.of(context).size.width,
                             title: const Text("Social Security Number", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
-                            text: Text ("${snapshot.data!.ssn}", textAlign: TextAlign.center),
+                            text: Text (snapshot.data!.ssn, textAlign: TextAlign.center),
                           ),
                           TextInfoCard(
                             callback: () async {
@@ -125,7 +125,7 @@ class DoctorDetailsState extends State<DoctorDetails> {
                         ],
                         TextInfoCard(
                           callback: () async {
-                            await Clipboard.setData(ClipboardData(text: "${snapshot.data!.ssn}"));
+                            await Clipboard.setData(ClipboardData(text: snapshot.data!.ssn));
                           },
                           color: Colors.deepPurple,
                           width: MediaQuery.of(context).size.width,
@@ -134,7 +134,7 @@ class DoctorDetailsState extends State<DoctorDetails> {
                         ),
                         TextInfoCard(
                           callback: () async {
-                            await Clipboard.setData(ClipboardData(text: "${snapshot.data!.ssn}"));
+                            await Clipboard.setData(ClipboardData(text: snapshot.data!.ssn));
                           },
                           color: Colors.deepPurple,
                           width: MediaQuery.of(context).size.width,
@@ -149,7 +149,7 @@ class DoctorDetailsState extends State<DoctorDetails> {
                           color: Colors.deepPurple,
                           width: MediaQuery.of(context).size.width,
                           title: const Text("Email", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
-                          text: Text ("${snapshot.data!.email}", textAlign: TextAlign.center),
+                          text: Text (snapshot.data!.email, textAlign: TextAlign.center),
                         ),
                         TextInfoCard(
                           callback: () async {
@@ -158,7 +158,7 @@ class DoctorDetailsState extends State<DoctorDetails> {
                           color: Colors.deepPurple,
                           width: MediaQuery.of(context).size.width,
                           title: const Text("Phone Number", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
-                          text: Text ("${snapshot.data!.phoneNumber}", textAlign: TextAlign.center),
+                          text: Text (snapshot.data!.phoneNumber, textAlign: TextAlign.center),
                         ),
 
                         if (payload["role"] == "ADMINISTRATOR")... [
@@ -193,7 +193,7 @@ class DoctorDetailsState extends State<DoctorDetails> {
                             width: MediaQuery.of(context).size.width,
                           ),
                           Container(
-                            padding: EdgeInsets.all(16),
+                            padding: const EdgeInsets.all(16),
                             width: MediaQuery.of(context).size.width,
                             child: Row(
                               mainAxisSize: MainAxisSize.max,
@@ -229,11 +229,11 @@ class DoctorDetailsState extends State<DoctorDetails> {
                                     },
                                     style: ElevatedButton.styleFrom(
                                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                                      minimumSize: Size(160, 40),
+                                      minimumSize: const Size(160, 40),
                                       backgroundColor: Colors.orange,
                                       foregroundColor: Colors.white,
                                     ),
-                                    child: Text("Force password expiry")
+                                    child: const Text("Force password expiry")
                                 ),
                                 if (!snapshot.data!.isDisabled)... [
                                   ElevatedButton(
@@ -265,11 +265,11 @@ class DoctorDetailsState extends State<DoctorDetails> {
                                       },
                                       style: ElevatedButton.styleFrom(
                                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                                        minimumSize: Size(160, 40),
+                                        minimumSize: const Size(160, 40),
                                         backgroundColor: Colors.red,
                                         foregroundColor: Colors.white,
                                       ),
-                                      child: Text("Disable account")
+                                      child: const Text("Disable account")
                                   ),
                                 ]
                                 else... [
@@ -302,11 +302,11 @@ class DoctorDetailsState extends State<DoctorDetails> {
                                       },
                                       style: ElevatedButton.styleFrom(
                                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                                        minimumSize: Size(160, 40),
+                                        minimumSize: const Size(160, 40),
                                         backgroundColor: Colors.green,
                                         foregroundColor: Colors.white,
                                       ),
-                                      child: Text("Enable account")
+                                      child: const Text("Enable account")
                                   ),
                                 ]
                               ],

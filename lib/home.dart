@@ -1,3 +1,4 @@
+import 'package:client_android_app/auth/globals.dart';
 import 'package:client_android_app/auth/http_requests.dart';
 import 'package:client_android_app/auth/login.dart';
 import 'package:client_android_app/pages/admin/report_page.dart';
@@ -44,11 +45,11 @@ class HomePageState extends State<HomePage> {
   HomePageState();
 
   late Map<String, dynamic> payload;
-  final GlobalKey<ScaffoldState> key = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> key = GlobalKey<ScaffoldState>();
   DateTime? currentBackPressTime = DateTime.now();
 
   void logOut() {
-    storage.delete(key: "token");
+    Globals.isLoggedIn = false;
     Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginPage()));
   }
 
@@ -647,7 +648,7 @@ class HomePageState extends State<HomePage> {
 
     if (!key.currentState!.isDrawerOpen) {
       DateTime now = DateTime.now();
-      if (now.difference(currentBackPressTime!) > Duration(seconds: 2)) {
+      if (now.difference(currentBackPressTime!) > const Duration(seconds: 2)) {
         currentBackPressTime = now;
         ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text("Back again to exit."), duration: Duration(seconds: 2),)

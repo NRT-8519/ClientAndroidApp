@@ -3,7 +3,6 @@ import 'package:client_android_app/auth/validators.dart';
 import 'package:client_android_app/models/patient.dart';
 import 'package:client_android_app/models/request.dart' as rqst;
 import 'package:client_android_app/pages/request/requests.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 
@@ -84,7 +83,7 @@ class NewRequestState extends State<NewRequest> {
                     typeController.text = value!;
                   },
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 TextFormField(
                   keyboardType: TextInputType.multiline,
                   maxLines: null,
@@ -153,10 +152,10 @@ class NewRequestState extends State<NewRequest> {
             }
           }
         },
-        label: Text("Send a request"),
-        icon: Icon(Icons.send),
+        label: const Text("Send a request"),
+        icon: const Icon(Icons.send),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      ) : SizedBox.shrink(),
+      ) : const SizedBox.shrink(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }

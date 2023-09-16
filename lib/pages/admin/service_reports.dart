@@ -1,7 +1,6 @@
 import 'package:client_android_app/auth/http_requests.dart';
 import 'package:client_android_app/home.dart';
 import 'package:client_android_app/pages/admin/report_details.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -44,10 +43,10 @@ class ServiceReportsState extends State<ServiceReports> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Service reports"),
+        title: const Text("Service reports"),
         centerTitle: true,automaticallyImplyLeading: false,
         leading: GestureDetector(
-          child: Icon(Icons.arrow_back),
+          child: const Icon(Icons.arrow_back),
           onTap: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(payload)));
           },
@@ -66,10 +65,10 @@ class ServiceReportsState extends State<ServiceReports> {
                     child: Table(
                       defaultVerticalAlignment: TableCellVerticalAlignment.middle,
                       columnWidths: <int, TableColumnWidth>{
-                        0: snapshot.data!.items.isEmpty ? FixedColumnWidth(MediaQuery.of(context).size.width - 32) : FixedColumnWidth(32),
-                        1: FixedColumnWidth(200),
-                        2: FixedColumnWidth(64),
-                        3: FixedColumnWidth(64),
+                        0: snapshot.data!.items.isEmpty ? FixedColumnWidth(MediaQuery.of(context).size.width - 32) : const FixedColumnWidth(32),
+                        1: const FixedColumnWidth(200),
+                        2: const FixedColumnWidth(64),
+                        3: const FixedColumnWidth(64),
                       },
                       children: [
                         if(snapshot.data!.items.isNotEmpty)... [
@@ -79,7 +78,7 @@ class ServiceReportsState extends State<ServiceReports> {
                                   TableCell(child: Text("${(i + 1) + (pageNumber == 1 ? 0 : (pageNumber - 1) * pageSize)}", textAlign: TextAlign.center,)),
                                   TableCell(child: Text(snapshot.data!.items[i]!.title, textAlign: TextAlign.center)),
                                   Container(
-                                    margin: EdgeInsets.all(9),
+                                    margin: const EdgeInsets.all(9),
                                     child: GestureDetector(
                                       onTap: () {
                                         Navigator.push(context, MaterialPageRoute(builder: (context) => ReportDetails(payload, snapshot.data!.items[i]!.uuid)));
@@ -88,7 +87,7 @@ class ServiceReportsState extends State<ServiceReports> {
                                     ),
                                   ),
                                   Container(
-                                      margin: EdgeInsets.all(9),
+                                      margin: const EdgeInsets.all(9),
                                       child: GestureDetector(
                                         onTap: () async {
                                           int result = await HttpRequests.report.delete(snapshot.data!.items[i]!.uuid);
@@ -111,7 +110,7 @@ class ServiceReportsState extends State<ServiceReports> {
                           ]
                         ]
                         else... [
-                          TableRow(
+                          const TableRow(
                               children: [
                                 Text(
                                   "No Content",
@@ -125,7 +124,7 @@ class ServiceReportsState extends State<ServiceReports> {
                   ),
                 ),
                 Container(
-                    padding: EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(16),
                     child: Row(
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -134,21 +133,21 @@ class ServiceReportsState extends State<ServiceReports> {
                             onPressed: snapshot.data!.hasPrevious ? () {} : null,
                             style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                              minimumSize: Size(160, 40),
+                              minimumSize: const Size(160, 40),
                               backgroundColor: Colors.lightBlue,
                               foregroundColor: Colors.white,
                             ),
-                            child: Text("Previous")
+                            child: const Text("Previous")
                         ),
                         ElevatedButton(
                             onPressed: snapshot.data!.hasNext ? () {} : null,
                             style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                              minimumSize: Size(160, 40),
+                              minimumSize: const Size(160, 40),
                               backgroundColor: Colors.lightBlue,
                               foregroundColor: Colors.white,
                             ),
-                            child: Text("Next")
+                            child: const Text("Next")
                         ),
                       ],
                     )

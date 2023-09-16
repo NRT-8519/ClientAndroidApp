@@ -16,6 +16,7 @@ class Globals {
       if (!isValid) {
         isLoggedIn = false;
         ClientWebApp.navigatorKey.currentState!.push(MaterialPageRoute(builder: (context) => const LoginPage()));
+
         ScaffoldMessenger.of(ClientWebApp.navigatorKey.currentState!.context).showSnackBar(
             const SnackBar(content: Text("You have been logged out"))
         );

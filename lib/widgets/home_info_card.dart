@@ -55,10 +55,10 @@ class HomeInfoCard extends StatelessWidget {
                 children: [
                   Icon(icon, size: 24, color: color),
                   if(count == -1)... [
-                    countVisible! ? Container(
+                    countVisible! ? const SizedBox(
                       width: 24,
                       height: 24,
-                      child: const CircularProgressIndicator(),
+                      child: CircularProgressIndicator(),
                     ) : Text(countText, style: const TextStyle(fontSize: 12),)
                   ]
                   else... [

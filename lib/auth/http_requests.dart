@@ -3,7 +3,7 @@ import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:client_android_app/models/Note.dart';
+import 'package:client_android_app/models/note.dart';
 import 'package:client_android_app/models/appointment.dart';
 import 'package:client_android_app/models/issuer.dart';
 import 'package:client_android_app/models/paginated_list.dart';
@@ -15,14 +15,13 @@ import 'package:client_android_app/models/request.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
 
 import '../models/company.dart';
 import '../models/doctor.dart';
 import '../models/user.dart';
 
-const SERVER = "https://10.0.2.2:7215";
-const STORAGE = FlutterSecureStorage();
+const server = "https://10.0.2.2:7215";
+const storage = FlutterSecureStorage();
 
 class HttpRequests {
 
@@ -51,7 +50,7 @@ class __Authentication {
 
     try {
       http.Response result = await http.post(
-          Uri.parse("$SERVER/api/users/authenticate/"),
+          Uri.parse("$server/api/users/authenticate/"),
           headers: {
             "accept": "*/*",
             "content-type": "application/json; charset=utf-8",
@@ -72,9 +71,9 @@ class __Authentication {
       "accept": "*/*"
     });
 
-    var token = await STORAGE.read(key: "token");
+    var token = await storage.read(key: "token");
 
-    http.Response result = await http.get(Uri.parse("$SERVER/api/users/validate?token=$token"));
+    http.Response result = await http.get(Uri.parse("$server/api/users/validate?token=$token"));
     return bool.parse(result.body);
   }
 }
@@ -85,9 +84,9 @@ class __Administrator {
     Map<String, String> headers = HashMap<String, String>();
     headers.addAll({
       "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
-    http.Response result = await http.get(Uri.parse("$SERVER/api/users/all/basic?sortOrder=$sortOrder&searchString=$searchString&currentFilter=$currentFilter&pageNumber=$pageNumber&pageSize=$pageSize"), headers: headers);
+    http.Response result = await http.get(Uri.parse("$server/api/users/all/basic?sortOrder=$sortOrder&searchString=$searchString&currentFilter=$currentFilter&pageNumber=$pageNumber&pageSize=$pageSize"), headers: headers);
 
     if (result.statusCode == 200) {
       Map<String, dynamic> body = json.decode(result.body);
@@ -111,11 +110,11 @@ class __Administrator {
     Map<String, String> headers = HashMap<String, String>();
     headers.addAll({
       "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
 
     http.Response result = await http.get(
-        Uri.parse("$SERVER/api/users/administrators/count/"),
+        Uri.parse("$server/api/users/administrators/count/"),
         headers: headers
     );
 
@@ -132,10 +131,10 @@ class __Administrator {
     Map<String, String> headers = HashMap<String, String>();
     headers.addAll({
       "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
     http.Response result = await http.get(
-        Uri.parse("$SERVER/api/users/$uuid"),
+        Uri.parse("$server/api/users/$uuid"),
         headers: headers
     );
 
@@ -151,10 +150,10 @@ class __Administrator {
     headers.addAll({
       "accept": "*/*",
       "Content-Type": "application/json",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
     http.Response result = await http.post(
-        Uri.parse("$SERVER/api/users/add/"),
+        Uri.parse("$server/api/users/add/"),
         headers: headers,
         body: user.asJson()
     );
@@ -167,10 +166,10 @@ class __Administrator {
     headers.addAll({
       "accept": "*/*",
       "Content-Type": "application/json",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
     http.Response result = await http.put(
-        Uri.parse("$SERVER/api/users/edit/"),
+        Uri.parse("$server/api/users/edit/"),
         headers: headers,
         body: user.asJson()
     );
@@ -186,9 +185,9 @@ class __Doctor {
     Map<String, String> headers = HashMap<String, String>();
     headers.addAll({
       "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
-    http.Response result = await http.get(Uri.parse("$SERVER/api/users/doctors/all/basic?sortOrder=$sortOrder&searchString=$searchString&currentFilter=$currentFilter&pageNumber=$pageNumber&pageSize=$pageSize"), headers: headers);
+    http.Response result = await http.get(Uri.parse("$server/api/users/doctors/all/basic?sortOrder=$sortOrder&searchString=$searchString&currentFilter=$currentFilter&pageNumber=$pageNumber&pageSize=$pageSize"), headers: headers);
 
     if (result.statusCode == 200) {
       Map<String, dynamic> body = json.decode(result.body);
@@ -212,9 +211,9 @@ class __Doctor {
     Map<String, String> headers = HashMap<String, String>();
     headers.addAll({
       "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
-    http.Response result = await http.get(Uri.parse("$SERVER/api/users/doctors/all/"), headers: headers);
+    http.Response result = await http.get(Uri.parse("$server/api/users/doctors/all/"), headers: headers);
 
     if (result.statusCode == 200) {
       List<dynamic> dynamicList = json.decode(result.body);
@@ -237,11 +236,11 @@ class __Doctor {
     Map<String, String> headers = HashMap<String, String>();
     headers.addAll({
       "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
 
     http.Response result = await http.get(
-        Uri.parse("$SERVER/api/users/doctors/count/"),
+        Uri.parse("$server/api/users/doctors/count/"),
         headers: headers
     );
 
@@ -258,10 +257,10 @@ class __Doctor {
     Map<String, String> headers = HashMap<String, String>();
     headers.addAll({
       "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
     http.Response result = await http.get(
-        Uri.parse("$SERVER/api/users/doctors/$uuid"),
+        Uri.parse("$server/api/users/doctors/$uuid"),
         headers: headers
     );
 
@@ -277,10 +276,10 @@ class __Doctor {
     headers.addAll({
       "accept": "*/*",
       "Content-Type": "application/json",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
     http.Response result = await http.post(
-        Uri.parse("$SERVER/api/users/doctors/add/"),
+        Uri.parse("$server/api/users/doctors/add/"),
         headers: headers,
         body: doctor.asJson()
     );
@@ -293,10 +292,10 @@ class __Doctor {
     headers.addAll({
       "accept": "*/*",
       "Content-Type": "application/json",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
     http.Response result = await http.put(
-        Uri.parse("$SERVER/api/users/doctors/edit/"),
+        Uri.parse("$server/api/users/doctors/edit/"),
         headers: headers,
         body: doctor.asJson()
     );
@@ -312,9 +311,9 @@ class __Patient {
     Map<String, String> headers = HashMap<String, String>();
     headers.addAll({
       "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
-    http.Response result = await http.get(Uri.parse("$SERVER/api/users/patients/all/"), headers: headers);
+    http.Response result = await http.get(Uri.parse("$server/api/users/patients/all/"), headers: headers);
 
     if (result.statusCode == 200) {
       List<dynamic> dynamicList = json.decode(result.body);
@@ -337,9 +336,9 @@ class __Patient {
     Map<String, String> headers = HashMap<String, String>();
     headers.addAll({
       "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
-    http.Response result = await http.get(Uri.parse("$SERVER/api/users/patients/all/basic?sortOrder=$sortOrder&searchString=$searchString&currentFilter=$currentFilter&pageNumber=$pageNumber&pageSize=$pageSize&doctor=$doctor"), headers: headers);
+    http.Response result = await http.get(Uri.parse("$server/api/users/patients/all/basic?sortOrder=$sortOrder&searchString=$searchString&currentFilter=$currentFilter&pageNumber=$pageNumber&pageSize=$pageSize&doctor=$doctor"), headers: headers);
 
     if (result.statusCode == 200) {
       Map<String, dynamic> body = json.decode(result.body);
@@ -363,11 +362,11 @@ class __Patient {
     Map<String, String> headers = HashMap<String, String>();
     headers.addAll({
       "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
 
     http.Response result = await http.get(
-        Uri.parse("$SERVER/api/users/patients/count/"),
+        Uri.parse("$server/api/users/patients/count/"),
         headers: headers
     );
 
@@ -384,10 +383,10 @@ class __Patient {
     Map<String, String> headers = HashMap<String, String>();
     headers.addAll({
       "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
     http.Response result = await http.get(
-        Uri.parse("$SERVER/api/users/patients/$uuid"),
+        Uri.parse("$server/api/users/patients/$uuid"),
         headers: headers
     );
 
@@ -408,10 +407,10 @@ class __Patient {
     headers.addAll({
       "accept": "*/*",
       "Content-Type": "application/json",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
     http.Response result = await http.post(
-        Uri.parse("$SERVER/api/users/patients/add/"),
+        Uri.parse("$server/api/users/patients/add/"),
         headers: headers,
         body: patient.asJson()
     );
@@ -424,10 +423,10 @@ class __Patient {
     headers.addAll({
       "accept": "*/*",
       "Content-Type": "application/json",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
     http.Response result = await http.put(
-        Uri.parse("$SERVER/api/users/patients/edit/"),
+        Uri.parse("$server/api/users/patients/edit/"),
         headers: headers,
         body: patient.asJson()
     );
@@ -443,9 +442,9 @@ class __Medicine {
     Map<String, String> headers = HashMap<String, String>();
     headers.addAll({
       "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
-    http.Response result = await http.get(Uri.parse("$SERVER/api/medicine/all/all/"), headers: headers);
+    http.Response result = await http.get(Uri.parse("$server/api/medicine/all/all/"), headers: headers);
 
     if (result.statusCode == 200) {
       List<dynamic> dynamicList = json.decode(result.body);
@@ -468,9 +467,9 @@ class __Medicine {
     Map<String, String> headers = HashMap<String, String>();
     headers.addAll({
       "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
-    http.Response result = await http.get(Uri.parse("$SERVER/api/medicine/all?sortOrder=$sortOrder&searchString=$searchString&currentFilter=$currentFilter&pageNumber=$pageNumber&pageSize=$pageSize&company=$company&issuer=$issuer"), headers: headers);
+    http.Response result = await http.get(Uri.parse("$server/api/medicine/all?sortOrder=$sortOrder&searchString=$searchString&currentFilter=$currentFilter&pageNumber=$pageNumber&pageSize=$pageSize&company=$company&issuer=$issuer"), headers: headers);
 
     if (result.statusCode == 200) {
       Map<String, dynamic> body = json.decode(result.body);
@@ -494,11 +493,11 @@ class __Medicine {
     Map<String, String> headers = HashMap<String, String>();
     headers.addAll({
       "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
 
     http.Response result = await http.get(
-        Uri.parse("$SERVER/api/medicine/count/"),
+        Uri.parse("$server/api/medicine/count/"),
         headers: headers
     );
 
@@ -515,10 +514,10 @@ class __Medicine {
     Map<String, String> headers = HashMap<String, String>();
     headers.addAll({
       "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
     http.Response result = await http.get(
-        Uri.parse("$SERVER/api/medicine/$uuid"),
+        Uri.parse("$server/api/medicine/$uuid"),
         headers: headers
     );
 
@@ -534,10 +533,10 @@ class __Medicine {
     headers.addAll({
       "accept": "*/*",
       "Content-Type": "application/json",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
     http.Response result = await http.post(
-        Uri.parse("$SERVER/api/medicine/add/"),
+        Uri.parse("$server/api/medicine/add/"),
         headers: headers,
         body: medicine.asJson()
     );
@@ -550,10 +549,10 @@ class __Medicine {
     headers.addAll({
       "accept": "*/*",
       "Content-Type": "application/json",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
     http.Response result = await http.put(
-        Uri.parse("$SERVER/api/medicine/edit/"),
+        Uri.parse("$server/api/medicine/edit/"),
         headers: headers,
         body: medicine.asJson()
     );
@@ -569,9 +568,9 @@ class __Company {
     Map<String, String> headers = HashMap<String, String>();
     headers.addAll({
       "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
-    http.Response result = await http.get(Uri.parse("$SERVER/api/company/all?sortOrder=$sortOrder&searchString=$searchString&currentFilter=$currentFilter&pageNumber=$pageNumber&pageSize=$pageSize"), headers: headers);
+    http.Response result = await http.get(Uri.parse("$server/api/company/all?sortOrder=$sortOrder&searchString=$searchString&currentFilter=$currentFilter&pageNumber=$pageNumber&pageSize=$pageSize"), headers: headers);
 
     if (result.statusCode == 200) {
       Map<String, dynamic> body = json.decode(result.body);
@@ -595,9 +594,9 @@ class __Company {
     Map<String, String> headers = HashMap<String, String>();
     headers.addAll({
       "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
-    http.Response result = await http.get(Uri.parse("$SERVER/api/company/all/all/"), headers: headers);
+    http.Response result = await http.get(Uri.parse("$server/api/company/all/all/"), headers: headers);
 
     if (result.statusCode == 200) {
       List<dynamic> dynamicList = json.decode(result.body);
@@ -620,11 +619,11 @@ class __Company {
     Map<String, String> headers = HashMap<String, String>();
     headers.addAll({
       "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
 
     http.Response result = await http.get(
-        Uri.parse("$SERVER/api/company/count/"),
+        Uri.parse("$server/api/company/count/"),
         headers: headers
     );
 
@@ -641,10 +640,10 @@ class __Company {
     Map<String, String> headers = HashMap<String, String>();
     headers.addAll({
       "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
     http.Response result = await http.get(
-        Uri.parse("$SERVER/api/company/$uuid"),
+        Uri.parse("$server/api/company/$uuid"),
         headers: headers
     );
 
@@ -660,10 +659,10 @@ class __Company {
     headers.addAll({
       "accept": "*/*",
       "Content-Type": "application/json",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
     http.Response result = await http.post(
-        Uri.parse("$SERVER/api/company/add/"),
+        Uri.parse("$server/api/company/add/"),
         headers: headers,
         body: company.asJson()
     );
@@ -676,10 +675,10 @@ class __Company {
     headers.addAll({
       "accept": "*/*",
       "Content-Type": "application/json",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
     http.Response result = await http.put(
-        Uri.parse("$SERVER/api/company/edit/"),
+        Uri.parse("$server/api/company/edit/"),
         headers: headers,
         body: company.asJson()
     );
@@ -695,9 +694,9 @@ class __Issuer {
     Map<String, String> headers = HashMap<String, String>();
     headers.addAll({
       "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
-    http.Response result = await http.get(Uri.parse("$SERVER/api/issuer/all?sortOrder=$sortOrder&searchString=$searchString&currentFilter=$currentFilter&pageNumber=$pageNumber&pageSize=$pageSize"), headers: headers);
+    http.Response result = await http.get(Uri.parse("$server/api/issuer/all?sortOrder=$sortOrder&searchString=$searchString&currentFilter=$currentFilter&pageNumber=$pageNumber&pageSize=$pageSize"), headers: headers);
 
     if (result.statusCode == 200) {
       Map<String, dynamic> body = json.decode(result.body);
@@ -721,9 +720,9 @@ class __Issuer {
     Map<String, String> headers = HashMap<String, String>();
     headers.addAll({
       "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
-    http.Response result = await http.get(Uri.parse("$SERVER/api/issuer/all/all/"), headers: headers);
+    http.Response result = await http.get(Uri.parse("$server/api/issuer/all/all/"), headers: headers);
 
     if (result.statusCode == 200) {
       List<dynamic> dynamicList = json.decode(result.body);
@@ -746,11 +745,11 @@ class __Issuer {
     Map<String, String> headers = HashMap<String, String>();
     headers.addAll({
       "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
 
     http.Response result = await http.get(
-        Uri.parse("$SERVER/api/issuer/count/"),
+        Uri.parse("$server/api/issuer/count/"),
         headers: headers
     );
 
@@ -767,10 +766,10 @@ class __Issuer {
     Map<String, String> headers = HashMap<String, String>();
     headers.addAll({
       "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
     http.Response result = await http.get(
-        Uri.parse("$SERVER/api/issuer/$uuid"),
+        Uri.parse("$server/api/issuer/$uuid"),
         headers: headers
     );
 
@@ -786,10 +785,10 @@ class __Issuer {
     headers.addAll({
       "accept": "*/*",
       "Content-Type": "application/json",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
     http.Response result = await http.post(
-        Uri.parse("$SERVER/api/issuer/add/"),
+        Uri.parse("$server/api/issuer/add/"),
         headers: headers,
         body: issuer.asJson()
     );
@@ -802,10 +801,10 @@ class __Issuer {
     headers.addAll({
       "accept": "*/*",
       "Content-Type": "application/json",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
     http.Response result = await http.put(
-        Uri.parse("$SERVER/api/issuer/edit/"),
+        Uri.parse("$server/api/issuer/edit/"),
         headers: headers,
         body: issuer.asJson()
     );
@@ -823,9 +822,9 @@ class __Report {
     Map<String, String> headers = HashMap<String, String>();
     headers.addAll({
       "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
-    http.Response result = await http.get(Uri.parse("$SERVER/api/report/all?sortOrder=$sortOrder&pageNumber=$pageNumber&pageSize=$pageSize&user=$user"), headers: headers);
+    http.Response result = await http.get(Uri.parse("$server/api/report/all?sortOrder=$sortOrder&pageNumber=$pageNumber&pageSize=$pageSize&user=$user"), headers: headers);
 
     if (result.statusCode == 200) {
       Map<String, dynamic> body = json.decode(result.body);
@@ -849,11 +848,11 @@ class __Report {
     Map<String, String> headers = HashMap<String, String>();
     headers.addAll({
       "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
 
     http.Response result = await http.get(
-        Uri.parse("$SERVER/api/report/count/"),
+        Uri.parse("$server/api/report/count/"),
         headers: headers
     );
 
@@ -870,10 +869,10 @@ class __Report {
     Map<String, String> headers = HashMap<String, String>();
     headers.addAll({
       "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
     http.Response result = await http.get(
-        Uri.parse("$SERVER/api/report/$uuid"),
+        Uri.parse("$server/api/report/$uuid"),
         headers: headers
     );
 
@@ -889,10 +888,10 @@ class __Report {
     headers.addAll({
       "accept": "*/*",
       "Content-Type": "application/json",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
     http.Response result = await http.post(
-        Uri.parse("$SERVER/api/report/add/"),
+        Uri.parse("$server/api/report/add/"),
         headers: headers,
         body: report.asJson()
     );
@@ -904,10 +903,10 @@ class __Report {
     Map<String, String> headers = HashMap<String, String>();
     headers.addAll({
       "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
 
-    http.Response result = await http.delete(Uri.parse("$SERVER/api/report/remove/$uuid"), headers: headers);
+    http.Response result = await http.delete(Uri.parse("$server/api/report/remove/$uuid"), headers: headers);
 
     if (result.statusCode == 200) {
       return 1;
@@ -925,9 +924,9 @@ class __Request {
     Map<String, String> headers = HashMap<String, String>();
     headers.addAll({
       "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
-    http.Response result = await http.get(Uri.parse("$SERVER/api/request/all?sortOrder=$sortOrder&pageNumber=$pageNumber&pageSize=$pageSize&patient=$patient&doctor=$doctor"), headers: headers);
+    http.Response result = await http.get(Uri.parse("$server/api/request/all?sortOrder=$sortOrder&pageNumber=$pageNumber&pageSize=$pageSize&patient=$patient&doctor=$doctor"), headers: headers);
 
     if (result.statusCode == 200) {
       Map<String, dynamic> body = json.decode(result.body);
@@ -951,11 +950,11 @@ class __Request {
     Map<String, String> headers = HashMap<String, String>();
     headers.addAll({
       "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
 
     http.Response result = await http.get(
-        Uri.parse("$SERVER/api/request/count/$uuid/AWAITING"),
+        Uri.parse("$server/api/request/count/$uuid/AWAITING"),
         headers: headers
     );
 
@@ -972,10 +971,10 @@ class __Request {
     Map<String, String> headers = HashMap<String, String>();
     headers.addAll({
       "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
     http.Response result = await http.get(
-        Uri.parse("$SERVER/api/request/$uuid"),
+        Uri.parse("$server/api/request/$uuid"),
         headers: headers
     );
 
@@ -991,10 +990,10 @@ class __Request {
     headers.addAll({
       "accept": "*/*",
       "Content-Type": "application/json",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
     http.Response result = await http.post(
-        Uri.parse("$SERVER/api/request/add/"),
+        Uri.parse("$server/api/request/add/"),
         headers: headers,
         body: request.asJson()
     );
@@ -1007,10 +1006,10 @@ class __Request {
     headers.addAll({
       "accept": "*/*",
       "Content-Type": "application/json",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
     http.Response result = await http.put(
-        Uri.parse("$SERVER/api/request/edit/"),
+        Uri.parse("$server/api/request/edit/"),
         headers: headers,
         body: request.asJson()
     );
@@ -1026,9 +1025,9 @@ class __Prescription {
     Map<String, String> headers = HashMap<String, String>();
     headers.addAll({
       "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
-    http.Response result= await http.get(Uri.parse("$SERVER/api/prescription/all?sortOrder=$sortOrder&pageNumber=$pageNumber&pageSize=$pageSize&doctor=$doctor&patient=$patient"), headers: headers);
+    http.Response result= await http.get(Uri.parse("$server/api/prescription/all?sortOrder=$sortOrder&pageNumber=$pageNumber&pageSize=$pageSize&doctor=$doctor&patient=$patient"), headers: headers);
 
     if (result.statusCode == 200) {
       Map<String, dynamic> body = json.decode(result.body);
@@ -1052,10 +1051,10 @@ class __Prescription {
     Map<String, String> headers = HashMap<String, String>();
     headers.addAll({
       "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
     http.Response result = await http.get(
-        Uri.parse("$SERVER/api/prescription/$id"),
+        Uri.parse("$server/api/prescription/$id"),
         headers: headers
     );
 
@@ -1071,10 +1070,10 @@ class __Prescription {
     headers.addAll({
       "accept": "*/*",
       "Content-Type": "application/json",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
     http.Response result = await http.post(
-        Uri.parse("$SERVER/api/prescription/add/"),
+        Uri.parse("$server/api/prescription/add/"),
         headers: headers,
         body: prescription.asJson()
     );
@@ -1086,11 +1085,11 @@ class __Prescription {
     Map<String, String> headers = HashMap<String, String>();
     headers.addAll({
       "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
 
     http.Response result = await http.get(
-        Uri.parse("$SERVER/api/prescription/count?UUID=$uuid"),
+        Uri.parse("$server/api/prescription/count?UUID=$uuid"),
         headers: headers
     );
 
@@ -1112,15 +1111,15 @@ class __Appointment {
     Map<String, String> headers = HashMap<String, String>();
     headers.addAll({
       "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
     http.Response result;
     if (dateTime == null) {
-      result = await http.get(Uri.parse("$SERVER/api/schedule/all?sortOrder=$sortOrder&searchString=$searchString&currentFilter=$currentFilter&pageNumber=$pageNumber&pageSize=$pageSize&doctor=$doctor&patient=$patient"), headers: headers);
+      result = await http.get(Uri.parse("$server/api/schedule/all?sortOrder=$sortOrder&searchString=$searchString&currentFilter=$currentFilter&pageNumber=$pageNumber&pageSize=$pageSize&doctor=$doctor&patient=$patient"), headers: headers);
     }
     else {
       DateFormat format = DateFormat("yyyy-MM-ddTHH:mm:ss");
-      result  = await http.get(Uri.parse("$SERVER/api/schedule/all?sortOrder=$sortOrder&searchString=$searchString&currentFilter=$currentFilter&pageNumber=$pageNumber&pageSize=$pageSize&doctor=$doctor&patient=$patient&date=${format.format(dateTime)}"), headers: headers);
+      result  = await http.get(Uri.parse("$server/api/schedule/all?sortOrder=$sortOrder&searchString=$searchString&currentFilter=$currentFilter&pageNumber=$pageNumber&pageSize=$pageSize&doctor=$doctor&patient=$patient&date=${format.format(dateTime)}"), headers: headers);
     }
 
     if (result.statusCode == 200) {
@@ -1145,10 +1144,10 @@ class __Appointment {
     Map<String, String> headers = HashMap<String, String>();
     headers.addAll({
       "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
     http.Response result = await http.get(
-        Uri.parse("$SERVER/api/schedule/$id"),
+        Uri.parse("$server/api/schedule/$id"),
         headers: headers
     );
 
@@ -1164,10 +1163,10 @@ class __Appointment {
     headers.addAll({
       "accept": "*/*",
       "Content-Type": "application/json",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
     http.Response result = await http.post(
-        Uri.parse("$SERVER/api/schedule/add/"),
+        Uri.parse("$server/api/schedule/add/"),
         headers: headers,
         body: appointment.asJson()
     );
@@ -1180,10 +1179,10 @@ class __Appointment {
     headers.addAll({
       "accept": "*/*",
       "Content-Type": "application/json",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
     http.Response result = await http.put(
-        Uri.parse("$SERVER/api/schedule/edit/"),
+        Uri.parse("$server/api/schedule/edit/"),
         headers: headers,
         body: appointment.asJson()
     );
@@ -1199,9 +1198,9 @@ class __Notes {
     Map<String, String> headers = HashMap<String, String>();
     headers.addAll({
       "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
-    http.Response result = await http.get(Uri.parse("$SERVER/api/notes/all?sortOrder=$sortOrder&pageNumber=$pageNumber&pageSize=$pageSize&doctor=$doctor&patient=$patient"), headers: headers);
+    http.Response result = await http.get(Uri.parse("$server/api/notes/all?sortOrder=$sortOrder&pageNumber=$pageNumber&pageSize=$pageSize&doctor=$doctor&patient=$patient"), headers: headers);
 
 
     if (result.statusCode == 200) {
@@ -1226,10 +1225,10 @@ class __Notes {
     Map<String, String> headers = HashMap<String, String>();
     headers.addAll({
       "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
     http.Response result = await http.get(
-        Uri.parse("$SERVER/api/notes/$id"),
+        Uri.parse("$server/api/notes/$id"),
         headers: headers
     );
 
@@ -1245,10 +1244,10 @@ class __Notes {
     headers.addAll({
       "accept": "*/*",
       "Content-Type": "application/json",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
     http.Response result = await http.post(
-        Uri.parse("$SERVER/api/notes/add/"),
+        Uri.parse("$server/api/notes/add/"),
         headers: headers,
         body: note.asJson()
     );
@@ -1261,10 +1260,10 @@ class __Notes {
     headers.addAll({
       "accept": "*/*",
       "Content-Type": "application/json",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
     http.Response result = await http.put(
-        Uri.parse("$SERVER/api/notes/edit/"),
+        Uri.parse("$server/api/notes/edit/"),
         headers: headers,
         body: note.asJson()
     );
@@ -1276,10 +1275,10 @@ class __Notes {
     Map<String, String> headers = HashMap<String, String>();
     headers.addAll({
       "accept": "*/*",
-      "Authorization": "Bearer ${await STORAGE.read(key: "token")}"
+      "Authorization": "Bearer ${await storage.read(key: "token")}"
     });
 
-    http.Response result = await http.delete(Uri.parse("$SERVER/api/notes/remove/$id"), headers: headers);
+    http.Response result = await http.delete(Uri.parse("$server/api/notes/remove/$id"), headers: headers);
 
     if (result.statusCode == 200) {
       return 1;

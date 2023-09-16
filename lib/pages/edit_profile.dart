@@ -1,6 +1,5 @@
 import 'package:client_android_app/auth/validators.dart';
 import 'package:client_android_app/pages/my_profile.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
@@ -80,10 +79,10 @@ class EditProfileState extends State<EditProfile> {
               return Form(
                 key: formKey,
                 child: ListView(
-                  padding: EdgeInsets.only(top: 16),
+                  padding: const EdgeInsets.only(top: 16),
                   children: [
                     Container(
-                      margin: EdgeInsets.only(top: 8, left: 16.0, right: 16.0),
+                      margin: const EdgeInsets.only(top: 8, left: 16.0, right: 16.0),
                       child: TextFormField(
                         enabled: !submitting,
                         validator: (value) => Validators.validateNotEmpty(value),
@@ -95,7 +94,7 @@ class EditProfileState extends State<EditProfile> {
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.only(top: 8, left: 16.0, right: 16.0),
+                      margin: const EdgeInsets.only(top: 8, left: 16.0, right: 16.0),
                       child: TextFormField(
                         enabled: !submitting,
                         validator: (value) => Validators.validateNotEmpty(value),
@@ -107,7 +106,7 @@ class EditProfileState extends State<EditProfile> {
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.only(top: 8, left: 16.0, right: 16.0),
+                      margin: const EdgeInsets.only(top: 8, left: 16.0, right: 16.0),
                       child: TextFormField(
                         enabled: !submitting,
                         validator: (value) => Validators.validateNotEmpty(value),
@@ -119,7 +118,7 @@ class EditProfileState extends State<EditProfile> {
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.only(top: 8, left: 16.0, right: 16.0),
+                      margin: const EdgeInsets.only(top: 8, left: 16.0, right: 16.0),
                       child: TextFormField(
                         enabled: !submitting,
                         validator: (value) => Validators.validateTitle(value),
@@ -130,9 +129,9 @@ class EditProfileState extends State<EditProfile> {
                         ),
                       ),
                     ),
-                    Divider(indent: 16, endIndent: 16,),
+                    const Divider(indent: 16, endIndent: 16,),
                     Container(
-                      margin: EdgeInsets.only(top: 8, left: 16.0, right: 16.0),
+                      margin: const EdgeInsets.only(top: 8, left: 16.0, right: 16.0),
                       child: TextFormField(
                         enabled: !submitting,
                         controller: usernameController,
@@ -143,7 +142,7 @@ class EditProfileState extends State<EditProfile> {
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.only(top: 8, left: 16.0, right: 16.0),
+                      margin: const EdgeInsets.only(top: 8, left: 16.0, right: 16.0),
                       child: TextFormField(
                         enabled: !submitting,
                         validator: (value) => Validators.validatePassword(value),
@@ -155,10 +154,10 @@ class EditProfileState extends State<EditProfile> {
                         ),
                       ),
                     ),
-                    Divider(indent: 16, endIndent: 16,),
+                    const Divider(indent: 16, endIndent: 16,),
                     Container(
                       width: MediaQuery.of(context).size.width,
-                      margin: EdgeInsets.only(top: 8, left: 16.0, right: 16.0),
+                      margin: const EdgeInsets.only(top: 8, left: 16.0, right: 16.0),
                       child: DropdownButtonFormField(
                         value: snapshot.data!.gender,
                         validator: (value) => Validators.validateGender(value),
@@ -168,9 +167,9 @@ class EditProfileState extends State<EditProfile> {
                         ),
                         items:  [
                           if (!submitting)... [
-                            DropdownMenuItem(value: "", enabled: false, child: Text("Select...")),
-                            DropdownMenuItem(value: "M", child: Text("Male")),
-                            DropdownMenuItem(value: "F", child: Text("Female"))
+                            const DropdownMenuItem(value: "", enabled: false, child: Text("Select...")),
+                            const DropdownMenuItem(value: "M", child: Text("Male")),
+                            const DropdownMenuItem(value: "F", child: Text("Female"))
                           ]
                       ],
                         onChanged: (Object? value) {
@@ -179,7 +178,7 @@ class EditProfileState extends State<EditProfile> {
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.only(top: 8, left: 16.0, right: 16.0),
+                      margin: const EdgeInsets.only(top: 8, left: 16.0, right: 16.0),
                       child: TextFormField(
                         enabled: !submitting,
                         validator: (value) => Validators.validateDateOfBirth(value),
@@ -204,9 +203,9 @@ class EditProfileState extends State<EditProfile> {
                         ),
                       ),
                     ),
-                    Divider(indent: 16, endIndent: 16,),
+                    const Divider(indent: 16, endIndent: 16,),
                     Container(
-                      margin: EdgeInsets.only(top: 8, left: 16.0, right: 16.0),
+                      margin: const EdgeInsets.only(top: 8, left: 16.0, right: 16.0),
                       child: TextFormField(
                         enabled: !submitting,
                         validator: (value) => Validators.validateSSN(value),
@@ -218,7 +217,7 @@ class EditProfileState extends State<EditProfile> {
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.only(top: 8, left: 16.0, right: 16.0),
+                      margin: const EdgeInsets.only(top: 8, left: 16.0, right: 16.0),
                       child: TextFormField(
                         enabled: !submitting,
                         validator: (value) => Validators.validateEmail(value),
@@ -230,7 +229,7 @@ class EditProfileState extends State<EditProfile> {
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.only(top: 8, left: 16.0, right: 16.0, bottom: 64),
+                      margin: const EdgeInsets.only(top: 8, left: 16.0, right: 16.0, bottom: 64),
                       child: TextFormField(
                         enabled: !submitting,
                         validator: (value) => Validators.validatePhoneNumber(value),

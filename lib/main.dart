@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:client_android_app/auth/http_overrides.dart';
-import 'package:client_android_app/auth/http_requests.dart';
 import 'package:client_android_app/auth/login.dart';
 import 'package:client_android_app/unsupported_role.dart';
 import 'package:flutter/material.dart';
@@ -63,10 +62,9 @@ class ClientWebApp extends StatelessWidget {
             var jwt = JwtDecoder.decode(snapshot.data!);
 
             if (JwtDecoder.isExpired(snapshot.data!)) {
-              return LoginPage();
+              return const LoginPage();
             }
             else {
-              print(navigatorKey.currentState!.toString());
               Globals.isLoggedIn = true;
               Globals.keepSession();
               switch (jwt["role"].toString()) {
@@ -80,7 +78,7 @@ class ClientWebApp extends StatelessWidget {
             }
           }
           else {
-            return LoginPage();
+            return const LoginPage();
           }
         },
 

@@ -1,12 +1,11 @@
 import 'package:client_android_app/auth/http_requests.dart';
 import 'package:client_android_app/home.dart';
-import 'package:client_android_app/models/Note.dart';
+import 'package:client_android_app/models/note.dart';
 import 'package:client_android_app/models/doctor.dart';
 import 'package:client_android_app/models/paginated_list.dart';
 import 'package:client_android_app/widgets/notes_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 
 class Notes extends StatefulWidget {
@@ -95,7 +94,7 @@ class NotesState extends State<Notes> {
                 String temp = patientUUID;
                 patientUUID = "";
                 refresh();
-                await Future.delayed(Duration(seconds: 1));
+                await Future.delayed(const Duration(seconds: 1));
                 patientUUID = temp;
                 refresh();
 
@@ -161,7 +160,7 @@ class NotesState extends State<Notes> {
                                         String temp = patientUUID;
                                         patientUUID = "";
                                         refresh();
-                                        await Future.delayed(Duration(seconds: 1));
+                                        await Future.delayed(const Duration(seconds: 1));
                                         patientUUID = temp;
                                         refresh();
 
@@ -183,7 +182,7 @@ class NotesState extends State<Notes> {
                                                   String temp = patientUUID;
                                                   patientUUID = "";
                                                   refresh();
-                                                  await Future.delayed(Duration(seconds: 1));
+                                                  await Future.delayed(const Duration(seconds: 1));
                                                   patientUUID = temp;
                                                   refresh();
 
@@ -212,7 +211,7 @@ class NotesState extends State<Notes> {
                                 ),
                               ),
                               Container(
-                                  margin: EdgeInsets.all(16),
+                                  margin: const EdgeInsets.all(16),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.max,
                                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -227,7 +226,7 @@ class NotesState extends State<Notes> {
                                             String temp = patientUUID;
                                             patientUUID = "";
                                             refresh();
-                                            await Future.delayed(Duration(milliseconds: 100));
+                                            await Future.delayed(const Duration(milliseconds: 100));
                                             patientUUID = temp;
                                             refresh();
 
@@ -237,11 +236,11 @@ class NotesState extends State<Notes> {
                                           } : null,
                                           style: ElevatedButton.styleFrom(
                                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                                            minimumSize: Size(160, 40),
+                                            minimumSize: const Size(160, 40),
                                             backgroundColor: Colors.green,
                                             foregroundColor: Colors.white,
                                           ),
-                                          child: Text("Previous")
+                                          child: const Text("Previous")
                                       ),
                                       ElevatedButton(
                                           onPressed: notesSnapshot.data!.hasNext ? () async {
@@ -253,7 +252,7 @@ class NotesState extends State<Notes> {
                                             String temp = patientUUID;
                                             patientUUID = "";
                                             refresh();
-                                            await Future.delayed(Duration(milliseconds: 100));
+                                            await Future.delayed(const Duration(milliseconds: 100));
                                             patientUUID = temp;
                                             refresh();
 
@@ -263,11 +262,11 @@ class NotesState extends State<Notes> {
                                           } : null,
                                           style: ElevatedButton.styleFrom(
                                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                                            minimumSize: Size(160, 40),
+                                            minimumSize: const Size(160, 40),
                                             backgroundColor: Colors.green,
                                             foregroundColor: Colors.white,
                                           ),
-                                          child: Text("Next")
+                                          child: const Text("Next")
                                       ),
                                     ],
                                   )
@@ -282,9 +281,7 @@ class NotesState extends State<Notes> {
                         }
                       }
                       else {
-                        return Container(
-                          child: const Center(child: Text("No content", style: TextStyle(color: Colors.black),))
-                        );
+                        return const Center(child: Text("No content", style: TextStyle(color: Colors.black),));
                       }
                     }
                   )
@@ -420,7 +417,7 @@ class NotesState extends State<Notes> {
                     TextButton(onPressed: isSubmitting ? null : () {Navigator.of(statefulContext).pop(true);}, child: const Text("Cancel")),
                   ],
                   scrollable: true,
-                  title: Text("New note", style: const TextStyle(fontSize: 14, ), textAlign: TextAlign.center),
+                  title: const Text("New note", style: TextStyle(fontSize: 14, ), textAlign: TextAlign.center),
                   content: Padding(
                     padding: const EdgeInsets.all(16),
                     child: Form(

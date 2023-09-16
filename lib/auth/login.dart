@@ -4,7 +4,6 @@ import 'package:client_android_app/auth/http_requests.dart';
 import 'package:client_android_app/auth/validators.dart';
 import 'package:client_android_app/home.dart';
 import 'package:client_android_app/models/jwt.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart';
@@ -50,7 +49,7 @@ class LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Log In"), automaticallyImplyLeading: false),
+      appBar: AppBar(title: const Text("Log In"), automaticallyImplyLeading: false),
       body: Form(
         key: formKey,
           child: Container(
@@ -61,7 +60,7 @@ class LoginPageState extends State<LoginPage> {
 
               children: [
                 Container(
-                  margin: EdgeInsets.only(top: 165.0, left: 16.0, right: 16.0),
+                  margin: const EdgeInsets.only(top: 165.0, left: 16.0, right: 16.0),
                   child: TextFormField(
                     enabled: !submitting,
                     validator: (value) => Validators.validateUsername(value),
@@ -73,7 +72,7 @@ class LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.all(16),
+                  margin: const EdgeInsets.all(16),
                   child: TextFormField(
                     enabled: !submitting,
                     validator: (value) => Validators.validatePasswordLogin(value),
@@ -86,7 +85,7 @@ class LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.only(left: 16.0, right: 16.0, top: 0.0),
+                  margin: const EdgeInsets.only(left: 16.0, right: 16.0, top: 0.0),
                   height: 50.0,
                   width: MediaQuery.of(context).size.width,
                   child: ElevatedButton(
@@ -134,10 +133,10 @@ class LoginPageState extends State<LoginPage> {
                               showDialog(
                                   context: context,
                                   builder: (context) => AlertDialog(
-                                    title: Text("Error"),
+                                    title: const Text("Error"),
                                     content: Text(jwtToken.errorMessage!),
                                     actions: [
-                                      TextButton(onPressed: () {Navigator.of(context).pop(true);}, child: Text("OK"))
+                                      TextButton(onPressed: () {Navigator.of(context).pop(true);}, child: const Text("OK"))
                                     ],
                                   )
 
@@ -149,15 +148,15 @@ class LoginPageState extends State<LoginPage> {
                               submitting = false;
                             });
                             ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text("Login Failed: Server offline"))
+                                const SnackBar(content: Text("Login Failed: Server offline"))
                             );
                             showDialog(
                                 context: context,
                                 builder: (context) => AlertDialog(
-                                  title: Text("Error"),
-                                  content: Text("Server offline"),
+                                  title: const Text("Error"),
+                                  content: const Text("Server offline"),
                                   actions: [
-                                    TextButton(onPressed: () {Navigator.of(context).pop(true);}, child: Text("OK"))
+                                    TextButton(onPressed: () {Navigator.of(context).pop(true);}, child: const Text("OK"))
                                   ],
                                 )
 

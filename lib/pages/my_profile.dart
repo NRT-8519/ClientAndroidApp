@@ -47,7 +47,7 @@ class MyProfileState extends State<MyProfile> {
                 child: ListView(
                   children: [
                     const Icon(Icons.account_circle, size: 78, color: Colors.deepPurple,),
-                    Divider(indent: 16, endIndent: 16,),
+                    const Divider(indent: 16, endIndent: 16,),
                     Text(
                       "${snapshot.data!.firstName} ${snapshot.data!.middleName[0]}. ${snapshot.data!.lastName}",
                       style: const TextStyle(fontSize: 24),
@@ -58,11 +58,11 @@ class MyProfileState extends State<MyProfile> {
                       style: const TextStyle(fontSize: 14),
                       textAlign: TextAlign.center,
                     ),
-                    Divider(indent: 16, endIndent: 16,),
+                    const Divider(indent: 16, endIndent: 16,),
                     TextInfoCard(
                       color: Colors.grey,
                       width: MediaQuery.of(context).size.width,
-                      title: Text("Gender", textAlign: TextAlign.center),
+                      title: const Text("Gender", textAlign: TextAlign.center),
                       text: Container(
                         child: snapshot.data!.gender == "M" ?
                         const Icon(Icons.male, size: 36, color: Colors.lightBlue,) :
@@ -77,17 +77,17 @@ class MyProfileState extends State<MyProfile> {
                       },
                       color: Colors.grey,
                       width: MediaQuery.of(context).size.width,
-                      title: Text("Date of Birth", textAlign: TextAlign.center),
+                      title: const Text("Date of Birth", textAlign: TextAlign.center),
                       text: Text ("${snapshot.data!.dateOfBirth.day}/${snapshot.data!.dateOfBirth.month}/${snapshot.data!.dateOfBirth.year}", textAlign: TextAlign.center,),
                     ),
                     TextInfoCard(
                       callback: () async {
-                        await Clipboard.setData(ClipboardData(text: "${snapshot.data!.ssn}"));
+                        await Clipboard.setData(ClipboardData(text: snapshot.data!.ssn));
                       },
                       color: Colors.grey,
                       width: MediaQuery.of(context).size.width,
-                      title: Text("Social Security Number", textAlign: TextAlign.center),
-                      text: Text ("${snapshot.data!.ssn}", textAlign: TextAlign.center),
+                      title: const Text("Social Security Number", textAlign: TextAlign.center),
+                      text: Text (snapshot.data!.ssn, textAlign: TextAlign.center),
                     ),
                     TextInfoCard(
                       callback: () async {
@@ -95,8 +95,8 @@ class MyProfileState extends State<MyProfile> {
                       },
                       color: Colors.grey,
                       width: MediaQuery.of(context).size.width,
-                      title: Text("Email", textAlign: TextAlign.center),
-                      text: Text ("${snapshot.data!.email}", textAlign: TextAlign.center),
+                      title: const Text("Email", textAlign: TextAlign.center),
+                      text: Text (snapshot.data!.email, textAlign: TextAlign.center),
                     ),
                     TextInfoCard(
                       callback: () async {
@@ -104,8 +104,8 @@ class MyProfileState extends State<MyProfile> {
                       },
                       color: Colors.grey,
                       width: MediaQuery.of(context).size.width,
-                      title: Text("Phone Number", textAlign: TextAlign.center),
-                      text: Text ("${snapshot.data!.phoneNumber}", textAlign: TextAlign.center),
+                      title: const Text("Phone Number", textAlign: TextAlign.center),
+                      text: Text (snapshot.data!.phoneNumber, textAlign: TextAlign.center),
                     ),
                     TextInfoCard(
                       callback: () async {
@@ -113,7 +113,7 @@ class MyProfileState extends State<MyProfile> {
                       },
                       color: Colors.grey,
                       width: MediaQuery.of(context).size.width,
-                      title: Text("Username", textAlign: TextAlign.center),
+                      title: const Text("Username", textAlign: TextAlign.center),
                       text: Text ("${snapshot.data!.username}", textAlign: TextAlign.center),
                     ),
                   ],

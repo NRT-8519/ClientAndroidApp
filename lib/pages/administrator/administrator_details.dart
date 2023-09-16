@@ -1,6 +1,4 @@
-import 'package:client_android_app/models/patient.dart';
 import 'package:client_android_app/models/user.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -8,7 +6,6 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../../auth/http_requests.dart';
 import '../../../widgets/text_info_card.dart';
-import '../doctor/doctor_details.dart';
 
 class AdministratorDetails extends StatefulWidget {
   const AdministratorDetails(this.payload, this.administratorUUID, {super.key});

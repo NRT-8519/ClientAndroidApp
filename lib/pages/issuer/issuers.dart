@@ -9,7 +9,7 @@ import '../../../models/issuer.dart';
 import 'issuer_details.dart';
 
 class Issuers extends StatefulWidget {
-  Issuers({super.key, required this.payload});
+  const Issuers({super.key, required this.payload});
 
   final Map<String, dynamic> payload;
 
@@ -52,16 +52,16 @@ class IssuersState extends State<Issuers> {
           onTap: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) => Dashboard(payload)));
           },
-          child: Icon(Icons.arrow_back),
+          child: const Icon(Icons.arrow_back),
         ),
         actions: [
           Padding(
-            padding: EdgeInsets.only(right: 16),
+            padding: const EdgeInsets.only(right: 16),
             child: GestureDetector(
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => AddIssuer(payload)));
               },
-              child: Icon(Icons.add_circle_outline),
+              child: const Icon(Icons.add_circle_outline),
             ),
           )
         ],
@@ -126,7 +126,7 @@ class IssuersState extends State<Issuers> {
                                   TableCell(child: Text("${(i + 1) + (pageNumber == 1 ? 0 : (pageNumber - 1) * pageSize)}", textAlign: TextAlign.center,)),
                                   TableCell(child: Text(snapshot.data!.items[i].name, textAlign: TextAlign.center)),
                                   Container(
-                                    margin: EdgeInsets.all(9),
+                                    margin: const EdgeInsets.all(9),
                                     child: GestureDetector(
                                       onTap: () {
                                         Navigator.push(context, MaterialPageRoute(builder: (context) => IssuerDetails(payload, snapshot.data!.items[i].uuid)));
@@ -135,7 +135,7 @@ class IssuersState extends State<Issuers> {
                                     ),
                                   ),
                                   Container(
-                                      margin: EdgeInsets.all(9),
+                                      margin: const EdgeInsets.all(9),
                                       child: GestureDetector(
                                         onTap: () {
                                           Navigator.push(context, MaterialPageRoute(builder: (context) => EditIssuer(payload, snapshot.data!.items[i].uuid)));

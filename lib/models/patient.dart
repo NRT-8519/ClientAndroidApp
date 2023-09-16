@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:client_android_app/models/user.dart';
 import 'package:client_android_app/models/user_basic.dart';
 import 'package:flutter/foundation.dart';

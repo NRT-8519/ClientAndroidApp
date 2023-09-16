@@ -1,10 +1,6 @@
 import 'package:client_android_app/models/appointment.dart';
 import 'package:client_android_app/models/doctor.dart';
-import 'package:client_android_app/models/issuer.dart';
-import 'package:client_android_app/models/patient.dart';
 import 'package:client_android_app/pages/appointment/appointments.dart';
-import 'package:client_android_app/pages/company/companies.dart';
-import 'package:client_android_app/pages/issuer/issuers.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';

@@ -1,10 +1,5 @@
-import 'dart:convert';
 import 'package:client_android_app/auth/login.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
-
-import 'models/jwt.dart';
 
 class UnsupportedRole extends StatelessWidget {
   const UnsupportedRole({super.key});
@@ -25,7 +20,7 @@ class UnsupportedRole extends StatelessWidget {
               elevation: 4.0,
               padding: const EdgeInsets.all(8.0),
               onPressed: () async => {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()))
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginPage()))
               },
               child: const Text("Log Out"),
             ),

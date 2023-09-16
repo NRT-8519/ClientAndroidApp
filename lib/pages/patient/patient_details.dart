@@ -1,6 +1,5 @@
 import 'package:client_android_app/models/patient.dart';
 import 'package:client_android_app/pages/patient/patients.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -51,7 +50,7 @@ class PatientDetailsState extends State<PatientDetails> {
               Navigator.push(context, MaterialPageRoute(builder: (context) => Patients(payload: payload, doctor: payload["jti"])));
             }
           },
-          child: Icon(Icons.arrow_back),
+          child: const Icon(Icons.arrow_back),
         ),
       ),
       body: FutureBuilder(
@@ -184,7 +183,7 @@ class PatientDetailsState extends State<PatientDetails> {
                           width: MediaQuery.of(context).size.width,
                         ),
                         Container(
-                          padding: EdgeInsets.all(16),
+                          padding: const EdgeInsets.all(16),
                           width: MediaQuery.of(context).size.width,
                           child: Row(
                             mainAxisSize: MainAxisSize.max,
@@ -218,11 +217,11 @@ class PatientDetailsState extends State<PatientDetails> {
                                   },
                                   style: ElevatedButton.styleFrom(
                                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                                    minimumSize: Size(160, 40),
+                                    minimumSize: const Size(160, 40),
                                     backgroundColor: Colors.orange,
                                     foregroundColor: Colors.white,
                                   ),
-                                  child: Text("Force password Expiry")
+                                  child: const Text("Force password Expiry")
                               ),
                               if(!snapshot.data!.isDisabled)... [
                                 ElevatedButton(
@@ -252,11 +251,11 @@ class PatientDetailsState extends State<PatientDetails> {
                                     },
                                     style: ElevatedButton.styleFrom(
                                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                                      minimumSize: Size(160, 40),
+                                      minimumSize: const Size(160, 40),
                                       backgroundColor: Colors.red,
                                       foregroundColor: Colors.white,
                                     ),
-                                    child: Text("Disable account")
+                                    child: const Text("Disable account")
                                 ),
                               ]
                               else... [
@@ -287,11 +286,11 @@ class PatientDetailsState extends State<PatientDetails> {
                                     },
                                     style: ElevatedButton.styleFrom(
                                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                                      minimumSize: Size(160, 40),
+                                      minimumSize: const Size(160, 40),
                                       backgroundColor: Colors.green,
                                       foregroundColor: Colors.white,
                                     ),
-                                    child: Text("Enable account")
+                                    child: const Text("Enable account")
                                 ),
                               ]
                             ],

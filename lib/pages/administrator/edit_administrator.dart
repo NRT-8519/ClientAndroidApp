@@ -2,7 +2,6 @@ import 'package:client_android_app/auth/http_requests.dart';
 import 'package:client_android_app/auth/validators.dart';
 import 'package:client_android_app/models/user.dart';
 import 'package:client_android_app/pages/administrator/administrators.dart';
-import 'package:client_android_app/pages/my_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
@@ -83,10 +82,10 @@ class EditAdministratorState extends State<EditAdministrator> {
               return Form(
                   key: formKey,
                   child: ListView(
-                    padding: EdgeInsets.only(top: 16),
+                    padding: const EdgeInsets.only(top: 16),
                     children: [
                       Container(
-                        margin: EdgeInsets.only(top: 8, left: 16.0, right: 16.0),
+                        margin: const EdgeInsets.only(top: 8, left: 16.0, right: 16.0),
                         child: TextFormField(
                           enabled: !submitting,
                           validator: (value) => Validators.validateNotEmpty(value),
@@ -98,7 +97,7 @@ class EditAdministratorState extends State<EditAdministrator> {
                         ),
                       ),
                       Container(
-                        margin: EdgeInsets.only(top: 8, left: 16.0, right: 16.0),
+                        margin: const EdgeInsets.only(top: 8, left: 16.0, right: 16.0),
                         child: TextFormField(
                           enabled: !submitting,
                           validator: (value) => Validators.validateNotEmpty(value),
@@ -110,7 +109,7 @@ class EditAdministratorState extends State<EditAdministrator> {
                         ),
                       ),
                       Container(
-                        margin: EdgeInsets.only(top: 8, left: 16.0, right: 16.0),
+                        margin: const EdgeInsets.only(top: 8, left: 16.0, right: 16.0),
                         child: TextFormField(
                           enabled: !submitting,
                           validator: (value) => Validators.validateNotEmpty(value),
@@ -122,7 +121,7 @@ class EditAdministratorState extends State<EditAdministrator> {
                         ),
                       ),
                       Container(
-                        margin: EdgeInsets.only(top: 8, left: 16.0, right: 16.0),
+                        margin: const EdgeInsets.only(top: 8, left: 16.0, right: 16.0),
                         child: TextFormField(
                           enabled: !submitting,
                           validator: (value) => Validators.validateTitle(value),
@@ -133,9 +132,9 @@ class EditAdministratorState extends State<EditAdministrator> {
                           ),
                         ),
                       ),
-                      Divider(indent: 16, endIndent: 16,),
+                      const Divider(indent: 16, endIndent: 16,),
                       Container(
-                        margin: EdgeInsets.only(top: 8, left: 16.0, right: 16.0),
+                        margin: const EdgeInsets.only(top: 8, left: 16.0, right: 16.0),
                         child: TextFormField(
                           enabled: !submitting,
                           controller: usernameController,
@@ -145,10 +144,10 @@ class EditAdministratorState extends State<EditAdministrator> {
                           ),
                         ),
                       ),
-                      Divider(indent: 16, endIndent: 16,),
+                      const Divider(indent: 16, endIndent: 16,),
                       Container(
                         width: MediaQuery.of(context).size.width,
-                        margin: EdgeInsets.only(top: 8, left: 16.0, right: 16.0),
+                        margin: const EdgeInsets.only(top: 8, left: 16.0, right: 16.0),
                         child: DropdownButtonFormField(
                           value: snapshot.data!.gender,
                           validator: (value) => Validators.validateGender(value),
@@ -158,9 +157,9 @@ class EditAdministratorState extends State<EditAdministrator> {
                           ),
                           items:  [
                             if (!submitting)... [
-                              DropdownMenuItem(value: "", enabled: false, child: Text("Select...")),
-                              DropdownMenuItem(value: "M", child: Text("Male")),
-                              DropdownMenuItem(value: "F", child: Text("Female"))
+                              const DropdownMenuItem(value: "", enabled: false, child: Text("Select...")),
+                              const DropdownMenuItem(value: "M", child: Text("Male")),
+                              const DropdownMenuItem(value: "F", child: Text("Female"))
                             ]
                           ],
                           onChanged: (Object? value) {
@@ -169,7 +168,7 @@ class EditAdministratorState extends State<EditAdministrator> {
                         ),
                       ),
                       Container(
-                        margin: EdgeInsets.only(top: 8, left: 16.0, right: 16.0),
+                        margin: const EdgeInsets.only(top: 8, left: 16.0, right: 16.0),
                         child: TextFormField(
                           enabled: !submitting,
                           validator: (value) => Validators.validateDateOfBirth(value),
@@ -194,9 +193,9 @@ class EditAdministratorState extends State<EditAdministrator> {
                           ),
                         ),
                       ),
-                      Divider(indent: 16, endIndent: 16,),
+                      const Divider(indent: 16, endIndent: 16,),
                       Container(
-                        margin: EdgeInsets.only(top: 8, left: 16.0, right: 16.0),
+                        margin: const EdgeInsets.only(top: 8, left: 16.0, right: 16.0),
                         child: TextFormField(
                           enabled: !submitting,
                           validator: (value) => Validators.validateSSN(value),
@@ -208,7 +207,7 @@ class EditAdministratorState extends State<EditAdministrator> {
                         ),
                       ),
                       Container(
-                        margin: EdgeInsets.only(top: 8, left: 16.0, right: 16.0),
+                        margin: const EdgeInsets.only(top: 8, left: 16.0, right: 16.0),
                         child: TextFormField(
                           enabled: !submitting,
                           validator: (value) => Validators.validateEmail(value),
@@ -220,7 +219,7 @@ class EditAdministratorState extends State<EditAdministrator> {
                         ),
                       ),
                       Container(
-                        margin: EdgeInsets.only(top: 8, left: 16.0, right: 16.0, bottom: 64),
+                        margin: const EdgeInsets.only(top: 8, left: 16.0, right: 16.0, bottom: 64),
                         child: TextFormField(
                           enabled: !submitting,
                           validator: (value) => Validators.validatePhoneNumber(value),

@@ -2,7 +2,6 @@ import 'package:client_android_app/models/medicine.dart';
 import 'package:client_android_app/pages/company/company_details.dart';
 import 'package:client_android_app/pages/issuer/issuer_details.dart';
 import 'package:client_android_app/widgets/text_info_card.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';

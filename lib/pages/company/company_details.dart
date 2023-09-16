@@ -1,11 +1,9 @@
 import 'package:client_android_app/widgets/text_info_card.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../../auth/http_requests.dart';
 import '../../../models/company.dart';
-import '../../../models/paginated_list.dart';
 
 class CompanyDetails extends StatefulWidget {
   const CompanyDetails(this.payload, this.companyUUID, {super.key});

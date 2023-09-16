@@ -34,7 +34,7 @@ class ReportState extends State<Report> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Report a problem"),
+        title: const Text("Report a problem"),
         centerTitle: true,
         automaticallyImplyLeading: false,
         leading: GestureDetector(
@@ -45,7 +45,7 @@ class ReportState extends State<Report> {
         ),
       ),
       body: Container(
-        margin: EdgeInsets.all(16),
+        margin: const EdgeInsets.all(16),
         alignment: Alignment.center,
         child: Form(
           key: key,
@@ -60,7 +60,7 @@ class ReportState extends State<Report> {
                   labelText: "Report title",
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 16,
               ),
               TextFormField(
@@ -124,10 +124,10 @@ class ReportState extends State<Report> {
             }
           }
         },
-        label: Text("Send a report"),
-        icon: Icon(Icons.send),
+        label: const Text("Send a report"),
+        icon: const Icon(Icons.send),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      ) : SizedBox.shrink(),
+      ) : const SizedBox.shrink(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }

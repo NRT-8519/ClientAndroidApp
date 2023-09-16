@@ -1,9 +1,4 @@
-import 'package:client_android_app/auth/http_requests.dart';
-import 'package:client_android_app/auth/validators.dart';
-import 'package:client_android_app/models/Note.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class TimestampCard extends StatefulWidget {
   final double? width;

@@ -60,17 +60,17 @@ class PatientsState extends State<Patients> {
               Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(payload)));
             }
           },
-          child: Icon(Icons.arrow_back),
+          child: const Icon(Icons.arrow_back),
         ),
         actions: [
           if(payload["role"] == "ADMINISTRATOR")... [
             Padding(
-              padding: EdgeInsets.only(right: 16),
+              padding: const EdgeInsets.only(right: 16),
               child: GestureDetector(
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) => AddPatient(payload)));
                 },
-                child: Icon(Icons.add_circle_outline),
+                child: const Icon(Icons.add_circle_outline),
               ),
             )
           ]
@@ -84,7 +84,7 @@ class PatientsState extends State<Patients> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  padding: EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(16),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -108,11 +108,11 @@ class PatientsState extends State<Patients> {
                           },
                           style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                            minimumSize: Size(100, 60),
+                            minimumSize: const Size(100, 60),
                             backgroundColor: Colors.deepPurple,
                             foregroundColor: Colors.white,
                           ),
-                          child: Icon(Icons.search)
+                          child: const Icon(Icons.search)
                       )
                     ],
                   ),
@@ -123,10 +123,10 @@ class PatientsState extends State<Patients> {
                     child: Table(
                       defaultVerticalAlignment: TableCellVerticalAlignment.middle,
                       columnWidths: <int, TableColumnWidth>{
-                        0: snapshot.data!.items.isEmpty ? FixedColumnWidth(MediaQuery.of(context).size.width - 32) : FixedColumnWidth(32),
-                        1: FixedColumnWidth(200),
-                        2: FixedColumnWidth(64),
-                        3: FixedColumnWidth(64),
+                        0: snapshot.data!.items.isEmpty ? FixedColumnWidth(MediaQuery.of(context).size.width - 32) : const FixedColumnWidth(32),
+                        1: const FixedColumnWidth(200),
+                        2: const FixedColumnWidth(64),
+                        3: const FixedColumnWidth(64),
                       },
                       children: [
                         if(snapshot.data!.items.isNotEmpty)... [
@@ -136,7 +136,7 @@ class PatientsState extends State<Patients> {
                                   TableCell(child: Text("${(i + 1) + (pageNumber == 1 ? 0 : (pageNumber - 1) * pageSize)}", textAlign: TextAlign.center,)),
                                   TableCell(child: Text("${snapshot.data!.items[i].firstName} ${snapshot.data!.items[i].middleName[0]}. ${snapshot.data!.items[i].lastName}", textAlign: TextAlign.center)),
                                   Container(
-                                      margin: EdgeInsets.all(9),
+                                      margin: const EdgeInsets.all(9),
                                       child: GestureDetector(
                                         onTap: () {
                                           Navigator.push(context, MaterialPageRoute(builder: (context) => PatientDetails(payload, snapshot.data!.items[i].uuid!)));
@@ -146,7 +146,7 @@ class PatientsState extends State<Patients> {
                                   ),
                                   if(payload["role"] == "ADMINISTRATOR")... [
                                     Container(
-                                        margin: EdgeInsets.all(9),
+                                        margin: const EdgeInsets.all(9),
                                         child: GestureDetector(
                                           onTap: () {
                                             Navigator.push(context, MaterialPageRoute(builder: (context) => EditPatient(payload, snapshot.data!.items[i].uuid!)));
@@ -160,7 +160,7 @@ class PatientsState extends State<Patients> {
                           ]
                         ]
                         else... [
-                          TableRow(
+                          const TableRow(
                               children: [
                                 Text(
                                   "No Content",
@@ -174,7 +174,7 @@ class PatientsState extends State<Patients> {
                   ),
                 ),
                 Container(
-                    padding: EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(16),
                     child: Row(
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -188,11 +188,11 @@ class PatientsState extends State<Patients> {
                             } : null,
                             style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                              minimumSize: Size(160, 40),
+                              minimumSize: const Size(160, 40),
                               backgroundColor: Colors.deepPurple,
                               foregroundColor: Colors.white,
                             ),
-                            child: Text("Previous")
+                            child: const Text("Previous")
                         ),
                         ElevatedButton(
                             onPressed: snapshot.data!.hasNext ? () {
@@ -203,11 +203,11 @@ class PatientsState extends State<Patients> {
                             } : null,
                             style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                              minimumSize: Size(160, 40),
+                              minimumSize: const Size(160, 40),
                               backgroundColor: Colors.deepPurple,
                               foregroundColor: Colors.white,
                             ),
-                            child: Text("Next")
+                            child: const Text("Next")
                         ),
                       ],
                     )

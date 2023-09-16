@@ -1,6 +1,5 @@
 import 'package:client_android_app/auth/http_requests.dart';
 import 'package:client_android_app/home.dart';
-import 'package:client_android_app/models/Note.dart';
 import 'package:client_android_app/models/doctor.dart';
 import 'package:client_android_app/models/medicine.dart';
 import 'package:client_android_app/models/paginated_list.dart';
@@ -9,7 +8,6 @@ import 'package:client_android_app/models/prescription.dart';
 import 'package:client_android_app/widgets/notes_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 
 class Prescriptions extends StatefulWidget {
@@ -110,7 +108,7 @@ class PrescriptionsState extends State<Prescriptions> {
                   String temp = doctorUUID;
                   doctorUUID = "";
                   refresh();
-                  await Future.delayed(Duration(seconds: 1));
+                  await Future.delayed(const Duration(seconds: 1));
                   doctorUUID = temp;
                   refresh();
 
@@ -155,7 +153,7 @@ class PrescriptionsState extends State<Prescriptions> {
                                         String temp = doctorUUID;
                                         doctorUUID = "";
                                         refresh();
-                                        await Future.delayed(Duration(seconds: 1));
+                                        await Future.delayed(const Duration(seconds: 1));
                                         doctorUUID = temp;
                                         refresh();
                                       }
@@ -163,7 +161,7 @@ class PrescriptionsState extends State<Prescriptions> {
                                         String temp = patientUUID;
                                         patientUUID = "";
                                         refresh();
-                                        await Future.delayed(Duration(seconds: 1));
+                                        await Future.delayed(const Duration(seconds: 1));
                                         patientUUID = temp;
                                         refresh();
                                       }
@@ -186,7 +184,7 @@ class PrescriptionsState extends State<Prescriptions> {
                                                   String temp = doctorUUID;
                                                   doctorUUID = "";
                                                   refresh();
-                                                  await Future.delayed(Duration(seconds: 1));
+                                                  await Future.delayed(const Duration(seconds: 1));
                                                   doctorUUID = temp;
                                                   refresh();
                                                 }
@@ -194,7 +192,7 @@ class PrescriptionsState extends State<Prescriptions> {
                                                   String temp = patientUUID;
                                                   patientUUID = "";
                                                   refresh();
-                                                  await Future.delayed(Duration(seconds: 1));
+                                                  await Future.delayed(const Duration(seconds: 1));
                                                   patientUUID = temp;
                                                   refresh();
                                                 }
@@ -203,7 +201,7 @@ class PrescriptionsState extends State<Prescriptions> {
                                                 });
                                               },
                                               child: TimestampCard(
-                                                title: Text("${prescriptionSnapshot.data!.items[i]!.patient!}", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                                                title: Text(prescriptionSnapshot.data!.items[i]!.patient!, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                                                 timestamp: Text(
                                                     prescriptionSnapshot.data!.items[i]!.prescribed == null ? "Administered ${format.format(prescriptionSnapshot.data!.items[i]!.administered!)}" : "Prescribed ${format.format(prescriptionSnapshot.data!.items[i]!.prescribed!)}",
                                                     style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: CupertinoColors.systemGrey)),
@@ -224,7 +222,7 @@ class PrescriptionsState extends State<Prescriptions> {
                                   )
                               ),
                               Container(
-                                  margin: EdgeInsets.all(16),
+                                  margin: const EdgeInsets.all(16),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.max,
                                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -239,7 +237,7 @@ class PrescriptionsState extends State<Prescriptions> {
                                               String temp = doctorUUID;
                                               doctorUUID = "";
                                               refresh();
-                                              await Future.delayed(Duration(seconds: 1));
+                                              await Future.delayed(const Duration(seconds: 1));
                                               doctorUUID = temp;
                                               refresh();
                                             }
@@ -247,7 +245,7 @@ class PrescriptionsState extends State<Prescriptions> {
                                               String temp = patientUUID;
                                               patientUUID = "";
                                               refresh();
-                                              await Future.delayed(Duration(seconds: 1));
+                                              await Future.delayed(const Duration(seconds: 1));
                                               patientUUID = temp;
                                               refresh();
                                             }
@@ -257,11 +255,11 @@ class PrescriptionsState extends State<Prescriptions> {
                                           } : null,
                                           style: ElevatedButton.styleFrom(
                                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                                            minimumSize: Size(160, 40),
+                                            minimumSize: const Size(160, 40),
                                             backgroundColor: Colors.green,
                                             foregroundColor: Colors.white,
                                           ),
-                                          child: Text("Previous")
+                                          child: const Text("Previous")
                                       ),
                                       ElevatedButton(
                                           onPressed: prescriptionSnapshot.data!.hasNext ? () async {
@@ -273,7 +271,7 @@ class PrescriptionsState extends State<Prescriptions> {
                                               String temp = doctorUUID;
                                               doctorUUID = "";
                                               refresh();
-                                              await Future.delayed(Duration(seconds: 1));
+                                              await Future.delayed(const Duration(seconds: 1));
                                               doctorUUID = temp;
                                               refresh();
                                             }
@@ -281,7 +279,7 @@ class PrescriptionsState extends State<Prescriptions> {
                                               String temp = patientUUID;
                                               patientUUID = "";
                                               refresh();
-                                              await Future.delayed(Duration(seconds: 1));
+                                              await Future.delayed(const Duration(seconds: 1));
                                               patientUUID = temp;
                                               refresh();
                                             }
@@ -291,11 +289,11 @@ class PrescriptionsState extends State<Prescriptions> {
                                           } : null,
                                           style: ElevatedButton.styleFrom(
                                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                                            minimumSize: Size(160, 40),
+                                            minimumSize: const Size(160, 40),
                                             backgroundColor: Colors.green,
                                             foregroundColor: Colors.white,
                                           ),
-                                          child: Text("Next")
+                                          child: const Text("Next")
                                       ),
                                     ],
                                   )
@@ -348,7 +346,7 @@ class PrescriptionsState extends State<Prescriptions> {
                     TextButton(onPressed: () {Navigator.of(statefulContext).pop(true);}, child: const Text("Close")),
                   ],
                   scrollable: true,
-                  title: Text("Prescription", style: const TextStyle(fontSize: 14, ), textAlign: TextAlign.center),
+                  title: const Text("Prescription", style: TextStyle(fontSize: 14, ), textAlign: TextAlign.center),
                   content: Padding(
                     padding: const EdgeInsets.all(16),
                     child: Column(
@@ -441,7 +439,7 @@ class PrescriptionsState extends State<Prescriptions> {
                         String temp = doctorUUID;
                         doctorUUID = "";
                         refresh();
-                        await Future.delayed(Duration(seconds: 1));
+                        await Future.delayed(const Duration(seconds: 1));
                         doctorUUID = temp;
                         refresh();
 
@@ -456,7 +454,7 @@ class PrescriptionsState extends State<Prescriptions> {
                     TextButton(onPressed: isSubmitting ? null : () {Navigator.of(statefulContext).pop(true);}, child: const Text("Cancel")),
                   ],
                   scrollable: true,
-                  title: Text("New prescription", style: const TextStyle(fontSize: 14, ), textAlign: TextAlign.center),
+                  title: const Text("New prescription", style: TextStyle(fontSize: 14, ), textAlign: TextAlign.center),
                   content: Padding(
                     padding: const EdgeInsets.all(16),
                     child: Form(
@@ -538,7 +536,7 @@ class PrescriptionsState extends State<Prescriptions> {
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
 
                             children: [
-                              Text("Administered"),
+                              const Text("Administered"),
                               Switch(
                                 value: prescribed,
                                 activeColor: Colors.white,
@@ -551,7 +549,7 @@ class PrescriptionsState extends State<Prescriptions> {
                                   });
                                 }
                               ),
-                              Text("Prescribed")
+                              const Text("Prescribed")
                             ],
                           )
                         ],

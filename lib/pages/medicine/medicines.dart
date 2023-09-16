@@ -9,7 +9,7 @@ import 'package:client_android_app/pages/admin/dashboard.dart';
 import 'edit_medicine.dart';
 
 class Medicines extends StatefulWidget {
-  Medicines({super.key, required this.payload});
+  const Medicines({super.key, required this.payload});
 
   final Map<String, dynamic> payload;
 
@@ -55,16 +55,16 @@ class MedicinesState extends State<Medicines> {
           onTap: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) => Dashboard(payload)));
           },
-          child: Icon(Icons.arrow_back),
+          child: const Icon(Icons.arrow_back),
         ),
         actions: [
           Padding(
-            padding: EdgeInsets.only(right: 16),
+            padding: const EdgeInsets.only(right: 16),
             child: GestureDetector(
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => AddMedicine(payload)));
               },
-              child: Icon(Icons.add_circle_outline),
+              child: const Icon(Icons.add_circle_outline),
             ),
           )
         ],
@@ -77,7 +77,7 @@ class MedicinesState extends State<Medicines> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  padding: EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(16),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -101,11 +101,11 @@ class MedicinesState extends State<Medicines> {
                           },
                           style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                            minimumSize: Size(100, 60),
+                            minimumSize: const Size(100, 60),
                             backgroundColor: Colors.green,
                             foregroundColor: Colors.white,
                           ),
-                          child: Icon(Icons.search)
+                          child: const Icon(Icons.search)
                       )
                     ],
                   ),
@@ -116,10 +116,10 @@ class MedicinesState extends State<Medicines> {
                     child: Table(
                       defaultVerticalAlignment: TableCellVerticalAlignment.middle,
                       columnWidths: <int, TableColumnWidth>{
-                        0: snapshot.data!.items.isEmpty ? FixedColumnWidth(MediaQuery.of(context).size.width - 32) : FixedColumnWidth(32),
-                        1: FixedColumnWidth(200),
-                        2: FixedColumnWidth(64),
-                        3: FixedColumnWidth(64),
+                        0: snapshot.data!.items.isEmpty ? FixedColumnWidth(MediaQuery.of(context).size.width - 32) : const FixedColumnWidth(32),
+                        1: const FixedColumnWidth(200),
+                        2: const FixedColumnWidth(64),
+                        3: const FixedColumnWidth(64),
                       },
                       children: [
                         if(snapshot.data!.items.isNotEmpty)... [
@@ -129,7 +129,7 @@ class MedicinesState extends State<Medicines> {
                                   TableCell(child: Text("${(i + 1) + (pageNumber == 1 ? 0 : (pageNumber - 1) * pageSize)}", textAlign: TextAlign.center,)),
                                   TableCell(child: Text(snapshot.data!.items[i].name, textAlign: TextAlign.center)),
                                   Container(
-                                    margin: EdgeInsets.all(9),
+                                    margin: const EdgeInsets.all(9),
                                     child: GestureDetector(
                                       onTap: () {
                                         Navigator.push(context, MaterialPageRoute(builder: (context) => MedicineDetails(payload, snapshot.data!.items[i].uuid)));
@@ -138,7 +138,7 @@ class MedicinesState extends State<Medicines> {
                                     ),
                                   ),
                                   Container(
-                                      margin: EdgeInsets.all(9),
+                                      margin: const EdgeInsets.all(9),
                                       child: GestureDetector(
                                         onTap: () {
                                           Navigator.push(context, MaterialPageRoute(builder: (context) => EditMedicine(payload, snapshot.data!.items[i].uuid)));
@@ -151,7 +151,7 @@ class MedicinesState extends State<Medicines> {
                           ]
                         ]
                         else... [
-                          TableRow(
+                          const TableRow(
                               children: [
                                 Text(
                                   "No Content",
@@ -165,7 +165,7 @@ class MedicinesState extends State<Medicines> {
                   ),
                 ),
                 Container(
-                    padding: EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(16),
                     child: Row(
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -179,11 +179,11 @@ class MedicinesState extends State<Medicines> {
                             } : null,
                             style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                              minimumSize: Size(160, 40),
+                              minimumSize: const Size(160, 40),
                               backgroundColor: Colors.green,
                               foregroundColor: Colors.white,
                             ),
-                            child: Text("Previous")
+                            child: const Text("Previous")
                         ),
                         ElevatedButton(
                             onPressed: snapshot.data!.hasNext ? () {
@@ -194,11 +194,11 @@ class MedicinesState extends State<Medicines> {
                             } : null,
                             style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                              minimumSize: Size(160, 40),
+                              minimumSize: const Size(160, 40),
                               backgroundColor: Colors.green,
                               foregroundColor: Colors.white,
                             ),
-                            child: Text("Next")
+                            child: const Text("Next")
                         ),
                       ],
                     )

@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class Validators {
@@ -29,7 +28,7 @@ class Validators {
   }
 
   static String? validateEmail(String? value) {
-    if (value != null || !value!.isEmpty) {
+    if (value != null || value!.isNotEmpty) {
       if (value.length > 50) {
         return "Maximum length for an email is 50 characters!";
       }
@@ -47,7 +46,7 @@ class Validators {
   }
 
   static String? validatePhoneNumber(String? value) {
-    if (value != null || !value!.isEmpty) {
+    if (value != null || value!.isNotEmpty) {
       if (value.length > 13) {
         return "Maximum length for an phone number is 13 characters!";
       }
@@ -147,7 +146,7 @@ class Validators {
   }
 
   static String? validatePasswordLogin(String? value) {
-    if (value != null || !value!.isEmpty) {
+    if (value != null || value!.isNotEmpty) {
       if (value.length < 8 || value.length > 45) {
         return "Password must be between 8 and 45 characters!";
       }
@@ -236,7 +235,7 @@ class Validators {
         return "Room number must be between 100 and 999";
       }
     }
-    else if (value!.isEmpty) {
+    else if (value.isEmpty) {
       return "Room number is required!";
     }
     return null;

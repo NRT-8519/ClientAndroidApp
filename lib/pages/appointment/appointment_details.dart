@@ -5,13 +5,12 @@ import 'package:client_android_app/models/patient.dart';
 import 'package:client_android_app/pages/appointment/appointments.dart';
 import 'package:client_android_app/pages/appointment/edit_appointment.dart';
 import 'package:client_android_app/widgets/text_info_card.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 class AppointmentDetails extends StatefulWidget {
-  const AppointmentDetails(this.payload, this.id);
+  const AppointmentDetails(this.payload, this.id, {super.key});
 
   final Map<String, dynamic> payload;
   final int id;
@@ -47,14 +46,14 @@ class AppointmentDetailsState extends State<AppointmentDetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Appointment Details"),
+        title: const Text("Appointment Details"),
         centerTitle: true,
         automaticallyImplyLeading: false,
         leading: GestureDetector(
           onTap: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) => Appointments(payload: payload)));
           },
-          child: Icon(Icons.arrow_back),
+          child: const Icon(Icons.arrow_back),
         ),
       ),
       body: FutureBuilder(
@@ -143,12 +142,12 @@ class AppointmentDetailsState extends State<AppointmentDetails> {
         }
       ),
       floatingActionButton: payload["role"] == "DOCTOR" ? FloatingActionButton(
-        child: Icon(Icons.edit),
         foregroundColor: Colors.white,
         backgroundColor: Colors.blue,
         onPressed: () {
           Navigator.push(context, MaterialPageRoute(builder: (context) => EditAppointment(payload, id)));
-        }
+        },
+        child: const Icon(Icons.edit)
       ) : null,
     );
   }
