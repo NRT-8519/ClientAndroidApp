@@ -70,5 +70,4 @@ class DashboardInfoCard extends StatelessWidget {
       ),
     );
   }
-
 }
